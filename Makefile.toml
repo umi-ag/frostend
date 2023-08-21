@@ -1,0 +1,11 @@
+[tasks."dev:ui"]
+script = '''
+cd ui
+bun run dev
+'''
+
+[tasks."deploy:sui"]
+script = '''
+cd contracts/frostend
+sui client publish --gas-budget 123456789 --skip-dependency-verification
+'''

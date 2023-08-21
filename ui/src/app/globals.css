@@ -1,0 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Climate+Crisis&family=Edu+QLD+Beginner:wght@400;700&family=Genos:wght@400;700&family=Lalezar&family=Mochiy+Pop+One&family=Teko&family=Tilt+Prism&family=Tourney&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.text-frostend {
+  background: linear-gradient(
+    to bottom,
+    #0047ab,
+    #01b5fd,
+    #d1fffd
+  ); /* 上部: 濃い青, 下部: 白めの青 */
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
