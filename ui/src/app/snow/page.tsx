@@ -2,7 +2,6 @@
 
 import { useWallet } from '@suiet/wallet-kit';
 import { AppBar } from 'src/components/AppBar';
-import { Snowflakes } from 'src/components/Snowflakes';
 
 const imageUrl = "https://user-images.githubusercontent.com/14998939/256967328-b7870445-e873-416e-a1a0-ee1d60c7993c.jpg";
 
@@ -24,18 +23,15 @@ const Page = () => {
   const { address, signAndExecuteTransactionBlock } = useWallet();
 
   return (
-    <div className="h-screen bg-blue-500 relative -z-10">
+    <div className="min-h-screen bg-gray-100">
       <AppBar />
       <main className="flex justify-center mt-[120px]">
         <div className="text-white flex flex-col gap-[40px]">
           <PlayerScreen />
         </div>
       </main>
-      <Snowflakes />
     </div>
   )
 }
 
-
 export default Page;
-

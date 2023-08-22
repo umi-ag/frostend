@@ -23,6 +23,10 @@ const config: Config = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      animation: {
+        'snowflakes-fall': 'snowflakes-fall 10s linear infinite',
+        'snowflakes-shake': 'snowflakes-shake 3s ease-in-out infinite'
+      }
     },
   },
   plugins: [],

@@ -29,7 +29,7 @@ const WalletConnectButton: React.FC = () => {
 
 export const AppBar: React.FC = () => {
   return (
-    <div className="flex items-center justify-between px-6 py-2 bg-sky-700">
+    <div className="flex items-center justify-between px-6 py-2 bg-sky-800 z-50">
       <div className="flex items-center gap-3 drop-shadow-3xl">
         <Image
           src="/logo.png"
@@ -42,6 +42,7 @@ export const AppBar: React.FC = () => {
           FrostEnd
         </span>
       </div>
+      <div className="snowflake-neon"></div>
       <div className="flex items-center gap-6">
         <NavLink href="/offer">/offer</NavLink>
         <NavLink href="/claim">/claim</NavLink>
