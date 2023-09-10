@@ -4,45 +4,30 @@ import {
 } from "@mysten/sui.js/transactions";
 import { VerifierInputs } from "src/types";
 
-// https://suiexplorer.com/txblock/3T2AeoYRC6cdYQyYbgpES8BdhXxpqqQs5ASKXZdip8rk?network=testnet
+// https://suiexplorer.com/txblock/6KyRr5DFjFXFT4nRndoXWWN3t41oWKtqV4rAc2NSty9b?network=testnet
 
 export const PACKAGE_ID =
-  "0x7f590f43d7ce9aa5985ad894fe7147d26ccba3a3212cd2425d8ea94aa49fd5b2";
+  "0xd9fd26b190ab579d5c5f05d86317a97fc463a05fe5f7ee568804e59886befab6";
 
-export const PUBLISHER_ID =
-  "0xa4cdba799eb17ce5b1d8f5195324daf0c41d1471493a89dd30cfd7c23f31383b";
+export const STSUI_TREASURY_CAP =
+  "0x889dd6be6958e0f3880fde2135e99937d75c95181133f5f47b09ba199f63c18e"
 
-export const KIOSK_ID =
-  "0x7feda756d93ffafbe2e3b6e329c75e757a3b8d5bf0547a755435b1e794f6e456";
 
-export const KIOSK_CAP_ID =
-  "0xdccdd4ec556b08b40bcf147be017ed84af6824e4e78ae2069b0e4268e307d9bf";
-
-export const POLICY_ID =
-  "0x324ed38a73f61cff82344564866aa44de40b81a9623d7d6128775e844f264025";
-
-export const POLICY_CAP_ID =
-  "0xfce4b6b629c26399bc0ffe319906831421fb283d9657d7f332d256eea8c806db";
-
-export const TARGET_ASSET_ID =
-  "0x58fb671a164975dfb325d3ae855c62ad3b251950df3f0a6f9e8ec881ca49f5c0";
-
-export const mintMyHero = (props: {
+export const mintSTSUI = (props: {
   txb: TransactionBlock;
-  name: string;
-  imageUrl: string;
-  sendToAddress: string;
+  volume: number;
 }) => {
   const { txb } = props;
   const hero = txb.moveCall({
-    target: `${PACKAGE_ID}::my_hero::mint`,
+    target: `${PACKAGE_ID}::stsui_coin::mint`,
     arguments: [
-      txb.pure(props.name),
-      txb.pure(props.imageUrl),
+      txb.pure(STSUI_TREASURY_CAP),
+      txb.pure(BigInt(props.volume * 1e8))
     ],
   });
   return hero;
 };
+
 export const moveCallOffer2 = async (props: {
   txb: TransactionBlock;
   hero: any;
@@ -54,8 +39,6 @@ export const moveCallOffer2 = async (props: {
       `${PACKAGE_ID}::my_hero::Hero`,
     ],
     arguments: [
-      txb.pure(PUBLISHER_ID),
-      props.hero,
     ],
   });
 };

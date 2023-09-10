@@ -45,7 +45,7 @@ export const AppBar: React.FC = () => {
       <div className="snowflake-neon"></div>
       <div className="flex items-center gap-6">
         <NavLink href="/offer">/offer</NavLink>
-        <NavLink href="/claim">/claim</NavLink>
+        <NavLink href="/faucet">/faucet</NavLink>
         <NavLink href="/admin">/admin</NavLink>
         <div className="font-bold text-lg">
           <WalletConnectButton />
@@ -53,4 +53,5 @@ export const AppBar: React.FC = () => {
       </div>
     </div>
   );
+
 };
