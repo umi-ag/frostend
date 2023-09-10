@@ -1,7 +1,10 @@
 module frostend::bank {
-    use sui::object::{Self, UID, ID};
-    use sui::balance::{Self, Supply, Balance};
-    use sui::tx_context::{Self, TxContext};
+    use std::ascii::String;
+    use std::type_name;
+
+    use sui::object::{Self, UID};
+    use sui::balance::{Self, Balance};
+    use sui::tx_context::{TxContext};
 
     use frostend::vault::{Self, Vault};
 
@@ -23,6 +26,11 @@ module frostend::bank {
             id: object::new(ctx),
             coin_sy_reserve: balance::zero(),
         }
+    }
+
+    public fun get_type_name<X>(
+    ): String {
+        type_name::into_string(type_name::get<Bank<X>>())
     }
 
     public(friend) fun borrow_sy<X>(

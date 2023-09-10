@@ -2,9 +2,7 @@
 module frostend::utils {
     use sui::pay;
     use sui::transfer;
-    use sui::transfer_policy::{Self, TransferPolicy, TransferRequest, TransferPolicyCap};
     use sui::coin::{Self, Coin};
-    use sui::balance::{Self, Balance};
     use sui::tx_context::{Self, TxContext};
 
     public fun merge_coins<R>(coins: vector<Coin<R>>, ctx: &mut TxContext): Coin<R> {

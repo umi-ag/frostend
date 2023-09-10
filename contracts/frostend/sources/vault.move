@@ -1,9 +1,10 @@
 module frostend::vault {
-    use sui::object::{Self, UID, ID};
-    use sui::balance::{Self, Supply, Balance};
-    use sui::tx_context::{Self, TxContext};
+    use std::ascii::String;
+    use std::type_name;
 
-    use frostend::utils;
+    use sui::object::{Self, UID};
+    use sui::balance::{Self, Supply, Balance};
+    use sui::tx_context::{TxContext};
 
     friend frostend::bank;
     friend frostend::actions;
@@ -36,6 +37,11 @@ module frostend::vault {
             coin_pt_supply: balance::create_supply( PTCoin {} ),
             coin_yt_supply: balance::create_supply(YTCoin {}),
         }
+    }
+
+    public fun get_type_name<X>(
+    ): String {
+        type_name::into_string(type_name::get<Vault<X>>())
     }
 
     public(friend) fun deposit_sy<X>(
