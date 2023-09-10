@@ -48,7 +48,11 @@ module frostend::vault {
         balance_sy: Balance<X>,
         vault: &mut Vault<X>,
     ) {
+        use std::debug::print;
+        print(&vector[1003, 1]);
+        print(vault);
         balance::join(&mut vault.coin_sy_reserve, balance_sy);
+        print(vault);
     }
 
     public(friend) fun deposit_pt<X>(
@@ -76,7 +80,10 @@ module frostend::vault {
         amount: u64,
         vault: &mut Vault<X>,
     ): Balance<PTCoin<X>> {
+        use std::debug::print;
+        print(vault);
 
+        mint_pt(amount, vault);
         balance::split(&mut vault.coin_pt_reserve, amount)
     }
 
@@ -85,6 +92,14 @@ module frostend::vault {
         vault: &mut Vault<X>,
     ): Balance<YTCoin<X>> {
         balance::split(&mut vault.coin_yt_reserve, amount)
+    }
+
+    fun mint_pt<X>(
+        amount: u64,
+        vault: &mut Vault<X>,
+    ) {
+        let balance_pt = balance::increase_supply(&mut vault.coin_pt_supply, amount);
+        deposit_pt(balance_pt, vault);
     }
 
     public(friend) fun mint_pt_and_yt<X>(

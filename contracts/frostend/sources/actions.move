@@ -14,8 +14,13 @@ module frostend::actions {
         vault: &mut Vault<X>,
         bank: &mut Bank<X>,
     ): Balance<PTCoin<X>> {
+        use std::debug::print;
+        print(&balance_sy);
         let amount = balance::value(&balance_sy);
+        print(vault);
         vault::deposit_sy(balance_sy, vault);
+        print(&vector[1004, 1]);
+        print(vault);
         bank::payback_sy(amount, vault, bank);
         vault::withdraw_pt(amount, vault)
     }

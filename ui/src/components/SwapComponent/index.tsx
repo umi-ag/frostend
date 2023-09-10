@@ -5,6 +5,7 @@ import { useWallet } from '@suiet/wallet-kit';
 import Image from 'next/image';
 import { STSUI } from 'src/coinList';
 import { FaChevronDown } from "react-icons/fa6";
+import SwapTransactionButton from './SwapTransactionButton';
 
 const TradeContext = React.createContext();
 const ModalContext = React.createContext();
@@ -92,7 +93,6 @@ export const SwapComponent = () => {
   };
 
   const TargetBody = () => {
-
     return (
       <div className='flex justify-between items-center pl-1 pr-3'>
         <button className='w-[200px] flex items-center gap-2 hover:bg-slate-200'>
@@ -142,7 +142,7 @@ export const SwapComponent = () => {
         <TargetBody />
         <TargetFooter />
       </div>
-      {/* <SwapTransactionButton /> */}
+      <SwapTransactionButton />
     </div>
   );
 };

@@ -3,7 +3,7 @@
 import { useWallet } from '@suiet/wallet-kit';
 import { AppBar } from 'src/components/AppBar';
 import { TransactionBlock } from '@mysten/sui.js/transactions'
-import { mintSTSUI } from 'src/moveCall/frostend';
+import { mintSTSUI } from 'src/_moveCall/frostend';
 import { SwapComponent } from 'src/components/SwapComponent';
 
 

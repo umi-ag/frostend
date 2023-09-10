@@ -1,8 +1,7 @@
-module frostend::root {
+module frostend::dof_root {
     use std::ascii::String;
 
     use sui::object::{Self, UID};
-    use sui::dynamic_field as df;
     use sui::dynamic_object_field as dof;
     use sui::transfer;
     use sui::tx_context::{TxContext};
@@ -47,8 +46,7 @@ module frostend::root {
     ) {
         assert!(!bank_exists<X>(root), 1);
         let bank = bank::new<X>(ctx);
-        df::add(&mut root.id, bank::get_type_name<X>(), object::id(&bank));
-        transfer::public_share_object(bank);
+        dof::add(&mut root.id, bank::get_type_name<X>(), bank);
     }
 
     public fun create_vault<X>(
@@ -57,7 +55,20 @@ module frostend::root {
     ) {
         assert!(!vault_exists<X>(root), 1);
         let vault = vault::new<X>(ctx);
-        df::add(&mut root.id, vault::get_type_name<X>(), object::id(&vault));
-        transfer::public_share_object(vault);
+        dof::add(&mut root.id, vault::get_type_name<X>(), vault);
+    }
+
+    public fun borrow_mut_bank<X>(
+        root: &mut Root,
+    ): &mut Bank<X> {
+        assert!(bank_exists<X>(root), 1);
+        dof::borrow_mut(&mut root.id, bank::get_type_name<X>())
+    }
+
+    public fun borrow_mut_vault<X>(
+        root: &mut Root,
+    ): &mut Vault<X> {
+        assert!(bank_exists<X>(root), 1);
+        dof::borrow_mut(&mut root.id, vault::get_type_name<X>())
     }
 }
