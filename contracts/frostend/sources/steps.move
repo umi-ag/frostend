@@ -125,4 +125,76 @@ module frostend::steps {
         let balance_sy = withdraw_sy(amount, vault);
         balance::join(&mut bank.coin_sy_reserve, balance_sy);
     }
+
+    /// ----------------------------------------
+
+    public fun swap_sy_to_pt<X>(
+        balance_sy: Balance<X>,
+        vault: &mut Vault<X>,
+        bank: &mut Bank<X>,
+    ): Balance<PTCoin<X>> {
+        let amount = balance::value(&balance_sy);
+        deposit_sy(balance_sy, vault);
+        payback_sy(amount, vault, bank);
+        withdraw_pt(amount, vault)
+    }
+
+    public fun swap_pt_to_sy<X>(
+        balance_pt: Balance<PTCoin<X>>,
+        vault: &mut Vault<X>,
+        bank: &mut Bank<X>,
+    ): Balance<X> {
+        let amount = balance::value(&balance_pt);
+        deposit_pt(balance_pt, vault);
+        borrow_sy(amount, vault, bank);
+        withdraw_sy(amount, vault)
+    }
+
+    public fun swap_sy_to_yt<X>(
+        balance_sy: Balance<X>,
+        vault: &mut Vault<X>,
+        bank: &mut Bank<X>,
+    ): Balance<YTCoin<X>> {
+        let amount = balance::value(&balance_sy);
+        deposit_sy(balance_sy, vault);
+        borrow_sy(amount, vault, bank);
+        mint_pt_and_yt(amount, vault);
+        withdraw_yt(amount, vault)
+    }
+
+    public fun swap_yt_to_sy<X>(
+        balance_yt: Balance<YTCoin<X>>,
+        vault: &mut Vault<X>,
+        bank: &mut Bank<X>,
+    ): Balance<X> {
+        let amount = balance::value(&balance_yt);
+        deposit_yt(balance_yt, vault);
+        burn_pt_and_yt(amount, vault);
+        payback_sy(amount, vault, bank);
+        withdraw_sy(amount, vault)
+    }
+
+    public fun swap_pt_to_yt<X>(
+        balance_pt: Balance<PTCoin<X>>,
+        vault: &mut Vault<X>,
+        bank: &mut Bank<X>,
+    ): Balance<YTCoin<X>> {
+        let amount = balance::value(&balance_pt);
+        deposit_pt(balance_pt, vault);
+        borrow_sy(amount, vault, bank);
+        mint_pt_and_yt(amount, vault);
+        withdraw_yt(amount, vault)
+    }
+
+    public fun swap_yt_to_pt<X>(
+        balance_yt: Balance<YTCoin<X>>,
+        vault: &mut Vault<X>,
+        bank: &mut Bank<X>,
+    ): Balance<PTCoin<X>> {
+        let amount = balance::value(&balance_yt);
+        deposit_yt(balance_yt, vault);
+        burn_pt_and_yt(amount, vault);
+        payback_sy(amount, vault, bank);
+        withdraw_pt(amount, vault)
+    }
 }
