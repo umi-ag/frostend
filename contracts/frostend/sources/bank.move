@@ -61,14 +61,7 @@ module frostend::bank {
         vault: &mut Vault<X>,
         bank: &mut Bank<X>,
     ) {
-        use std::debug::print;
-        print(&vector[1005, 1]);
-        print(vault);
         let balance_sy = vault::withdraw_sy(amount, vault);
-        print(&vector[1005, 2]);
-        print(vault);
         deposit_sy(balance_sy, bank);
-        print(&vector[1005, 3]);
-        print(vault);
     }
 }

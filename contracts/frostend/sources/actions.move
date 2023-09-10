@@ -1,9 +1,11 @@
 module frostend::actions {
+    use std::debug::print;
+
     use sui::balance::{Self, Balance};
+    use sui::tx_context::{TxContext};
 
     use frostend::vault::{Self, Vault, PTCoin, YTCoin};
     use frostend::bank::{Self, Bank};
-    use sui::tx_context::{TxContext};
 
     fun init(ctx: &mut TxContext) {
 
@@ -14,14 +16,13 @@ module frostend::actions {
         vault: &mut Vault<X>,
         bank: &mut Bank<X>,
     ): Balance<PTCoin<X>> {
-        use std::debug::print;
-        print(&balance_sy);
         let amount = balance::value(&balance_sy);
-        print(vault);
         vault::deposit_sy(balance_sy, vault);
-        print(&vector[1004, 1]);
-        print(vault);
         bank::payback_sy(amount, vault, bank);
+        {
+            // TODO: Remove this
+            vault::mint_pt(amount, vault);
+        };
         vault::withdraw_pt(amount, vault)
     }
 
@@ -32,6 +33,10 @@ module frostend::actions {
     ): Balance<X> {
         let amount = balance::value(&balance_pt);
         vault::deposit_pt(balance_pt, vault);
+        {
+            // TODO: Remove this
+            vault::burn_pt(amount, vault);
+        };
         bank::borrow_sy(amount, vault, bank);
         vault::withdraw_sy(amount, vault)
     }

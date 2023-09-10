@@ -15,7 +15,7 @@ module frostend::test_swap {
     use frostend::bank::{Self, Bank};
     use frostend::root;
     use frostend::swap;
-    use frostend::vault::{Self, Vault};
+    use frostend::vault::{Self, Vault, PTCoin, YTCoin};
     use frostend::stsui_coin::{Self, STSUI_COIN};
 
 
@@ -29,7 +29,7 @@ module frostend::test_swap {
     }
 
     #[test]
-    fun test_swap_sy_to_pt() {
+    fun test_swap_sy_to_pt_and_swap_pt_to_sy() {
         let bank_id;
         let vault_id;
         let scenario = test_scenario::begin(TEST_ADDR);
@@ -50,7 +50,6 @@ module frostend::test_swap {
             stsui_coin::test_init(ctx);
         };
         test_scenario::next_tx(test, TEST_ADDR);
-        print(&114514);
         {
             let treasury_cap = test_scenario::take_from_sender<TreasuryCap<STSUI_COIN>>(test);
             let ctx = test_scenario::ctx(test);
@@ -59,28 +58,49 @@ module frostend::test_swap {
         };
         test_scenario::next_tx(test, TEST_ADDR);
         {
-            let stsui_coin = test_scenario::take_from_sender<Coin<STSUI_COIN>>(test);
+            let coin_sy = test_scenario::take_from_sender<Coin<STSUI_COIN>>(test);
             let bank = test_scenario::take_from_sender<Bank<STSUI_COIN>>(test);
             let vault = test_scenario::take_from_sender<Vault<STSUI_COIN>>(test);
             let ctx = test_scenario::ctx(test);
 
-
-            let pt_coin = frostend::swap::swap_sy_to_pt(
-                vector[stsui_coin],
+            let coin_pt = frostend::swap::swap_sy_to_pt(
+                vector[coin_sy],
                 &mut vault,
                 &mut bank,
                 ctx,
             );
-            transfer::public_transfer(pt_coin, tx_context::sender(ctx));
+            transfer::public_transfer(coin_pt, tx_context::sender(ctx));
+
+            print(&vector[2000, 1]);
+            print(&vault);
 
             test_scenario::return_to_sender(test, bank);
             test_scenario::return_to_sender(test, vault);
         };
+        test_scenario::next_tx(test, TEST_ADDR);
+        {
+            let coin_pt = test_scenario::take_from_sender<Coin<PTCoin<STSUI_COIN>>>(test);
+            let bank = test_scenario::take_from_sender<Bank<STSUI_COIN>>(test);
+            let vault = test_scenario::take_from_sender<Vault<STSUI_COIN>>(test);
+            let ctx = test_scenario::ctx(test);
 
+            let coin_sy = frostend::swap::swap_pt_to_sy(
+                vector[coin_pt],
+                &mut vault,
+                &mut bank,
+                ctx,
+            );
+            transfer::public_transfer(coin_sy, tx_context::sender(ctx));
 
+            print(&vector[2000, 2]);
+            print(&vault);
+
+            assert_eq(vault::all_is_zero(&vault), true);
+
+            test_scenario::return_to_sender(test, bank);
+            test_scenario::return_to_sender(test, vault);
+        };
         test_scenario::end(scenario);
-
-
 
         assert_eq(true, true);
 
