@@ -9,3 +9,9 @@ script = '''
 cd contracts/frostend
 sui client publish --gas-budget 123456789 --skip-dependency-verification
 '''
+
+[tasks."gen:sui"]
+script = '''
+cd contracts/frostend
+sui-client-gen -o ../../ui/src/moveCall
+'''

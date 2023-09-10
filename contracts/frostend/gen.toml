@@ -4,4 +4,4 @@ rpc = "https://fullnode.testnet.sui.io:443"
 
 [packages]
 # Sui = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/mainnet"}
-frostend = {id = "0x16cf8814f8cf19d7754938bc1397555f837fa53e27dd83e4b34cf75bfe72e6e1"}
+frostend = {id = "0x3af8a3597faf9e5a7eb48d4be3ce7a9493d5acea3b8630fb8be9bc8fde2a5ad6"}
