@@ -33,14 +33,14 @@ module frostend::bank {
         type_name::into_string(type_name::get<Bank<X>>())
     }
 
-    fun deposit_sy<X>(
+    public fun deposit_sy<X>(
         balance_sy: Balance<X>,
         bank: &mut Bank<X>,
     ) {
         balance::join(&mut bank.coin_sy_reserve, balance_sy);
     }
 
-    fun withdraw_sy<X>(
+    public fun withdraw_sy<X>(
         amount: u64,
         bank: &mut Bank<X>,
     ): Balance<X> {

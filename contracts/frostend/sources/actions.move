@@ -47,9 +47,14 @@ module frostend::actions {
         bank: &mut Bank<X>,
     ): Balance<YTCoin<X>> {
         let amount = balance::value(&balance_sy);
+        print(&vector[1345, 1]);
         vault::deposit_sy(balance_sy, vault);
+        print(&vector[1345, 2]);
+        print(vault);
         bank::borrow_sy(amount, vault, bank);
+        print(&vector[1345, 3]);
         vault::mint_pt_and_yt(amount, vault);
+        print(&vector[1345, 4]);
         vault::withdraw_yt(amount, vault)
     }
 
