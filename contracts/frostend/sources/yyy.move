@@ -49,71 +49,95 @@ module frostend::amm {
 
     }
 
-    /// SY->PT+YT
-    public fun deposit_sy_mint_pt_and_yt<X>(
-        balance_sy: Balance<X>,
-        sy_vault: &mut SYCoinVault<X>,
-    ): (Balance<PTCoin<X>>, Balance<YTCoin<X>>) {
-        let amount = balance::value(&balance_sy);
-        let balance_pt = balance::increase_supply(&mut sy_vault.pt_supply, amount);
-        let balance_yt = balance::increase_supply(&mut sy_vault.yt_supply, amount);
+    // /// SY->PT+YT
+    // public fun deposit_sy_mint_pt_and_yt<X>(
+    //     balance_sy: Balance<X>,
+    //     sy_vault: &mut SYCoinVault<X>,
+    // ): (Balance<PTCoin<X>>, Balance<YTCoin<X>>) {
+    //     let amount = balance::value(&balance_sy);
+    //     let balance_pt = balance::increase_supply(&mut sy_vault.pt_supply, amount);
+    //     let balance_yt = balance::increase_supply(&mut sy_vault.yt_supply, amount);
 
-        balance::join(&mut sy_vault.coin_sy_reserve, balance_sy);
+    //     balance::join(&mut sy_vault.coin_sy_reserve, balance_sy);
 
-        (balance_pt, balance_yt)
-    }
+    //     (balance_pt, balance_yt)
+    // }
 
-    /// PT+YT->SY
-    public fun withdraw_sy_to_burn_pt_and_yt<X>(
-        balance_pt: Balance<PTCoin<X>>,
-        balance_yt: Balance<YTCoin<X>>,
-        sy_vault: &mut SYCoinVault<X>,
-    ): Balance<X> {
-        let amount = balance::value(&balance_pt);
-        balance::decrease_supply(&mut sy_vault.pt_supply, balance_pt);
-        balance::decrease_supply(&mut sy_vault.yt_supply, balance_yt);
+    // /// PT+YT->SY
+    // public fun withdraw_sy_to_burn_pt_and_yt<X>(
+    //     balance_pt: Balance<PTCoin<X>>,
+    //     balance_yt: Balance<YTCoin<X>>,
+    //     sy_vault: &mut SYCoinVault<X>,
+    // ): Balance<X> {
+    //     let amount = balance::value(&balance_pt);
+    //     balance::decrease_supply(&mut sy_vault.pt_supply, balance_pt);
+    //     balance::decrease_supply(&mut sy_vault.yt_supply, balance_yt);
 
-        let balance_sy = balance::split(&mut sy_vault.coin_sy_reserve, amount);
-        balance_sy
-    }
+    //     let balance_sy = balance::split(&mut sy_vault.coin_sy_reserve, amount);
+    //     balance_sy
+    // }
 
-    /// YT->SY
-    public fun withdraw_sy_to_burn_yt<X>(
-        balance_yt: Balance<YTCoin<X>>,
-        sy_vault: &mut SYCoinVault<X>,
-        bank: &mut Bank<X>,
-    ): Balance<X> {
-        let amount_pt = balance::value(&balance_yt) / 4 * 96;
-        let balance_pt = borrow_pt_from_bank(amount_pt, bank);
-        let balance_sy = withdraw_sy_to_burn_pt_and_yt(balance_pt, balance_yt, sy_vault);
-        balance_sy
-    }
+    // /// SY->YT
+    // public fun deposit_sy_to_mint_yt<X>(
+    //     balance_sy: Balance<X>,
+    //     sy_vault: &mut SYCoinVault<X>,
+    //     bank: &mut Bank<X>,
+    // ): Balance<YTCoin<X>> {
+    //     let (balance_pt, balance_yt) = deposit_sy_mint_pt_and_yt(balance_sy, sy_vault);
+    //     let balance_sy = bank_swap_pt_to_sy(balance_pt, bank);
+    //     balance_yt
+    // }
 
-    public fun borrow_pt_from_bank<X>(
-        amount: u64,
-        bank: &mut Bank<X>,
-    ): Balance<PTCoin<X>> {
-        let balance_pt = balance::split(&mut bank.coin_pt_reserve, amount);
-        balance_pt
-    }
+    // /// YT->SY
+    // public fun withdraw_sy_to_burn_yt<X>(
+    //     balance_yt: Balance<YTCoin<X>>,
+    //     sy_vault: &mut SYCoinVault<X>,
+    //     bank: &mut Bank<X>,
+    // ): Balance<X> {
+    //     let amount_pt = balance::value(&balance_yt) / 4 * 96;
+    //     // let balance_pt = bank_swap_sy_to_pt(, bank);
+    //     let balance_sy = withdraw_sy_to_burn_pt_and_yt(balance_pt, balance_yt, sy_vault);
+    //     balance_sy
+    // }
 
-    public fun repay_pt_toward_bank<X>(
-        balance_pt: Balance<PTCoin<X>>,
-        bank: &mut Bank<X>,
-    ) {
-        balance::join(&mut bank.coin_pt_reserve, balance_pt);
-    }
+    // // public fun borrow_pt_from_bank<X>(
+    // public fun bank_swap_sy_to_pt<X>(
+    //     balance_sy: Balance<X>,
+    //     bank: &mut Bank<X>,
+    // ): Balance<PTCoin<X>> {
+    //     let amount = balance::value(&balance_sy);
+    //     let balance_pt = balance::split(&mut bank.coin_pt_reserve, amount);
+    //     balance::join(&mut bank.coin_sy_reserve, balance_sy);
+    //     balance_pt
+    // }
 
-    /// SY->YT
-    public fun deposit_sy_to_mint_yt<X>(
-        balance_sy: Balance<X>,
-        sy_vault: &mut SYCoinVault<X>,
-        bank: &mut Bank<X>,
-    ): Balance<YTCoin<X>> {
-        let (balance_pt, balance_yt) = deposit_sy_mint_pt_and_yt(balance_sy, sy_vault);
-        repay_pt_toward_bank(balance_pt, bank);
-        balance_yt
-    }
+    // // repay_pt_toward_bank(balance_pt, bank);
+    // public fun bank_swap_pt_to_sy<X>(
+    //     balance_pt: Balance<PTCoin<X>>,
+    //     bank: &mut Bank<X>,
+    // ): Balance<X> {
+    //     let balance_sy = balance::split(&mut bank.coin_sy_reserve, balance::value(&balance_pt));
+    //     balance::join(&mut bank.coin_pt_reserve, balance_pt);
+    //     balance_sy
+    // }
+
+    // /// SY->PT
+    // public fun deposit_sy_mint_pt<X>(
+    //     balance_sy: Balance<X>,
+    //     sy_vault: &mut SYCoinVault<X>,
+    //     bank: &mut Bank<X>,
+    // ): Balance<PTCoin<X>> {
+    //     let amount_pt = 0;
+    //     let balance_pt = borrow_pt_from_bank(amount_pt, bank);
+    //     balance::join(&mut bank.coin_pt_reserve, balance_pt);
+
+    //     balance_pt
+    // }
+
+
+
+
+
 
 
     // // SY->PT
