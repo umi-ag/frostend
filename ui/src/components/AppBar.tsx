@@ -44,7 +44,8 @@ export const AppBar: React.FC = () => {
       </div>
       <div className="snowflake-neon"></div>
       <div className="flex items-center gap-6">
-        <NavLink href="/offer">/offer</NavLink>
+        <NavLink href="/">/</NavLink>
+        <NavLink href="/swap">/swap</NavLink>
         <NavLink href="/faucet">/faucet</NavLink>
         <NavLink href="/admin">/admin</NavLink>
         <div className="font-bold text-lg">
