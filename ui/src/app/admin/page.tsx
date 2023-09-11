@@ -32,10 +32,12 @@ const FaucetCard = (props: {
     const txb = new TransactionBlock()
     mintTo(txb, {
       treasuryCap: TRESURY_CAP,
+      // @ts-ignore
       u64: props.amount,
     })
 
     const r = await signAndExecuteTransactionBlock({
+      // @ts-ignore
       transactionBlock: txb
     });
     const url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`
@@ -72,8 +74,8 @@ const VaultAndBankCard = () => {
     createVault(txb, STSUI_COIN.$typeName, ROOT)
 
     const r = await signAndExecuteTransactionBlock({
+      // @ts-ignore
       transactionBlock: txb
-
     });
     const url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`
     console.log(url);
@@ -101,8 +103,7 @@ const VaultAndBankCard = () => {
 
 const bankDeposit = async (txb: TransactionBlock, address: string) => {
   const coins = await (async () => {
-    const coins: CoinObject[] = [];
-
+    const coins: { coinObjectId: string }[] = [];
     const coins_sy = await provider.getCoins({
       owner: address,
       coinType: STSUI_COIN.$typeName,
@@ -138,6 +139,7 @@ const BankDespositCard = () => {
     await bankDeposit(txb, address)
 
     const r = await signAndExecuteTransactionBlock({
+      // @ts-ignore
       transactionBlock: txb
     });
     const url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`

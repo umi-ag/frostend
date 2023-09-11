@@ -14,8 +14,8 @@ const FaucetCard = () => {
     const txb = new TransactionBlock();
     mintSTSUI({ txb, volume: 100 })
     const r = await signAndExecuteTransactionBlock({
+      // @ts-ignore
       transactionBlock: txb
-
     });
     const url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`
     console.log(url);
