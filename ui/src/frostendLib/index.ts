@@ -32,6 +32,10 @@ export const isYTcoinType = (coinType: string) => {
   return coinType.startsWith(`${PUBLISHED_AT}::vault::YTCoin<`);
 };
 
+export const whichCoinTypeIsSyPtYt = (coinType: string): "sy" | "pt" | "yt" => {
+  return isPTCoinType(coinType) ? "pt" : isYTcoinType(coinType) ? "yt" : "sy";
+};
+
 export const moveCallSwapSyToPt = async (
   txb: TransactionBlock,
   args: {

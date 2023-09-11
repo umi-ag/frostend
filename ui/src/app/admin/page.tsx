@@ -169,7 +169,7 @@ const BankDespositCard = () => {
 const ViewObject = (props: {
   objectId: string,
   display: string,
- }) => {
+}) => {
   const { address, signAndExecuteTransactionBlock } = useWallet();
 
   const url = () => {
@@ -198,7 +198,7 @@ const Page = () => {
   return (
     <div className="h-screen bg-blue-500">
       <AppBar />
-      <main className="flex justify-center mt-[120px] flex-wrap">
+      <main className="flex mx-auto items-center mt-[120px] max-w-[90%]">
         <div className="text-white flex flex-wrap gap-10">
           <FaucetCard amount={BigInt(100e8)} coinType={STSUI_COIN.$typeName} display='stSUI 100' buttonDisplay='faucet' />
           <FaucetCard amount={BigInt(100e3 * 1e8)} coinType={STSUI_COIN.$typeName} display='stSUI 100_000' buttonDisplay='faucet' />
