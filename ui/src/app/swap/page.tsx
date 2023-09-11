@@ -13,11 +13,11 @@ const FaucetCard = () => {
   const faucet = async () => {
     const txb = new TransactionBlock();
     mintSTSUI({ txb, volume: 100 })
-    let r = await signAndExecuteTransactionBlock({
+    const r = await signAndExecuteTransactionBlock({
       transactionBlock: txb
 
     });
-    let url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`
+    const url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`
     console.log(url);
   }
 

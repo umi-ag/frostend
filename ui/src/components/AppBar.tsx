@@ -46,7 +46,6 @@ export const AppBar: React.FC = () => {
       <div className="flex items-center gap-6">
         <NavLink href="/">/</NavLink>
         <NavLink href="/swap">/swap</NavLink>
-        <NavLink href="/faucet">/faucet</NavLink>
         <NavLink href="/admin">/admin</NavLink>
         <div className="font-bold text-lg">
           <WalletConnectButton />

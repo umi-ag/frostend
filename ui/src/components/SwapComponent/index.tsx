@@ -1,5 +1,4 @@
-import React, { useState, useContext } from 'react';
-import numeral from 'numeral';
+import React, { useContext } from 'react';
 import { AiOutlineArrowDown } from 'react-icons/ai';
 import { useWallet } from '@suiet/wallet-kit';
 import Image from 'next/image';
