@@ -2,24 +2,11 @@
 
 import { useWallet } from '@suiet/wallet-kit';
 import { AppBar } from 'src/components/AppBar';
-import { TransactionBlock } from '@mysten/sui.js/transactions'
-import { mintSTSUI } from 'src/_moveCall/frostend';
 import { SwapComponent } from 'src/components/SwapComponent';
 
 
 const FaucetCard = () => {
   const { address, signAndExecuteTransactionBlock } = useWallet();
-
-  const faucet = async () => {
-    const txb = new TransactionBlock();
-    mintSTSUI({ txb, volume: 100 })
-    const r = await signAndExecuteTransactionBlock({
-      // @ts-ignore
-      transactionBlock: txb
-    });
-    const url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`
-    console.log(url);
-  }
 
   return (
     <div className='bg-gray-100 px-3 py-2 rounded-lg flex items-center justify-center'>
@@ -31,7 +18,6 @@ const FaucetCard = () => {
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-[200px]"
             onClick={async () => {
-              await faucet();
             }}
           >
             YT: Long Yield APY
@@ -39,7 +25,6 @@ const FaucetCard = () => {
           <button
             className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg w-[200px]"
             onClick={async () => {
-              await faucet();
             }}
           >
             PT: Fixed APY

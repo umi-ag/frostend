@@ -1,31 +1,67 @@
 import { useWallet } from '@suiet/wallet-kit';
 import React from 'react';
 import { TransactionBlock } from '@mysten/sui.js/transactions'
+import { swapSyToPt } from 'src/moveCall/frostend/swap/functions';
+import { STSUI_COIN } from 'src/moveCall/frostend/stsui-coin/structs';
+import { JsonRpcProvider, Connection } from '@mysten/sui.js';
+import { maybeSplitCoinsAndTransferRest } from 'src/moveCall/frostend/coin-utils/functions';
+import { BANK, VAULT } from 'src/config/frostend';
+
+const provider = new JsonRpcProvider(
+  new Connection({
+    // fullnode: "https://fullnode.testnet.sui.io:443",
+    fullnode: "https://fullnode.testnet.sui.io",
+  }),
+);
+
+const moveCallSwapSyToPt = async (txb: TransactionBlock, address: string) => {
+  const coins = await (async () => {
+    const coins: { coinObjectId: string }[] = [];
+    const coins_sy = await provider.getCoins({
+      owner: address,
+      coinType: STSUI_COIN.$typeName,
+    })
+    coins.push(...coins_sy.data)
+    return coins
+  })()
+
+  const coin_sy = await maybeSplitCoinsAndTransferRest(txb, STSUI_COIN.$typeName, {
+    vecCoin: txb.makeMoveVec({
+      objects: coins.map(coin => txb.pure(coin.coinObjectId)),
+    }),
+    u64: BigInt(10 * 1e8),
+    address,
+  })
+
+  const coin_pt = await swapSyToPt(txb,
+    STSUI_COIN.$typeName,
+    {
+      vecCoin: txb.makeMoveVec({ objects: [coin_sy] }),
+      vault: VAULT,
+      bank: BANK,
+    },
+  )
+
+  txb.transferObjects([coin_pt], txb.pure(address))
+
+  return txb
+}
 
 const SwapTransactionButton = () => {
   const { address, signAndExecuteTransactionBlock } = useWallet()
 
+  const executeTransaction = async () => {
+    if (!address) return;
+    const txb = new TransactionBlock()
+    await moveCallSwapSyToPt(txb, address)
 
-  const sy2pt = async () => {
-    console.log("sy2pt")
-    const txb = new TransactionBlock();
-
-    // swapSyToPt(txb,
-    //   STSUI_COIN.$typeName,
-    //   {
-    //     coin: '0x55e0a6aa18a24cf88802d95641faa9b4ebf92440390fd87375ec4c93e35ea9ee',
-    //     vault: '0x92ad2498dca224a562b40c8d0b0620a8d5aab2711560ddb5164a8e072b70d3e3',
-    //     bank: '0x22a1e759d7e00545fa36dec0b574d077d0e837659b1599ad32c43577dd9e54ed',
-    //   },
-    // )
-
-    // const r = await signAndExecuteTransactionBlock({
-    //   transactionBlock: txb
-    // });
-    // const url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`
-    // console.log(url);
+    const r = await signAndExecuteTransactionBlock({
+      // @ts-ignore
+      transactionBlock: txb
+    });
+    const url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`
+    console.log(url);
   }
-
 
   return (
     <div className="py-4 w-full text-black">
@@ -33,7 +69,7 @@ const SwapTransactionButton = () => {
         <button
           className="text-lg bg-green-300 hover:bg-green-400 w-full p-4 rounded-full transition duration-200
           disabled:bg-gray-200 dark:disabled:bg-gray-400 disabled:cursor-not-allowed"
-          onClick={sy2pt}
+          onClick={executeTransaction}
         // disabled={networkName() === 'AptosMainnet' || disabled()}
         >
           Desposit

@@ -3,13 +3,14 @@
 import { useWallet } from '@suiet/wallet-kit';
 import { AppBar } from 'src/components/AppBar';
 import { TransactionBlock } from '@mysten/sui.js/transactions'
-import { mintTo } from '../../moveCall/frostend/stsui-coin/functions';
-import { STSUI_COIN } from '../../moveCall/frostend/stsui-coin/structs';
-import { createBank, createVault } from '../../moveCall/frostend/root/functions';
-import { BANK, ROOT, TRESURY_CAP } from 'src/config/frostend';
+import { mintTo } from 'src/moveCall/frostend/stsui-coin/functions';
+import { STSUI_COIN } from 'src/moveCall/frostend/stsui-coin/structs';
+import { createBank, createVault } from 'src/moveCall/frostend/root/functions';
+import { BANK, ROOT, TRESURY_CAP, VAULT } from 'src/config/frostend';
 import { JsonRpcProvider, Connection } from '@mysten/sui.js';
-import { maybeSplitCoinsAndTransferRest } from '../../moveCall/frostend/coin-utils/functions';
-import * as bank from '../../moveCall/frostend/bank/functions';
+import { maybeSplitCoinsAndTransferRest } from 'src/moveCall/frostend/coin-utils/functions';
+import * as bank from 'src/moveCall/frostend/bank/functions';
+import Link from 'next/link';
 
 
 const provider = new JsonRpcProvider(
@@ -165,6 +166,34 @@ const BankDespositCard = () => {
   )
 }
 
+const ViewObject = (props: {
+  objectId: string,
+  display: string,
+ }) => {
+  const { address, signAndExecuteTransactionBlock } = useWallet();
+
+  const url = () => {
+    return `https://suiexplorer.com/object/${props.objectId}?network=testnet`
+  }
+
+  return (
+    <div className='bg-gray-100 px-3 py-2 rounded-lg w-[200px] h-[200px] flex items-center justify-center'>
+      <div className='flex flex-col items-center gap-3'>
+        <div className='text-black text-lg font-bold'>
+          {props.display}
+        </div>
+        <Link href={url()} target='_blank'>
+          <button
+            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full"
+          >
+            explorer
+          </button>
+        </Link>
+      </div>
+    </div>
+  )
+}
+
 const Page = () => {
   return (
     <div className="h-screen bg-blue-500">
@@ -175,6 +204,8 @@ const Page = () => {
           <FaucetCard amount={BigInt(100e3 * 1e8)} coinType={STSUI_COIN.$typeName} display='stSUI 100_000' buttonDisplay='faucet' />
           <VaultAndBankCard />
           <BankDespositCard />
+          <ViewObject objectId={BANK} display='View BANK for stSUI' />
+          <ViewObject objectId={VAULT} display='View VAULT for stSUI' />
         </div>
       </main>
     </div>

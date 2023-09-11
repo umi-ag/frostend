@@ -1,6 +1,6 @@
 {
-  "name": "suitter",
-  "version": "0.202308.0",
+  "name": "frostend",
+  "version": "0.202309.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
