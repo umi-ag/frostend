@@ -26,4 +26,5 @@ script = '''
 cd ui/
 rm -rf src/moveCall
 sui-client-gen -m sui-client-gen.toml -o src/moveCall
+bun run lint
 '''
