@@ -22,11 +22,11 @@ export class Field<T0, T1> { static readonly $typeName = "0x2::dynamic_field::Fi
 
  readonly $typeArgs: [Type, Type];
 
-; readonly id: string; readonly name: T0; readonly value: T1
+ readonly id: string; readonly name: T0; readonly value: T1
 
  constructor(typeArgs: [Type, Type], fields: FieldFields<T0, T1>, ) { this.$typeArgs = typeArgs;
 
- this.id = fields.id;; this.name = fields.name;; this.value = fields.value; }
+ this.id = fields.id; this.name = fields.name; this.value = fields.value; }
 
  static fromFields<T0, T1>( typeArgs: [Type, Type], fields: Record<string, any> ): Field<T0, T1> { initLoaderIfNeeded();
 

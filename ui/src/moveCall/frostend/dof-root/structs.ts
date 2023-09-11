@@ -16,7 +16,7 @@ export interface RootFields { id: string }
 
 export class Root { static readonly $typeName = "0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::dof_root::Root"; static readonly $numTypeParams = 0;
 
- ; readonly id: string
+  readonly id: string
 
  constructor( id: string, ) { this.id = id; }
 

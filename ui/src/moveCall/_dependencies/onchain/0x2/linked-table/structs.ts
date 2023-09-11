@@ -24,11 +24,11 @@ export class LinkedTable<T0> { static readonly $typeName = "0x2::linked_table::L
 
  readonly $typeArgs: [Type, Type];
 
-; readonly id: string; readonly size: bigint; readonly head: (T0 | null); readonly tail: (T0 | null)
+ readonly id: string; readonly size: bigint; readonly head: (T0 | null); readonly tail: (T0 | null)
 
  constructor(typeArgs: [Type, Type], fields: LinkedTableFields<T0>, ) { this.$typeArgs = typeArgs;
 
- this.id = fields.id;; this.size = fields.size;; this.head = fields.head;; this.tail = fields.tail; }
+ this.id = fields.id; this.size = fields.size; this.head = fields.head; this.tail = fields.tail; }
 
  static fromFields<T0>( typeArgs: [Type, Type], fields: Record<string, any> ): LinkedTable<T0> { initLoaderIfNeeded();
 
@@ -67,11 +67,11 @@ export class Node<T0, T1> { static readonly $typeName = "0x2::linked_table::Node
 
  readonly $typeArgs: [Type, Type];
 
-; readonly prev: (T0 | null); readonly next: (T0 | null); readonly value: T1
+ readonly prev: (T0 | null); readonly next: (T0 | null); readonly value: T1
 
  constructor(typeArgs: [Type, Type], fields: NodeFields<T0, T1>, ) { this.$typeArgs = typeArgs;
 
- this.prev = fields.prev;; this.next = fields.next;; this.value = fields.value; }
+ this.prev = fields.prev; this.next = fields.next; this.value = fields.value; }
 
  static fromFields<T0, T1>( typeArgs: [Type, Type], fields: Record<string, any> ): Node<T0, T1> { initLoaderIfNeeded();
 

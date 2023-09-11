@@ -18,9 +18,9 @@ export interface BorrowFields { kioskId: string; itemId: string }
 
 export class Borrow { static readonly $typeName = "0x2::kiosk::Borrow"; static readonly $numTypeParams = 0;
 
- ; readonly kioskId: string; readonly itemId: string
+  readonly kioskId: string; readonly itemId: string
 
- constructor( fields: BorrowFields, ) { this.kioskId = fields.kioskId;; this.itemId = fields.itemId; }
+ constructor( fields: BorrowFields, ) { this.kioskId = fields.kioskId; this.itemId = fields.itemId; }
 
  static fromFields( fields: Record<string, any> ): Borrow { return new Borrow( { kioskId: ID.fromFields(fields.kiosk_id).bytes, itemId: ID.fromFields(fields.item_id).bytes } ) }
 
@@ -48,9 +48,9 @@ export interface KioskFields { id: string; profits: Balance; owner: string; item
 
 export class Kiosk { static readonly $typeName = "0x2::kiosk::Kiosk"; static readonly $numTypeParams = 0;
 
- ; readonly id: string; readonly profits: Balance; readonly owner: string; readonly itemCount: number; readonly allowExtensions: boolean
+  readonly id: string; readonly profits: Balance; readonly owner: string; readonly itemCount: number; readonly allowExtensions: boolean
 
- constructor( fields: KioskFields, ) { this.id = fields.id;; this.profits = fields.profits;; this.owner = fields.owner;; this.itemCount = fields.itemCount;; this.allowExtensions = fields.allowExtensions; }
+ constructor( fields: KioskFields, ) { this.id = fields.id; this.profits = fields.profits; this.owner = fields.owner; this.itemCount = fields.itemCount; this.allowExtensions = fields.allowExtensions; }
 
  static fromFields( fields: Record<string, any> ): Kiosk { return new Kiosk( { id: UID.fromFields(fields.id).id, profits: Balance.fromFields(`0x2::sui::SUI`, fields.profits), owner: `0x${fields.owner}`, itemCount: fields.item_count, allowExtensions: fields.allow_extensions } ) }
 
@@ -80,9 +80,9 @@ export interface KioskOwnerCapFields { id: string; for: string }
 
 export class KioskOwnerCap { static readonly $typeName = "0x2::kiosk::KioskOwnerCap"; static readonly $numTypeParams = 0;
 
- ; readonly id: string; readonly for: string
+  readonly id: string; readonly for: string
 
- constructor( fields: KioskOwnerCapFields, ) { this.id = fields.id;; this.for = fields.for; }
+ constructor( fields: KioskOwnerCapFields, ) { this.id = fields.id; this.for = fields.for; }
 
  static fromFields( fields: Record<string, any> ): KioskOwnerCap { return new KioskOwnerCap( { id: UID.fromFields(fields.id).id, for: ID.fromFields(fields.for).bytes } ) }
 
@@ -116,11 +116,11 @@ export class PurchaseCap { static readonly $typeName = "0x2::kiosk::PurchaseCap"
 
  readonly $typeArg: Type;
 
-; readonly id: string; readonly kioskId: string; readonly itemId: string; readonly minPrice: bigint
+ readonly id: string; readonly kioskId: string; readonly itemId: string; readonly minPrice: bigint
 
  constructor(typeArg: Type, fields: PurchaseCapFields, ) { this.$typeArg = typeArg;
 
- this.id = fields.id;; this.kioskId = fields.kioskId;; this.itemId = fields.itemId;; this.minPrice = fields.minPrice; }
+ this.id = fields.id; this.kioskId = fields.kioskId; this.itemId = fields.itemId; this.minPrice = fields.minPrice; }
 
  static fromFields( typeArg: Type, fields: Record<string, any> ): PurchaseCap { return new PurchaseCap( typeArg, { id: UID.fromFields(fields.id).id, kioskId: ID.fromFields(fields.kiosk_id).bytes, itemId: ID.fromFields(fields.item_id).bytes, minPrice: BigInt(fields.min_price) } ) }
 
@@ -151,7 +151,7 @@ export interface ItemFields { id: string }
 
 export class Item { static readonly $typeName = "0x2::kiosk::Item"; static readonly $numTypeParams = 0;
 
- ; readonly id: string
+  readonly id: string
 
  constructor( id: string, ) { this.id = id; }
 
@@ -178,9 +178,9 @@ export interface ListingFields { id: string; isExclusive: boolean }
 
 export class Listing { static readonly $typeName = "0x2::kiosk::Listing"; static readonly $numTypeParams = 0;
 
- ; readonly id: string; readonly isExclusive: boolean
+  readonly id: string; readonly isExclusive: boolean
 
- constructor( fields: ListingFields, ) { this.id = fields.id;; this.isExclusive = fields.isExclusive; }
+ constructor( fields: ListingFields, ) { this.id = fields.id; this.isExclusive = fields.isExclusive; }
 
  static fromFields( fields: Record<string, any> ): Listing { return new Listing( { id: ID.fromFields(fields.id).bytes, isExclusive: fields.is_exclusive } ) }
 
@@ -204,7 +204,7 @@ export interface LockFields { id: string }
 
 export class Lock { static readonly $typeName = "0x2::kiosk::Lock"; static readonly $numTypeParams = 0;
 
- ; readonly id: string
+  readonly id: string
 
  constructor( id: string, ) { this.id = id; }
 
@@ -234,11 +234,11 @@ export class ItemListed { static readonly $typeName = "0x2::kiosk::ItemListed"; 
 
  readonly $typeArg: Type;
 
-; readonly kiosk: string; readonly id: string; readonly price: bigint
+ readonly kiosk: string; readonly id: string; readonly price: bigint
 
  constructor(typeArg: Type, fields: ItemListedFields, ) { this.$typeArg = typeArg;
 
- this.kiosk = fields.kiosk;; this.id = fields.id;; this.price = fields.price; }
+ this.kiosk = fields.kiosk; this.id = fields.id; this.price = fields.price; }
 
  static fromFields( typeArg: Type, fields: Record<string, any> ): ItemListed { return new ItemListed( typeArg, { kiosk: ID.fromFields(fields.kiosk).bytes, id: ID.fromFields(fields.id).bytes, price: BigInt(fields.price) } ) }
 
@@ -268,11 +268,11 @@ export class ItemPurchased { static readonly $typeName = "0x2::kiosk::ItemPurcha
 
  readonly $typeArg: Type;
 
-; readonly kiosk: string; readonly id: string; readonly price: bigint
+ readonly kiosk: string; readonly id: string; readonly price: bigint
 
  constructor(typeArg: Type, fields: ItemPurchasedFields, ) { this.$typeArg = typeArg;
 
- this.kiosk = fields.kiosk;; this.id = fields.id;; this.price = fields.price; }
+ this.kiosk = fields.kiosk; this.id = fields.id; this.price = fields.price; }
 
  static fromFields( typeArg: Type, fields: Record<string, any> ): ItemPurchased { return new ItemPurchased( typeArg, { kiosk: ID.fromFields(fields.kiosk).bytes, id: ID.fromFields(fields.id).bytes, price: BigInt(fields.price) } ) }
 
@@ -301,11 +301,11 @@ export class ItemDelisted { static readonly $typeName = "0x2::kiosk::ItemDeliste
 
  readonly $typeArg: Type;
 
-; readonly kiosk: string; readonly id: string
+ readonly kiosk: string; readonly id: string
 
  constructor(typeArg: Type, fields: ItemDelistedFields, ) { this.$typeArg = typeArg;
 
- this.kiosk = fields.kiosk;; this.id = fields.id; }
+ this.kiosk = fields.kiosk; this.id = fields.id; }
 
  static fromFields( typeArg: Type, fields: Record<string, any> ): ItemDelisted { return new ItemDelisted( typeArg, { kiosk: ID.fromFields(fields.kiosk).bytes, id: ID.fromFields(fields.id).bytes } ) }
 

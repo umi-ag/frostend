@@ -20,11 +20,11 @@ export class Referent<T0> { static readonly $typeName = "0x2::borrow::Referent";
 
  readonly $typeArg: Type;
 
-; readonly id: string; readonly value: (T0 | null)
+ readonly id: string; readonly value: (T0 | null)
 
  constructor(typeArg: Type, fields: ReferentFields<T0>, ) { this.$typeArg = typeArg;
 
- this.id = fields.id;; this.value = fields.value; }
+ this.id = fields.id; this.value = fields.value; }
 
  static fromFields<T0>( typeArg: Type, fields: Record<string, any> ): Referent<T0> { initLoaderIfNeeded();
 
@@ -55,9 +55,9 @@ export interface BorrowFields { ref: string; obj: string }
 
 export class Borrow { static readonly $typeName = "0x2::borrow::Borrow"; static readonly $numTypeParams = 0;
 
- ; readonly ref: string; readonly obj: string
+  readonly ref: string; readonly obj: string
 
- constructor( fields: BorrowFields, ) { this.ref = fields.ref;; this.obj = fields.obj; }
+ constructor( fields: BorrowFields, ) { this.ref = fields.ref; this.obj = fields.obj; }
 
  static fromFields( fields: Record<string, any> ): Borrow { return new Borrow( { ref: `0x${fields.ref}`, obj: ID.fromFields(fields.obj).bytes } ) }
 

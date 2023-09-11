@@ -20,11 +20,11 @@ export class Bank { static readonly $typeName = "0x165eacd90f3bfa192ccbe0fbd5128
 
  readonly $typeArg: Type;
 
-; readonly id: string; readonly coinSyReserve: Balance
+ readonly id: string; readonly coinSyReserve: Balance
 
  constructor(typeArg: Type, fields: BankFields, ) { this.$typeArg = typeArg;
 
- this.id = fields.id;; this.coinSyReserve = fields.coinSyReserve; }
+ this.id = fields.id; this.coinSyReserve = fields.coinSyReserve; }
 
  static fromFields( typeArg: Type, fields: Record<string, any> ): Bank { return new Bank( typeArg, { id: UID.fromFields(fields.id).id, coinSyReserve: Balance.fromFields(`${typeArg}`, fields.coin_sy_reserve) } ) }
 

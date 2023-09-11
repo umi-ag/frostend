@@ -18,7 +18,7 @@ export class Wrapper<T0> { static readonly $typeName = "0x2::dynamic_object_fiel
 
  readonly $typeArg: Type;
 
-; readonly name: T0
+ readonly name: T0
 
  constructor(typeArg: Type, name: T0, ) { this.$typeArg = typeArg;
 

@@ -18,7 +18,7 @@ export class VecSet<T0> { static readonly $typeName = "0x2::vec_set::VecSet"; st
 
  readonly $typeArg: Type;
 
-; readonly contents: Array<T0>
+ readonly contents: Array<T0>
 
  constructor(typeArg: Type, contents: Array<T0>, ) { this.$typeArg = typeArg;
 

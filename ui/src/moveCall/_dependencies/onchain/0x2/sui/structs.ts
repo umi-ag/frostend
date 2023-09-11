@@ -14,7 +14,7 @@ export interface SUIFields { dummyField: boolean }
 
 export class SUI { static readonly $typeName = "0x2::sui::SUI"; static readonly $numTypeParams = 0;
 
- ; readonly dummyField: boolean
+  readonly dummyField: boolean
 
  constructor( dummyField: boolean, ) { this.dummyField = dummyField; }
 

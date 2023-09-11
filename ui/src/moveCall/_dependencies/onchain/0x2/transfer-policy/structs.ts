@@ -24,11 +24,11 @@ export class TransferRequest { static readonly $typeName = "0x2::transfer_policy
 
  readonly $typeArg: Type;
 
-; readonly item: string; readonly paid: bigint; readonly from: string; readonly receipts: VecSet<TypeName>
+ readonly item: string; readonly paid: bigint; readonly from: string; readonly receipts: VecSet<TypeName>
 
  constructor(typeArg: Type, fields: TransferRequestFields, ) { this.$typeArg = typeArg;
 
- this.item = fields.item;; this.paid = fields.paid;; this.from = fields.from;; this.receipts = fields.receipts; }
+ this.item = fields.item; this.paid = fields.paid; this.from = fields.from; this.receipts = fields.receipts; }
 
  static fromFields( typeArg: Type, fields: Record<string, any> ): TransferRequest { return new TransferRequest( typeArg, { item: ID.fromFields(fields.item).bytes, paid: BigInt(fields.paid), from: ID.fromFields(fields.from).bytes, receipts: VecSet.fromFields<TypeName>(`0x1::type_name::TypeName`, fields.receipts) } ) }
 
@@ -58,11 +58,11 @@ export class TransferPolicy { static readonly $typeName = "0x2::transfer_policy:
 
  readonly $typeArg: Type;
 
-; readonly id: string; readonly balance: Balance; readonly rules: VecSet<TypeName>
+ readonly id: string; readonly balance: Balance; readonly rules: VecSet<TypeName>
 
  constructor(typeArg: Type, fields: TransferPolicyFields, ) { this.$typeArg = typeArg;
 
- this.id = fields.id;; this.balance = fields.balance;; this.rules = fields.rules; }
+ this.id = fields.id; this.balance = fields.balance; this.rules = fields.rules; }
 
  static fromFields( typeArg: Type, fields: Record<string, any> ): TransferPolicy { return new TransferPolicy( typeArg, { id: UID.fromFields(fields.id).id, balance: Balance.fromFields(`0x2::sui::SUI`, fields.balance), rules: VecSet.fromFields<TypeName>(`0x1::type_name::TypeName`, fields.rules) } ) }
 
@@ -96,11 +96,11 @@ export class TransferPolicyCap { static readonly $typeName = "0x2::transfer_poli
 
  readonly $typeArg: Type;
 
-; readonly id: string; readonly policyId: string
+ readonly id: string; readonly policyId: string
 
  constructor(typeArg: Type, fields: TransferPolicyCapFields, ) { this.$typeArg = typeArg;
 
- this.id = fields.id;; this.policyId = fields.policyId; }
+ this.id = fields.id; this.policyId = fields.policyId; }
 
  static fromFields( typeArg: Type, fields: Record<string, any> ): TransferPolicyCap { return new TransferPolicyCap( typeArg, { id: UID.fromFields(fields.id).id, policyId: ID.fromFields(fields.policy_id).bytes } ) }
 
@@ -133,7 +133,7 @@ export class TransferPolicyCreated { static readonly $typeName = "0x2::transfer_
 
  readonly $typeArg: Type;
 
-; readonly id: string
+ readonly id: string
 
  constructor(typeArg: Type, id: string, ) { this.$typeArg = typeArg;
 
@@ -165,7 +165,7 @@ export class RuleKey { static readonly $typeName = "0x2::transfer_policy::RuleKe
 
  readonly $typeArg: Type;
 
-; readonly dummyField: boolean
+ readonly dummyField: boolean
 
  constructor(typeArg: Type, dummyField: boolean, ) { this.$typeArg = typeArg;
 

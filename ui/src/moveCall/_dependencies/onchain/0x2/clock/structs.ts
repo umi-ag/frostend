@@ -17,9 +17,9 @@ export interface ClockFields { id: string; timestampMs: bigint }
 
 export class Clock { static readonly $typeName = "0x2::clock::Clock"; static readonly $numTypeParams = 0;
 
- ; readonly id: string; readonly timestampMs: bigint
+  readonly id: string; readonly timestampMs: bigint
 
- constructor( fields: ClockFields, ) { this.id = fields.id;; this.timestampMs = fields.timestampMs; }
+ constructor( fields: ClockFields, ) { this.id = fields.id; this.timestampMs = fields.timestampMs; }
 
  static fromFields( fields: Record<string, any> ): Clock { return new Clock( { id: UID.fromFields(fields.id).id, timestampMs: BigInt(fields.timestamp_ms) } ) }
 

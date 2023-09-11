@@ -18,7 +18,7 @@ export class Option<T0> { static readonly $typeName = "0x1::option::Option"; sta
 
  readonly $typeArg: Type;
 
-; readonly vec: Array<T0>
+ readonly vec: Array<T0>
 
  constructor(typeArg: Type, vec: Array<T0>, ) { this.$typeArg = typeArg;
 

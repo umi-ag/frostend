@@ -15,7 +15,7 @@ export interface TypeNameFields { name: string }
 
 export class TypeName { static readonly $typeName = "0x1::type_name::TypeName"; static readonly $numTypeParams = 0;
 
- ; readonly name: string
+  readonly name: string
 
  constructor( name: string, ) { this.name = name; }
 

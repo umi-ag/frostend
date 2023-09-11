@@ -14,7 +14,7 @@ export interface CurveFields { id: number }
 
 export class Curve { static readonly $typeName = "0x2::groth16::Curve"; static readonly $numTypeParams = 0;
 
- ; readonly id: number
+  readonly id: number
 
  constructor( id: number, ) { this.id = id; }
 
@@ -43,9 +43,9 @@ export interface PreparedVerifyingKeyFields { vkGammaAbcG1Bytes: Array<number>; 
 
 export class PreparedVerifyingKey { static readonly $typeName = "0x2::groth16::PreparedVerifyingKey"; static readonly $numTypeParams = 0;
 
- ; readonly vkGammaAbcG1Bytes: Array<number>; readonly alphaG1BetaG2Bytes: Array<number>; readonly gammaG2NegPcBytes: Array<number>; readonly deltaG2NegPcBytes: Array<number>
+  readonly vkGammaAbcG1Bytes: Array<number>; readonly alphaG1BetaG2Bytes: Array<number>; readonly gammaG2NegPcBytes: Array<number>; readonly deltaG2NegPcBytes: Array<number>
 
- constructor( fields: PreparedVerifyingKeyFields, ) { this.vkGammaAbcG1Bytes = fields.vkGammaAbcG1Bytes;; this.alphaG1BetaG2Bytes = fields.alphaG1BetaG2Bytes;; this.gammaG2NegPcBytes = fields.gammaG2NegPcBytes;; this.deltaG2NegPcBytes = fields.deltaG2NegPcBytes; }
+ constructor( fields: PreparedVerifyingKeyFields, ) { this.vkGammaAbcG1Bytes = fields.vkGammaAbcG1Bytes; this.alphaG1BetaG2Bytes = fields.alphaG1BetaG2Bytes; this.gammaG2NegPcBytes = fields.gammaG2NegPcBytes; this.deltaG2NegPcBytes = fields.deltaG2NegPcBytes; }
 
  static fromFields( fields: Record<string, any> ): PreparedVerifyingKey { return new PreparedVerifyingKey( { vkGammaAbcG1Bytes: fields.vk_gamma_abc_g1_bytes.map((item: any) => item), alphaG1BetaG2Bytes: fields.alpha_g1_beta_g2_bytes.map((item: any) => item), gammaG2NegPcBytes: fields.gamma_g2_neg_pc_bytes.map((item: any) => item), deltaG2NegPcBytes: fields.delta_g2_neg_pc_bytes.map((item: any) => item) } ) }
 
@@ -69,7 +69,7 @@ export interface PublicProofInputsFields { bytes: Array<number> }
 
 export class PublicProofInputs { static readonly $typeName = "0x2::groth16::PublicProofInputs"; static readonly $numTypeParams = 0;
 
- ; readonly bytes: Array<number>
+  readonly bytes: Array<number>
 
  constructor( bytes: Array<number>, ) { this.bytes = bytes; }
 
@@ -95,7 +95,7 @@ export interface ProofPointsFields { bytes: Array<number> }
 
 export class ProofPoints { static readonly $typeName = "0x2::groth16::ProofPoints"; static readonly $numTypeParams = 0;
 
- ; readonly bytes: Array<number>
+  readonly bytes: Array<number>
 
  constructor( bytes: Array<number>, ) { this.bytes = bytes; }
 

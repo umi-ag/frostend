@@ -19,11 +19,11 @@ export class Table { static readonly $typeName = "0x2::table::Table"; static rea
 
  readonly $typeArgs: [Type, Type];
 
-; readonly id: string; readonly size: bigint
+ readonly id: string; readonly size: bigint
 
  constructor(typeArgs: [Type, Type], fields: TableFields, ) { this.$typeArgs = typeArgs;
 
- this.id = fields.id;; this.size = fields.size; }
+ this.id = fields.id; this.size = fields.size; }
 
  static fromFields( typeArgs: [Type, Type], fields: Record<string, any> ): Table { return new Table( typeArgs, { id: UID.fromFields(fields.id).id, size: BigInt(fields.size) } ) }
 

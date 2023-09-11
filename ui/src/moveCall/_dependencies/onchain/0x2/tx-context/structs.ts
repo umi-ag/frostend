@@ -18,9 +18,9 @@ export interface TxContextFields { sender: string; txHash: Array<number>; epoch:
 
 export class TxContext { static readonly $typeName = "0x2::tx_context::TxContext"; static readonly $numTypeParams = 0;
 
- ; readonly sender: string; readonly txHash: Array<number>; readonly epoch: bigint; readonly epochTimestampMs: bigint; readonly idsCreated: bigint
+  readonly sender: string; readonly txHash: Array<number>; readonly epoch: bigint; readonly epochTimestampMs: bigint; readonly idsCreated: bigint
 
- constructor( fields: TxContextFields, ) { this.sender = fields.sender;; this.txHash = fields.txHash;; this.epoch = fields.epoch;; this.epochTimestampMs = fields.epochTimestampMs;; this.idsCreated = fields.idsCreated; }
+ constructor( fields: TxContextFields, ) { this.sender = fields.sender; this.txHash = fields.txHash; this.epoch = fields.epoch; this.epochTimestampMs = fields.epochTimestampMs; this.idsCreated = fields.idsCreated; }
 
  static fromFields( fields: Record<string, any> ): TxContext { return new TxContext( { sender: `0x${fields.sender}`, txHash: fields.tx_hash.map((item: any) => item), epoch: BigInt(fields.epoch), epochTimestampMs: BigInt(fields.epoch_timestamp_ms), idsCreated: BigInt(fields.ids_created) } ) }
 

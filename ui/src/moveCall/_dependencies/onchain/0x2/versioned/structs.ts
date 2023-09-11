@@ -17,9 +17,9 @@ export interface VersionedFields { id: string; version: bigint }
 
 export class Versioned { static readonly $typeName = "0x2::versioned::Versioned"; static readonly $numTypeParams = 0;
 
- ; readonly id: string; readonly version: bigint
+  readonly id: string; readonly version: bigint
 
- constructor( fields: VersionedFields, ) { this.id = fields.id;; this.version = fields.version; }
+ constructor( fields: VersionedFields, ) { this.id = fields.id; this.version = fields.version; }
 
  static fromFields( fields: Record<string, any> ): Versioned { return new Versioned( { id: UID.fromFields(fields.id).id, version: BigInt(fields.version) } ) }
 
@@ -49,9 +49,9 @@ export interface VersionChangeCapFields { versionedId: string; oldVersion: bigin
 
 export class VersionChangeCap { static readonly $typeName = "0x2::versioned::VersionChangeCap"; static readonly $numTypeParams = 0;
 
- ; readonly versionedId: string; readonly oldVersion: bigint
+  readonly versionedId: string; readonly oldVersion: bigint
 
- constructor( fields: VersionChangeCapFields, ) { this.versionedId = fields.versionedId;; this.oldVersion = fields.oldVersion; }
+ constructor( fields: VersionChangeCapFields, ) { this.versionedId = fields.versionedId; this.oldVersion = fields.oldVersion; }
 
  static fromFields( fields: Record<string, any> ): VersionChangeCap { return new VersionChangeCap( { versionedId: ID.fromFields(fields.versioned_id).bytes, oldVersion: BigInt(fields.old_version) } ) }
 

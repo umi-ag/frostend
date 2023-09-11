@@ -19,9 +19,9 @@ export interface PublisherFields { id: string; package: string; moduleName: stri
 
 export class Publisher { static readonly $typeName = "0x2::package::Publisher"; static readonly $numTypeParams = 0;
 
- ; readonly id: string; readonly package: string; readonly moduleName: string
+  readonly id: string; readonly package: string; readonly moduleName: string
 
- constructor( fields: PublisherFields, ) { this.id = fields.id;; this.package = fields.package;; this.moduleName = fields.moduleName; }
+ constructor( fields: PublisherFields, ) { this.id = fields.id; this.package = fields.package; this.moduleName = fields.moduleName; }
 
  static fromFields( fields: Record<string, any> ): Publisher { return new Publisher( { id: UID.fromFields(fields.id).id, package: (new TextDecoder()).decode(Uint8Array.from(String.fromFields(fields.package).bytes)).toString(), moduleName: (new TextDecoder()).decode(Uint8Array.from(String.fromFields(fields.module_name).bytes)).toString() } ) }
 
@@ -53,9 +53,9 @@ export interface UpgradeCapFields { id: string; package: string; version: bigint
 
 export class UpgradeCap { static readonly $typeName = "0x2::package::UpgradeCap"; static readonly $numTypeParams = 0;
 
- ; readonly id: string; readonly package: string; readonly version: bigint; readonly policy: number
+  readonly id: string; readonly package: string; readonly version: bigint; readonly policy: number
 
- constructor( fields: UpgradeCapFields, ) { this.id = fields.id;; this.package = fields.package;; this.version = fields.version;; this.policy = fields.policy; }
+ constructor( fields: UpgradeCapFields, ) { this.id = fields.id; this.package = fields.package; this.version = fields.version; this.policy = fields.policy; }
 
  static fromFields( fields: Record<string, any> ): UpgradeCap { return new UpgradeCap( { id: UID.fromFields(fields.id).id, package: ID.fromFields(fields.package).bytes, version: BigInt(fields.version), policy: fields.policy } ) }
 
@@ -87,9 +87,9 @@ export interface UpgradeTicketFields { cap: string; package: string; policy: num
 
 export class UpgradeTicket { static readonly $typeName = "0x2::package::UpgradeTicket"; static readonly $numTypeParams = 0;
 
- ; readonly cap: string; readonly package: string; readonly policy: number; readonly digest: Array<number>
+  readonly cap: string; readonly package: string; readonly policy: number; readonly digest: Array<number>
 
- constructor( fields: UpgradeTicketFields, ) { this.cap = fields.cap;; this.package = fields.package;; this.policy = fields.policy;; this.digest = fields.digest; }
+ constructor( fields: UpgradeTicketFields, ) { this.cap = fields.cap; this.package = fields.package; this.policy = fields.policy; this.digest = fields.digest; }
 
  static fromFields( fields: Record<string, any> ): UpgradeTicket { return new UpgradeTicket( { cap: ID.fromFields(fields.cap).bytes, package: ID.fromFields(fields.package).bytes, policy: fields.policy, digest: fields.digest.map((item: any) => item) } ) }
 
@@ -114,9 +114,9 @@ export interface UpgradeReceiptFields { cap: string; package: string }
 
 export class UpgradeReceipt { static readonly $typeName = "0x2::package::UpgradeReceipt"; static readonly $numTypeParams = 0;
 
- ; readonly cap: string; readonly package: string
+  readonly cap: string; readonly package: string
 
- constructor( fields: UpgradeReceiptFields, ) { this.cap = fields.cap;; this.package = fields.package; }
+ constructor( fields: UpgradeReceiptFields, ) { this.cap = fields.cap; this.package = fields.package; }
 
  static fromFields( fields: Record<string, any> ): UpgradeReceipt { return new UpgradeReceipt( { cap: ID.fromFields(fields.cap).bytes, package: ID.fromFields(fields.package).bytes } ) }
 

@@ -15,9 +15,9 @@ export interface BitVectorFields { length: bigint; bitField: Array<boolean> }
 
 export class BitVector { static readonly $typeName = "0x1::bit_vector::BitVector"; static readonly $numTypeParams = 0;
 
- ; readonly length: bigint; readonly bitField: Array<boolean>
+  readonly length: bigint; readonly bitField: Array<boolean>
 
- constructor( fields: BitVectorFields, ) { this.length = fields.length;; this.bitField = fields.bitField; }
+ constructor( fields: BitVectorFields, ) { this.length = fields.length; this.bitField = fields.bitField; }
 
  static fromFields( fields: Record<string, any> ): BitVector { return new BitVector( { length: BigInt(fields.length), bitField: fields.bit_field.map((item: any) => item) } ) }
 

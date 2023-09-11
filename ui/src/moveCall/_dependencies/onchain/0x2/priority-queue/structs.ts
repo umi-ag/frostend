@@ -18,7 +18,7 @@ export class PriorityQueue<T0> { static readonly $typeName = "0x2::priority_queu
 
  readonly $typeArg: Type;
 
-; readonly entries: Array<Entry<T0>>
+ readonly entries: Array<Entry<T0>>
 
  constructor(typeArg: Type, entries: Array<Entry<T0>>, ) { this.$typeArg = typeArg;
 
@@ -55,11 +55,11 @@ export class Entry<T0> { static readonly $typeName = "0x2::priority_queue::Entry
 
  readonly $typeArg: Type;
 
-; readonly priority: bigint; readonly value: T0
+ readonly priority: bigint; readonly value: T0
 
  constructor(typeArg: Type, fields: EntryFields<T0>, ) { this.$typeArg = typeArg;
 
- this.priority = fields.priority;; this.value = fields.value; }
+ this.priority = fields.priority; this.value = fields.value; }
 
  static fromFields<T0>( typeArg: Type, fields: Record<string, any> ): Entry<T0> { initLoaderIfNeeded();
 

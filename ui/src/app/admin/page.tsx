@@ -3,13 +3,13 @@
 import { useWallet } from '@suiet/wallet-kit';
 import { AppBar } from 'src/components/AppBar';
 import { TransactionBlock } from '@mysten/sui.js/transactions'
-import { mintTo } from 'src/moveCall/frostend/stsui-coin/functions';
-import { STSUI_COIN } from 'src/moveCall/frostend/stsui-coin/structs';
-import { createBank, createVault } from 'src/moveCall/frostend/root/functions';
+import { mintTo } from '../../moveCall/frostend/stsui-coin/functions';
+import { STSUI_COIN } from '../../moveCall/frostend/stsui-coin/structs';
+import { createBank, createVault } from '../../moveCall/frostend/root/functions';
 import { BANK, ROOT, TRESURY_CAP } from 'src/config/frostend';
 import { JsonRpcProvider, Connection } from '@mysten/sui.js';
-import { maybeSplitCoinsAndTransferRest } from 'src/moveCall/frostend/coin-utils/functions';
-import * as bank from 'src/moveCall/frostend/bank/functions';
+import { maybeSplitCoinsAndTransferRest } from '../../moveCall/frostend/coin-utils/functions';
+import * as bank from '../../moveCall/frostend/bank/functions';
 
 
 const provider = new JsonRpcProvider(

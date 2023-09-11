@@ -15,7 +15,7 @@ export interface UrlFields { url: string }
 
 export class Url { static readonly $typeName = "0x2::url::Url"; static readonly $numTypeParams = 0;
 
- ; readonly url: string
+  readonly url: string
 
  constructor( url: string, ) { this.url = url; }
 

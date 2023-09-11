@@ -1,8 +1,6 @@
 import { useWallet } from '@suiet/wallet-kit';
 import React from 'react';
 import { TransactionBlock } from '@mysten/sui.js/transactions'
-import { STSUI_COIN } from 'src/moveCall/frostend/stsui-coin/structs';
-import { swapSyToPt } from 'src/moveCall/frostend/swap/functions';
 
 const SwapTransactionButton = () => {
   const { address, signAndExecuteTransactionBlock } = useWallet()

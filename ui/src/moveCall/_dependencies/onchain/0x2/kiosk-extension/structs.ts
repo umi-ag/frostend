@@ -17,9 +17,9 @@ export interface ExtensionFields { storage: Bag; permissions: bigint; isEnabled:
 
 export class Extension { static readonly $typeName = "0x2::kiosk_extension::Extension"; static readonly $numTypeParams = 0;
 
- ; readonly storage: Bag; readonly permissions: bigint; readonly isEnabled: boolean
+  readonly storage: Bag; readonly permissions: bigint; readonly isEnabled: boolean
 
- constructor( fields: ExtensionFields, ) { this.storage = fields.storage;; this.permissions = fields.permissions;; this.isEnabled = fields.isEnabled; }
+ constructor( fields: ExtensionFields, ) { this.storage = fields.storage; this.permissions = fields.permissions; this.isEnabled = fields.isEnabled; }
 
  static fromFields( fields: Record<string, any> ): Extension { return new Extension( { storage: Bag.fromFields(fields.storage), permissions: BigInt(fields.permissions), isEnabled: fields.is_enabled } ) }
 
@@ -45,7 +45,7 @@ export class ExtensionKey { static readonly $typeName = "0x2::kiosk_extension::E
 
  readonly $typeArg: Type;
 
-; readonly dummyField: boolean
+ readonly dummyField: boolean
 
  constructor(typeArg: Type, dummyField: boolean, ) { this.$typeArg = typeArg;
 

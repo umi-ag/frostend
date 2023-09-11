@@ -14,7 +14,7 @@ export interface IDFields { bytes: string }
 
 export class ID { static readonly $typeName = "0x2::object::ID"; static readonly $numTypeParams = 0;
 
- ; readonly bytes: string
+  readonly bytes: string
 
  constructor( bytes: string, ) { this.bytes = bytes; }
 
@@ -40,7 +40,7 @@ export interface UIDFields { id: string }
 
 export class UID { static readonly $typeName = "0x2::object::UID"; static readonly $numTypeParams = 0;
 
- ; readonly id: string
+  readonly id: string
 
  constructor( id: string, ) { this.id = id; }
 

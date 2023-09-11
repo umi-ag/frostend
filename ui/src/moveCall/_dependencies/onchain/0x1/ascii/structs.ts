@@ -14,7 +14,7 @@ export interface StringFields { bytes: Array<number> }
 
 export class String { static readonly $typeName = "0x1::ascii::String"; static readonly $numTypeParams = 0;
 
- ; readonly bytes: Array<number>
+  readonly bytes: Array<number>
 
  constructor( bytes: Array<number>, ) { this.bytes = bytes; }
 
@@ -40,7 +40,7 @@ export interface CharFields { byte: number }
 
 export class Char { static readonly $typeName = "0x1::ascii::Char"; static readonly $numTypeParams = 0;
 
- ; readonly byte: number
+  readonly byte: number
 
  constructor( byte: number, ) { this.byte = byte; }
 

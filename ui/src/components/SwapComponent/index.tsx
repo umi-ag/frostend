@@ -23,10 +23,6 @@ export const SwapComponent = () => {
 
   const { address } = useWallet()
 
-
-  // 以下の関数やコンポーネントは、元のSolid.jsのコードを基にReactで再構築されています。
-  // 必要に応じて、関数やコンポーネントの内部ロジックを調整してください。
-
   const SourceHeader = () => {
     // ... (元のSourceHeaderの内容をReactに合わせて変更)
     return (

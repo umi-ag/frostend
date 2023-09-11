@@ -23,11 +23,11 @@ export class Coin { static readonly $typeName = "0x2::coin::Coin"; static readon
 
  readonly $typeArg: Type;
 
-; readonly id: string; readonly balance: Balance
+ readonly id: string; readonly balance: Balance
 
  constructor(typeArg: Type, fields: CoinFields, ) { this.$typeArg = typeArg;
 
- this.id = fields.id;; this.balance = fields.balance; }
+ this.id = fields.id; this.balance = fields.balance; }
 
  static fromFields( typeArg: Type, fields: Record<string, any> ): Coin { return new Coin( typeArg, { id: UID.fromFields(fields.id).id, balance: Balance.fromFields(`${typeArg}`, fields.balance) } ) }
 
@@ -65,11 +65,11 @@ export class CoinMetadata { static readonly $typeName = "0x2::coin::CoinMetadata
 
  readonly $typeArg: Type;
 
-; readonly id: string; readonly decimals: number; readonly name: string; readonly symbol: string; readonly description: string; readonly iconUrl: (string | null)
+ readonly id: string; readonly decimals: number; readonly name: string; readonly symbol: string; readonly description: string; readonly iconUrl: (string | null)
 
  constructor(typeArg: Type, fields: CoinMetadataFields, ) { this.$typeArg = typeArg;
 
- this.id = fields.id;; this.decimals = fields.decimals;; this.name = fields.name;; this.symbol = fields.symbol;; this.description = fields.description;; this.iconUrl = fields.iconUrl; }
+ this.id = fields.id; this.decimals = fields.decimals; this.name = fields.name; this.symbol = fields.symbol; this.description = fields.description; this.iconUrl = fields.iconUrl; }
 
  static fromFields( typeArg: Type, fields: Record<string, any> ): CoinMetadata { return new CoinMetadata( typeArg, { id: UID.fromFields(fields.id).id, decimals: fields.decimals, name: (new TextDecoder()).decode(Uint8Array.from(String.fromFields(fields.name).bytes)).toString(), symbol: (new TextDecoder()).decode(Uint8Array.from(String1.fromFields(fields.symbol).bytes)).toString(), description: (new TextDecoder()).decode(Uint8Array.from(String.fromFields(fields.description).bytes)).toString(), iconUrl: Option.fromFields<string>(`0x2::url::Url`, fields.icon_url).vec[0] || null } ) }
 
@@ -103,11 +103,11 @@ export class TreasuryCap { static readonly $typeName = "0x2::coin::TreasuryCap";
 
  readonly $typeArg: Type;
 
-; readonly id: string; readonly totalSupply: Supply
+ readonly id: string; readonly totalSupply: Supply
 
  constructor(typeArg: Type, fields: TreasuryCapFields, ) { this.$typeArg = typeArg;
 
- this.id = fields.id;; this.totalSupply = fields.totalSupply; }
+ this.id = fields.id; this.totalSupply = fields.totalSupply; }
 
  static fromFields( typeArg: Type, fields: Record<string, any> ): TreasuryCap { return new TreasuryCap( typeArg, { id: UID.fromFields(fields.id).id, totalSupply: Supply.fromFields(`${typeArg}`, fields.total_supply) } ) }
 
@@ -140,7 +140,7 @@ export class CurrencyCreated { static readonly $typeName = "0x2::coin::CurrencyC
 
  readonly $typeArg: Type;
 
-; readonly decimals: number
+ readonly decimals: number
 
  constructor(typeArg: Type, decimals: number, ) { this.$typeArg = typeArg;
 

@@ -21,11 +21,11 @@ export class Display { static readonly $typeName = "0x2::display::Display"; stat
 
  readonly $typeArg: Type;
 
-; readonly id: string; readonly fields: VecMap<string, string>; readonly version: number
+ readonly id: string; readonly fields: VecMap<string, string>; readonly version: number
 
  constructor(typeArg: Type, fields: DisplayFields, ) { this.$typeArg = typeArg;
 
- this.id = fields.id;; this.fields = fields.fields;; this.version = fields.version; }
+ this.id = fields.id; this.fields = fields.fields; this.version = fields.version; }
 
  static fromFields( typeArg: Type, fields: Record<string, any> ): Display { return new Display( typeArg, { id: UID.fromFields(fields.id).id, fields: VecMap.fromFields<string, string>([`0x1::string::String`, `0x1::string::String`], fields.fields), version: fields.version } ) }
 
@@ -58,7 +58,7 @@ export class DisplayCreated { static readonly $typeName = "0x2::display::Display
 
  readonly $typeArg: Type;
 
-; readonly id: string
+ readonly id: string
 
  constructor(typeArg: Type, id: string, ) { this.$typeArg = typeArg;
 
@@ -92,11 +92,11 @@ export class VersionUpdated { static readonly $typeName = "0x2::display::Version
 
  readonly $typeArg: Type;
 
-; readonly id: string; readonly version: number; readonly fields: VecMap<string, string>
+ readonly id: string; readonly version: number; readonly fields: VecMap<string, string>
 
  constructor(typeArg: Type, fields: VersionUpdatedFields, ) { this.$typeArg = typeArg;
 
- this.id = fields.id;; this.version = fields.version;; this.fields = fields.fields; }
+ this.id = fields.id; this.version = fields.version; this.fields = fields.fields; }
 
  static fromFields( typeArg: Type, fields: Record<string, any> ): VersionUpdated { return new VersionUpdated( typeArg, { id: ID.fromFields(fields.id).bytes, version: fields.version, fields: VecMap.fromFields<string, string>([`0x1::string::String`, `0x1::string::String`], fields.fields) } ) }
 

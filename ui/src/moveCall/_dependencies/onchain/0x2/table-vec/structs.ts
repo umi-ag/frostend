@@ -17,7 +17,7 @@ export class TableVec { static readonly $typeName = "0x2::table_vec::TableVec"; 
 
  readonly $typeArg: Type;
 
-; readonly contents: Table
+ readonly contents: Table
 
  constructor(typeArg: Type, contents: Table, ) { this.$typeArg = typeArg;
 

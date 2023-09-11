@@ -16,7 +16,7 @@ export class Supply { static readonly $typeName = "0x2::balance::Supply"; static
 
  readonly $typeArg: Type;
 
-; readonly value: bigint
+ readonly value: bigint
 
  constructor(typeArg: Type, value: bigint, ) { this.$typeArg = typeArg;
 
@@ -48,7 +48,7 @@ export class Balance { static readonly $typeName = "0x2::balance::Balance"; stat
 
  readonly $typeArg: Type;
 
-; readonly value: bigint
+ readonly value: bigint
 
  constructor(typeArg: Type, value: bigint, ) { this.$typeArg = typeArg;
 

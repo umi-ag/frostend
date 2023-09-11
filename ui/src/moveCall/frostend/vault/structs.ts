@@ -19,7 +19,7 @@ export class PTCoin { static readonly $typeName = "0x165eacd90f3bfa192ccbe0fbd51
 
  readonly $typeArg: Type;
 
-; readonly dummyField: boolean
+ readonly dummyField: boolean
 
  constructor(typeArg: Type, dummyField: boolean, ) { this.$typeArg = typeArg;
 
@@ -51,7 +51,7 @@ export class YTCoin { static readonly $typeName = "0x165eacd90f3bfa192ccbe0fbd51
 
  readonly $typeArg: Type;
 
-; readonly dummyField: boolean
+ readonly dummyField: boolean
 
  constructor(typeArg: Type, dummyField: boolean, ) { this.$typeArg = typeArg;
 
@@ -88,11 +88,11 @@ export class Vault { static readonly $typeName = "0x165eacd90f3bfa192ccbe0fbd512
 
  readonly $typeArg: Type;
 
-; readonly id: string; readonly coinSyReserve: Balance; readonly coinPtReserve: Balance; readonly coinYtReserve: Balance; readonly coinPtSupply: Supply; readonly coinYtSupply: Supply
+ readonly id: string; readonly coinSyReserve: Balance; readonly coinPtReserve: Balance; readonly coinYtReserve: Balance; readonly coinPtSupply: Supply; readonly coinYtSupply: Supply
 
  constructor(typeArg: Type, fields: VaultFields, ) { this.$typeArg = typeArg;
 
- this.id = fields.id;; this.coinSyReserve = fields.coinSyReserve;; this.coinPtReserve = fields.coinPtReserve;; this.coinYtReserve = fields.coinYtReserve;; this.coinPtSupply = fields.coinPtSupply;; this.coinYtSupply = fields.coinYtSupply; }
+ this.id = fields.id; this.coinSyReserve = fields.coinSyReserve; this.coinPtReserve = fields.coinPtReserve; this.coinYtReserve = fields.coinYtReserve; this.coinPtSupply = fields.coinPtSupply; this.coinYtSupply = fields.coinYtSupply; }
 
  static fromFields( typeArg: Type, fields: Record<string, any> ): Vault { return new Vault( typeArg, { id: UID.fromFields(fields.id).id, coinSyReserve: Balance.fromFields(`${typeArg}`, fields.coin_sy_reserve), coinPtReserve: Balance.fromFields(`0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::PTCoin<${typeArg}>`, fields.coin_pt_reserve), coinYtReserve: Balance.fromFields(`0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::YTCoin<${typeArg}>`, fields.coin_yt_reserve), coinPtSupply: Supply.fromFields(`0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::PTCoin<${typeArg}>`, fields.coin_pt_supply), coinYtSupply: Supply.fromFields(`0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::YTCoin<${typeArg}>`, fields.coin_yt_supply) } ) }
 

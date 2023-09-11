@@ -14,7 +14,7 @@ export interface BCSFields { bytes: Array<number> }
 
 export class BCS { static readonly $typeName = "0x2::bcs::BCS"; static readonly $numTypeParams = 0;
 
- ; readonly bytes: Array<number>
+  readonly bytes: Array<number>
 
  constructor( bytes: Array<number>, ) { this.bytes = bytes; }
 

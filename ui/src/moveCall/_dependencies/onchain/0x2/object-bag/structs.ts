@@ -17,9 +17,9 @@ export interface ObjectBagFields { id: string; size: bigint }
 
 export class ObjectBag { static readonly $typeName = "0x2::object_bag::ObjectBag"; static readonly $numTypeParams = 0;
 
- ; readonly id: string; readonly size: bigint
+  readonly id: string; readonly size: bigint
 
- constructor( fields: ObjectBagFields, ) { this.id = fields.id;; this.size = fields.size; }
+ constructor( fields: ObjectBagFields, ) { this.id = fields.id; this.size = fields.size; }
 
  static fromFields( fields: Record<string, any> ): ObjectBag { return new ObjectBag( { id: UID.fromFields(fields.id).id, size: BigInt(fields.size) } ) }
 

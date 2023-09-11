@@ -14,7 +14,7 @@ export interface STSUI_COINFields { dummyField: boolean }
 
 export class STSUI_COIN { static readonly $typeName = "0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::stsui_coin::STSUI_COIN"; static readonly $numTypeParams = 0;
 
- ; readonly dummyField: boolean
+  readonly dummyField: boolean
 
  constructor( dummyField: boolean, ) { this.dummyField = dummyField; }
 

@@ -14,7 +14,7 @@ export interface FixedPoint32Fields { value: bigint }
 
 export class FixedPoint32 { static readonly $typeName = "0x1::fixed_point32::FixedPoint32"; static readonly $numTypeParams = 0;
 
- ; readonly value: bigint
+  readonly value: bigint
 
  constructor( value: bigint, ) { this.value = value; }
 

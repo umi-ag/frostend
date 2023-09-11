@@ -19,11 +19,11 @@ export class Entry<T0, T1> { static readonly $typeName = "0x2::vec_map::Entry"; 
 
  readonly $typeArgs: [Type, Type];
 
-; readonly key: T0; readonly value: T1
+ readonly key: T0; readonly value: T1
 
  constructor(typeArgs: [Type, Type], fields: EntryFields<T0, T1>, ) { this.$typeArgs = typeArgs;
 
- this.key = fields.key;; this.value = fields.value; }
+ this.key = fields.key; this.value = fields.value; }
 
  static fromFields<T0, T1>( typeArgs: [Type, Type], fields: Record<string, any> ): Entry<T0, T1> { initLoaderIfNeeded();
 
@@ -55,7 +55,7 @@ export class VecMap<T0, T1> { static readonly $typeName = "0x2::vec_map::VecMap"
 
  readonly $typeArgs: [Type, Type];
 
-; readonly contents: Array<Entry<T0, T1>>
+ readonly contents: Array<Entry<T0, T1>>
 
  constructor(typeArgs: [Type, Type], contents: Array<Entry<T0, T1>>, ) { this.$typeArgs = typeArgs;
 
