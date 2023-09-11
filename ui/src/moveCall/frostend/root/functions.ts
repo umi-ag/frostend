@@ -2,9 +2,9 @@ import {PUBLISHED_AT} from "..";
 import {ObjectArg, Type, obj} from "../../_framework/util";
 import {TransactionBlock} from "@mysten/sui.js/transactions";
 
-export function new_( txb: TransactionBlock, ) { return txb.moveCall({ target: `${PUBLISHED_AT}::root::new`, arguments: [ ], }) }
-
 export function init( txb: TransactionBlock, ) { return txb.moveCall({ target: `${PUBLISHED_AT}::root::init`, arguments: [ ], }) }
+
+export function new_( txb: TransactionBlock, ) { return txb.moveCall({ target: `${PUBLISHED_AT}::root::new`, arguments: [ ], }) }
 
 export function bankExists( txb: TransactionBlock, typeArg: Type, root: ObjectArg ) { return txb.moveCall({ target: `${PUBLISHED_AT}::root::bank_exists`, typeArguments: [typeArg], arguments: [ obj(txb, root) ], }) }
 

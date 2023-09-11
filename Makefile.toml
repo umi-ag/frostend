@@ -5,6 +5,17 @@ bun run dev
 '''
 
 [tasks."deploy:sui"]
+dependencies = [
+  "deploy:frostend",
+]
+
+[tasks."deploy:umi-utils"]
+script = '''
+cd contracts/umi-utils
+sui client publish --gas-budget 123456789 --skip-dependency-verification
+'''
+
+[tasks."deploy:frostend"]
 script = '''
 cd contracts/frostend
 sui client publish --gas-budget 123456789 --skip-dependency-verification
@@ -12,6 +23,7 @@ sui client publish --gas-budget 123456789 --skip-dependency-verification
 
 [tasks."gen:sui"]
 script = '''
-cd contracts/frostend
-sui-client-gen -o ../../ui/src/moveCall
+cd ui/
+rm -rf src/moveCall
+sui-client-gen -m sui-client-gen.toml -o src/moveCall
 '''

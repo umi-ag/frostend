@@ -4,15 +4,15 @@ import {Encoding} from "@mysten/bcs";
 
 /* ============================== STSUI_COIN =============================== */
 
-bcs.registerStructType( "0x3af8a3597faf9e5a7eb48d4be3ce7a9493d5acea3b8630fb8be9bc8fde2a5ad6::stsui_coin::STSUI_COIN", {
+bcs.registerStructType( "0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::stsui_coin::STSUI_COIN", {
 dummy_field: `bool`,
 } )
 
-export function isSTSUI_COIN(type: Type): boolean { return type === "0x3af8a3597faf9e5a7eb48d4be3ce7a9493d5acea3b8630fb8be9bc8fde2a5ad6::stsui_coin::STSUI_COIN"; }
+export function isSTSUI_COIN(type: Type): boolean { return type === "0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::stsui_coin::STSUI_COIN"; }
 
 export interface STSUI_COINFields { dummyField: boolean }
 
-export class STSUI_COIN { static readonly $typeName = "0x3af8a3597faf9e5a7eb48d4be3ce7a9493d5acea3b8630fb8be9bc8fde2a5ad6::stsui_coin::STSUI_COIN"; static readonly $numTypeParams = 0;
+export class STSUI_COIN { static readonly $typeName = "0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::stsui_coin::STSUI_COIN"; static readonly $numTypeParams = 0;
 
  ; readonly dummyField: boolean
 

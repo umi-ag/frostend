@@ -7,16 +7,16 @@ import {SuiClient, SuiParsedData} from "@mysten/sui.js/client";
 
 /* ============================== Bank =============================== */
 
-bcs.registerStructType( "0x3af8a3597faf9e5a7eb48d4be3ce7a9493d5acea3b8630fb8be9bc8fde2a5ad6::bank::Bank<T0>", {
+bcs.registerStructType( "0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::bank::Bank<T0>", {
 id: `0x2::object::UID`,
 coin_sy_reserve: `0x2::balance::Balance<T0>`,
 } )
 
-export function isBank(type: Type): boolean { return type.startsWith("0x3af8a3597faf9e5a7eb48d4be3ce7a9493d5acea3b8630fb8be9bc8fde2a5ad6::bank::Bank<"); }
+export function isBank(type: Type): boolean { return type.startsWith("0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::bank::Bank<"); }
 
 export interface BankFields { id: string; coinSyReserve: Balance }
 
-export class Bank { static readonly $typeName = "0x3af8a3597faf9e5a7eb48d4be3ce7a9493d5acea3b8630fb8be9bc8fde2a5ad6::bank::Bank"; static readonly $numTypeParams = 1;
+export class Bank { static readonly $typeName = "0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::bank::Bank"; static readonly $numTypeParams = 1;
 
  readonly $typeArg: Type;
 
