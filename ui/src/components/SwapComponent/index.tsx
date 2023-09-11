@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { AiOutlineArrowDown } from 'react-icons/ai';
 import { useWallet } from '@suiet/wallet-kit';
 import Image from 'next/image';
@@ -6,9 +6,6 @@ import { STSUI } from 'src/coinList';
 import { FaChevronDown } from "react-icons/fa6";
 import SwapTransactionButton from './SwapTransactionButton';
 
-const TradeContext = React.createContext();
-const ModalContext = React.createContext();
-const PoolListContext = React.createContext();
 
 const ReverseSourceTargetButton: React.FC = () => {
   return (
@@ -23,9 +20,6 @@ const ReverseSourceTargetButton: React.FC = () => {
 };
 
 export const SwapComponent = () => {
-  const tradeContext = useContext(TradeContext);
-  const modalContext = useContext(ModalContext);
-  const poolListContext = useContext(PoolListContext);
 
   const { address } = useWallet()
 
