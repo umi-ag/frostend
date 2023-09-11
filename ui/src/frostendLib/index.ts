@@ -1,5 +1,10 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { swapPtToSy, swapSyToPt, swapSyToYt, swapYtToSy } from "src/moveCall/frostend/swap/functions";
+import {
+  swapPtToSy,
+  swapSyToPt,
+  swapSyToYt,
+  swapYtToSy,
+} from "src/moveCall/frostend/swap/functions";
 import { STSUI_COIN } from "src/moveCall/frostend/stsui-coin/structs";
 import { Connection, JsonRpcProvider } from "@mysten/sui.js";
 import { maybeSplitCoinsAndTransferRest } from "src/moveCall/frostend/coin-utils/functions";
@@ -13,9 +18,19 @@ const provider = new JsonRpcProvider(
   }),
 );
 
-const SYCoinType = STSUI_COIN.$typeName;
-const PTCoinType = `${PUBLISHED_AT}::vault::PTCoin<${SYCoinType}>`;
-const YTCoinType = `${PUBLISHED_AT}::vault::YTCoin<${SYCoinType}>`;
+export const STSUI_SYCoinType = STSUI_COIN.$typeName;
+export const STSUI_PTCoinType =
+  `${PUBLISHED_AT}::vault::PTCoin<${STSUI_SYCoinType}>`;
+export const STSUI_YTCoinType =
+  `${PUBLISHED_AT}::vault::YTCoin<${STSUI_SYCoinType}>`;
+
+export const isPTCoinType = (coinType: string) => {
+  return coinType.startsWith(`${PUBLISHED_AT}::vault::PTCoin<`);
+};
+
+export const isYTcoinType = (coinType: string) => {
+  return coinType.startsWith(`${PUBLISHED_AT}::vault::YTCoin<`);
+};
 
 export const moveCallSwapSyToPt = async (
   txb: TransactionBlock,
@@ -27,7 +42,7 @@ export const moveCallSwapSyToPt = async (
     const coins: { coinObjectId: string }[] = [];
     const coins_sy = await provider.getCoins({
       owner: args.address,
-      coinType: SYCoinType,
+      coinType: STSUI_SYCoinType,
     });
     coins.push(...coins_sy.data);
     return coins;
@@ -35,7 +50,7 @@ export const moveCallSwapSyToPt = async (
 
   const coin_sy = await maybeSplitCoinsAndTransferRest(
     txb,
-    SYCoinType,
+    STSUI_SYCoinType,
     {
       vecCoin: txb.makeMoveVec({
         objects: coins.map((coin) => txb.pure(coin.coinObjectId)),
@@ -45,7 +60,7 @@ export const moveCallSwapSyToPt = async (
     },
   );
 
-  const coin_pt = await swapSyToPt(txb, SYCoinType, {
+  const coin_pt = await swapSyToPt(txb, STSUI_SYCoinType, {
     vecCoin: txb.makeMoveVec({ objects: [coin_sy] }),
     vault: VAULT,
     bank: BANK,
@@ -66,7 +81,7 @@ export const moveCallSwapPtToSy = async (
     const coins: { coinObjectId: string }[] = [];
     const coins_sy = await provider.getCoins({
       owner: args.address,
-      coinType: PTCoinType,
+      coinType: STSUI_PTCoinType,
     });
     coins.push(...coins_sy.data);
     return coins;
@@ -74,7 +89,7 @@ export const moveCallSwapPtToSy = async (
 
   const coin_pt = await maybeSplitCoinsAndTransferRest(
     txb,
-    PTCoinType,
+    STSUI_PTCoinType,
     {
       vecCoin: txb.makeMoveVec({
         objects: coins.map((coin) => txb.pure(coin.coinObjectId)),
@@ -84,7 +99,7 @@ export const moveCallSwapPtToSy = async (
     },
   );
 
-  const coin_sy = await swapPtToSy(txb, SYCoinType, {
+  const coin_sy = await swapPtToSy(txb, STSUI_SYCoinType, {
     vecCoin: txb.makeMoveVec({ objects: [coin_pt] }),
     vault: VAULT,
     bank: BANK,
@@ -105,7 +120,7 @@ export const moveCallSwapSyToYt = async (
     const coins: { coinObjectId: string }[] = [];
     const coins_sy = await provider.getCoins({
       owner: args.address,
-      coinType: SYCoinType,
+      coinType: STSUI_SYCoinType,
     });
     coins.push(...coins_sy.data);
     return coins;
@@ -113,7 +128,7 @@ export const moveCallSwapSyToYt = async (
 
   const coin_sy = await maybeSplitCoinsAndTransferRest(
     txb,
-    SYCoinType,
+    STSUI_SYCoinType,
     {
       vecCoin: txb.makeMoveVec({
         objects: coins.map((coin) => txb.pure(coin.coinObjectId)),
@@ -123,7 +138,7 @@ export const moveCallSwapSyToYt = async (
     },
   );
 
-  const coin_yt = await swapSyToYt(txb, SYCoinType, {
+  const coin_yt = await swapSyToYt(txb, STSUI_SYCoinType, {
     vecCoin: txb.makeMoveVec({ objects: [coin_sy] }),
     vault: VAULT,
     bank: BANK,
@@ -144,7 +159,7 @@ export const moveCallSwapYtToSy = async (
     const coins: { coinObjectId: string }[] = [];
     const coins_sy = await provider.getCoins({
       owner: args.address,
-      coinType: YTCoinType,
+      coinType: STSUI_YTCoinType,
     });
     coins.push(...coins_sy.data);
     return coins;
@@ -152,7 +167,7 @@ export const moveCallSwapYtToSy = async (
 
   const coin_yt = await maybeSplitCoinsAndTransferRest(
     txb,
-    YTCoinType,
+    STSUI_YTCoinType,
     {
       vecCoin: txb.makeMoveVec({
         objects: coins.map((coin) => txb.pure(coin.coinObjectId)),
@@ -162,7 +177,7 @@ export const moveCallSwapYtToSy = async (
     },
   );
 
-  const coin_sy = await swapYtToSy(txb, SYCoinType, {
+  const coin_sy = await swapYtToSy(txb, STSUI_SYCoinType, {
     vecCoin: txb.makeMoveVec({ objects: [coin_yt] }),
     vault: VAULT,
     bank: BANK,
