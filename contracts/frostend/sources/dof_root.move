@@ -16,8 +16,8 @@ module frostend::dof_root {
     }
 
     fun init(ctx: &mut TxContext) {
-        let root = new(ctx);
-        transfer::public_share_object(root, )
+        // let root = new(ctx);
+        // transfer::public_share_object(root, )
     }
 
     fun new(

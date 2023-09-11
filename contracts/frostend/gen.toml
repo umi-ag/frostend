@@ -1,8 +1,0 @@
-[config]
-# will be set to mainnet by default if omitted
-rpc = "https://fullnode.testnet.sui.io:443"
-
-[packages]
-# Sui = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/mainnet"}
-# https://suiexplorer.com/txblock/s9nyhZfGEBAtJiCZouoYVpd9yGkntv7V1FCQpL1feDd?network=testnet
-frostend = {id = "0xa35c3c1d14ec0ab5345344f9bf2a476b708d578b17e783a462424feba858b52b"}

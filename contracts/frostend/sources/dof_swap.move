@@ -6,7 +6,6 @@ module frostend::dof_swap {
     use frostend::vault::{Vault, PTCoin, YTCoin};
     use frostend::bank::{Bank};
     use frostend::dof_root::{Self, Root};
-    use frostend::utils::merge_coins;
 
     fun init(ctx: &mut TxContext) {
 

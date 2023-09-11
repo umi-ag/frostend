@@ -2,13 +2,16 @@ module frostend::bank {
     use std::ascii::String;
     use std::type_name;
 
+    use sui::coin::{Self, Coin};
     use sui::object::{Self, UID};
     use sui::balance::{Self, Balance};
     use sui::tx_context::{TxContext};
 
+    use frostend::coin_utils::merge_coins;
     use frostend::vault::{Self, Vault};
 
     friend frostend::actions;
+
 
     struct Bank<phantom X> has key, store {
         id: UID,
@@ -33,14 +36,14 @@ module frostend::bank {
         type_name::into_string(type_name::get<Bank<X>>())
     }
 
-    public fun deposit_sy<X>(
+    public(friend) fun deposit_sy<X>(
         balance_sy: Balance<X>,
         bank: &mut Bank<X>,
     ) {
         balance::join(&mut bank.coin_sy_reserve, balance_sy);
     }
 
-    public fun withdraw_sy<X>(
+    public(friend) fun withdraw_sy<X>(
         amount: u64,
         bank: &mut Bank<X>,
     ): Balance<X> {
@@ -63,5 +66,24 @@ module frostend::bank {
     ) {
         let balance_sy = vault::withdraw_sy(amount, vault);
         deposit_sy(balance_sy, bank);
+    }
+
+    public fun deposit<X>(
+        coins_sy: vector<Coin<X>>,
+        bank: &mut Bank<X>,
+        ctx: &mut TxContext,
+    ) {
+        let coin_sy = merge_coins(coins_sy, ctx);
+        let balance_sy = coin::into_balance(coin_sy);
+        deposit_sy(balance_sy, bank);
+    }
+
+    public fun withdraw<X>(
+        amount: u64,
+        bank: &mut Bank<X>,
+        ctx: &mut TxContext,
+    ): Coin<X> {
+        let balance_sy = withdraw_sy(amount, bank);
+        coin::from_balance(balance_sy, ctx)
     }
 }

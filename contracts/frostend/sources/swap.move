@@ -2,10 +2,10 @@ module frostend::swap {
     use sui::coin::{Self, Coin};
     use sui::tx_context::{TxContext};
 
+    use frostend::coin_utils::merge_coins;
     use frostend::actions;
     use frostend::vault::{Vault, PTCoin, YTCoin};
     use frostend::bank::{Bank};
-    use frostend::utils::merge_coins;
 
     fun init(ctx: &mut TxContext) {
     }

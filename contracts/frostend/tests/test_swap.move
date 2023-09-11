@@ -134,7 +134,7 @@ module frostend::test_swap {
             let ctx = test_scenario::ctx(test);
 
             let coin_sy = stsui_coin::mint(&mut treasury_cap, 10_000 * 100_000_000, ctx);
-            bank::deposit_sy(coin::into_balance(coin_sy), &mut bank);
+            bank::deposit(vector[coin_sy], &mut bank, ctx);
 
             test_scenario::return_to_sender(test, treasury_cap);
             test_scenario::return_to_sender(test, bank);
