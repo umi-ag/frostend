@@ -72,6 +72,11 @@ module frostend::actions {
     ///     abs(dy_YAN) = abs(dx_YAN) / $YT
     ///     abs(dx_BANK) = abs(dy_YAN) - abs(dx_YAN)
     ///     abs(dx) = abs(dx_YAN) + abs(dx_BANK)
+    /// yan.#SY += -4
+    /// yan.#YT += 100
+    /// bank.#SY += -96
+    /// vault.#SY += 100
+    /// vault.#PT += 100
     public fun swap_sy_to_yt_<X>(
         balance_sy: Balance<X>, // -dx_YAN
         vault: &mut Vault<X>,
@@ -94,14 +99,9 @@ module frostend::actions {
         balance_yt: Balance<YTCoin<X>>,
         vault: &mut Vault<X>,
         bank: &mut Bank<X>,
+        clock: &Clock,
     ): Balance<X> {
-        abort 0;
-        balance::zero()
-        // let amount = balance::value(&balance_yt);
-        // vault::deposit_yt(balance_yt, vault);
-        // vault::burn_pt_and_yt(amount, vault);
-        // bank::payback_sy(amount, vault, bank);
-        // vault::withdraw_sy(amount, vault)
+        sys_manager::swap_yt_to_sy(balance_yt, vault, bank, clock)
     }
 
     public fun swap_pt_to_yt_<X>(

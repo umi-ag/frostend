@@ -1,4 +1,4 @@
-module frostend::swap {
+module frostend::swap_coin {
     use sui::clock::Clock;
     use sui::coin::{Self, Coin};
     use sui::tx_context::{TxContext};
@@ -51,11 +51,12 @@ module frostend::swap {
         coins_yt: vector<Coin<YTCoin<X>>>,
         vault: &mut Vault<X>,
         bank: &mut Bank<X>,
+        clock: &Clock,
         ctx: &mut TxContext,
     ): Coin<X> {
         let coin_yt = merge_coins(coins_yt, ctx);
         let balance_yt = coin::into_balance(coin_yt);
-        let balance_sy = actions::swap_yt_to_sy_(balance_yt, vault, bank);
+        let balance_sy = actions::swap_yt_to_sy_(balance_yt, vault, bank, clock);
         coin::from_balance(balance_sy, ctx)
     }
 
