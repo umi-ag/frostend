@@ -1,13 +1,8 @@
 module frostend::ctoken {
-    use std::debug::print;
-
     use sui::balance::{Balance};
-    use sui::clock::Clock;
     use sui::tx_context::{TxContext};
 
     use frostend::bank::{Self, Bank};
-
-    use math::fixedU32;
 
     friend frostend::actions;
 

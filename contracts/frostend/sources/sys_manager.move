@@ -1,14 +1,11 @@
 module frostend::sys_manager {
-    use std::debug::print;
-    use std::fixed_point32::{Self, FixedPoint32};
-
     use sui::balance::{Self, Balance};
     use sui::clock::{Clock};
     use sui::tx_context::{TxContext};
 
     use math::fixedU32;
 
-    use frostend::vault::{Self, Vault, PTCoin, YTCoin};
+    use frostend::vault::{Self, Vault, YTCoin};
     use frostend::bank::{Self, Bank};
     use frostend::pt_amm;
 

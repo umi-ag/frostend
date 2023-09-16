@@ -94,7 +94,6 @@ module frostend::vault {
         balance_pt: Balance<PTCoin<X>>,
         vault: &mut Vault<X>,
     ) {
-        let amount = balance::value(&balance_pt);
         balance::join(&mut vault.coin_pt_reserve, balance_pt);
     }
 

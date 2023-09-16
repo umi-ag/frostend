@@ -1,20 +1,15 @@
 module frostend::actions {
-    use std::debug::print;
-
-    use sui::balance::{Self, Balance};
+    use sui::balance::{Balance};
     use sui::clock::Clock;
     use sui::tx_context::{TxContext};
 
-    use frostend::vault::{Self, Vault, PTCoin, YTCoin};
-    use frostend::bank::{Self, Bank};
+    use frostend::vault::{Vault, PTCoin, YTCoin};
+    use frostend::bank::{Bank};
     use frostend::pt_amm;
     use frostend::sys_manager;
     use frostend::ctoken;
 
-    use math::fixedU32;
-
-    fun init(ctx: &mut TxContext) {
-    }
+    fun init(_ctx: &TxContext) { }
 
     /// LP: 1 #SY*$SY -> 1 #cSY*#cSY
     /// BANK: 1 #cSY*#cSY -> 1 #SY*$SY

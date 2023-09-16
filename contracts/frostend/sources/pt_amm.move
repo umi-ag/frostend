@@ -1,13 +1,11 @@
 module frostend::pt_amm {
-    use std::debug::print;
-    use std::fixed_point32::{Self, FixedPoint32};
+    use std::fixed_point32::{FixedPoint32};
 
     use sui::balance::{Self, Balance};
-    use sui::clock::{Self, Clock};
+    use sui::clock::{Clock};
     use sui::tx_context::{TxContext};
 
-    use frostend::vault::{Self, Vault, PTCoin, YTCoin};
-    use frostend::bank::{Self, Bank};
+    use frostend::vault::{Self, Vault, PTCoin};
 
     use math::fixedU32;
 

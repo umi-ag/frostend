@@ -7,8 +7,8 @@ module frostend::root {
     use sui::transfer;
     use sui::tx_context::{TxContext};
 
-    use frostend::vault::{Self, Vault};
-    use frostend::bank::{Self, Bank};
+    use frostend::vault::{Self};
+    use frostend::bank::{Self};
 
     friend frostend::actions;
 
