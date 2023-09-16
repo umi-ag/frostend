@@ -13,6 +13,7 @@ module frostend::vault {
 
     friend frostend::bank;
     friend frostend::actions;
+    friend frostend::pt_amm;
 
     struct PTCoin<phantom X> has drop {}
 
@@ -55,6 +56,18 @@ module frostend::vault {
         type_name::into_string(type_name::get<Vault<X>>())
     }
 
+    public fun coin_sy_reserve<X>(
+        vault: &Vault<X>,
+    ): u64 {
+        balance::value(&vault.coin_sy_reserve)
+    }
+
+    public fun coin_pt_reserve<X>(
+        vault: &Vault<X>,
+    ): u64 {
+        balance::value(&vault.coin_pt_reserve)
+    }
+
     /// constrains 0 <= t <= 1
     public fun get_time_to_maturity<X>(
         vault: &Vault<X>,
@@ -72,90 +85,6 @@ module frostend::vault {
                 fixedU32::from_u64(vault.matures_at - vault.issued_at)
             )
         }
-    }
-
-    /// (Y/X)^t
-    public fun get_price_pt_to_sy<X>(
-        vault: &Vault<X>,
-        clock: &Clock,
-    ): FixedPoint32 {
-        let x = fixedU32::from_u64(balance::value(&vault.coin_sy_reserve));
-        let y = fixedU32::from_u64(balance::value(&vault.coin_pt_reserve));
-        let t = get_time_to_maturity(vault, clock);
-
-        fixedU32::powf(fixedU32::div(y, x), t)
-    }
-
-    /// 1 - (Y/X)^t
-    public fun get_price_yt_to_sy<X>(
-        vault: &Vault<X>,
-        clock: &Clock,
-    ): FixedPoint32 {
-        fixedU32::sub(fixedU32::from_u64(1), get_price_pt_to_sy(vault, clock))
-    }
-
-    /// x_0^(1-t) + y_0^(1-t) = (x_0+dx)^(1-t) + (y_0+dy)^(1-t)
-    /// args:
-    ///     x_0 > 0
-    ///     y_0 > 0
-    ///     dx > 0
-    /// returns:
-    ///     (-dy) >0
-    public fun compute_delta_y(
-        x_0: FixedPoint32,
-        y_0: FixedPoint32,
-        delta_x: FixedPoint32,
-        t: FixedPoint32,
-    ): FixedPoint32 {
-        // 1 - t
-        let tt = fixedU32::sub(fixedU32::from_u64(1), t);
-
-        // x^(1-t) + y^(1-t) = k
-        let k = fixedU32::powf(x_0, tt);
-
-        let x_1 = fixedU32::add(x_0, delta_x);
-
-        // x_1^(1-t) + y_1^(1-t) = k
-        // y_1 = [ k - x_1^(1-t) ]^(1/(1-t))
-        let y_1 = fixedU32::powf(
-            fixedU32::sub(k, fixedU32::powf(x_1, tt)),
-            fixedU32::div(fixedU32::from_u64(1), tt)
-        );
-
-        let delta_y = fixedU32::sub(y_1, y_0);
-        delta_y
-    }
-
-    public(friend) fun swap_sy_to_pt<X>(
-        balance_sy: Balance<X>,
-        vault: &mut Vault<X>,
-        clock: &Clock,
-    ): Balance<PTCoin<X>> {
-        let reserve_s = fixedU32::from_u64(balance::value(&vault.coin_sy_reserve));
-        let reserve_t = fixedU32::from_u64(balance::value(&vault.coin_pt_reserve));
-        let delta_s = fixedU32::from_u64(balance::value(&balance_sy));
-        let t = get_time_to_maturity(vault, clock);
-        let delta_t = compute_delta_y(reserve_s, reserve_t, delta_s, t);
-
-        let amount_target = fixedU32::floor(delta_t);
-        deposit_sy(balance_sy, vault);
-        withdraw_pt(amount_target, vault)
-    }
-
-    public(friend) fun swap_pt_to_sy<X>(
-        balance_pt: Balance<PTCoin<X>>,
-        vault: &mut Vault<X>,
-        clock: &Clock,
-    ): Balance<X> {
-        let reserve_s = fixedU32::from_u64(balance::value(&vault.coin_pt_reserve));
-        let reserve_t = fixedU32::from_u64(balance::value(&vault.coin_sy_reserve));
-        let delta_s = fixedU32::from_u64(balance::value(&balance_pt));
-        let t = get_time_to_maturity(vault, clock);
-        let delta_t = compute_delta_y(reserve_s, reserve_t, delta_s, t);
-
-        let amount_target = fixedU32::floor(delta_t);
-        deposit_pt(balance_pt, vault);
-        withdraw_sy(amount_target, vault)
     }
 
     public(friend) fun deposit_sy<X>(
