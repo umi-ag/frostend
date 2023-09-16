@@ -14,6 +14,7 @@ module frostend::vault {
     friend frostend::bank;
     friend frostend::actions;
     friend frostend::pt_amm;
+    friend frostend::sys_manager;
 
     struct PTCoin<phantom X> has drop {}
 

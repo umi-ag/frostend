@@ -11,6 +11,7 @@ module frostend::bank {
     use frostend::vault::{Self, Vault};
 
     friend frostend::actions;
+    friend frostend::sys_manager;
 
 
     struct Bank<phantom X> has key, store {

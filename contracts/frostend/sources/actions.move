@@ -8,6 +8,7 @@ module frostend::actions {
     use frostend::vault::{Self, Vault, PTCoin, YTCoin};
     use frostend::bank::{Self, Bank};
     use frostend::pt_amm;
+    use frostend::sys_manager;
 
     use math::fixedU32;
 
@@ -76,18 +77,7 @@ module frostend::actions {
         bank: &mut Bank<X>,
         clock: &Clock,
     ): Balance<YTCoin<X>> {
-        let price_yt = pt_amm::get_price_yt_to_sy(vault, clock);
-        let dx_YAN = fixedU32::from_u64(balance::value(&balance_sy));
-        let dy_YAN = fixedU32::div(dx_YAN, price_yt);
-        let dx_BANK = fixedU32::sub(dy_YAN, dx_YAN);
-
-        let amount_sy_bank = fixedU32::floor(dx_BANK);
-        let balance_sy_bank = bank::withdraw_sy(amount_sy_bank, bank); // 96
-        balance::join(&mut balance_sy, balance_sy_bank); // 100
-        let (balance_pt, balance_yt) = vault::mint_pt_and_yt(balance_sy, vault);
-        vault::deposit_pt(balance_pt, vault);
-
-        balance_yt
+        sys_manager::swap_sy_to_yt(balance_sy, vault, bank, clock)
     }
 
     /// (dx_YAN + dx_BANK) #PT + (dx_YAN + dx_BANK) #YT -> (dx_YAN + dx_BANK) #SY
