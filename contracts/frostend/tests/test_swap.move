@@ -29,7 +29,7 @@ module frostend::test_swap {
     }
 
     #[test]
-    fun test_swap_sy_to_pt_and_swap_pt_to_sy() {
+    fun test_convert_sy_to_ptand_swap_pt_to_sy() {
         let scenario = test_scenario::begin(TEST_ADDR);
         let test = &mut scenario;
         {
@@ -104,7 +104,7 @@ module frostend::test_swap {
 
 
     #[test]
-    fun test_swap_sy_to_yt_and_swap_yt_to_sy() {
+    fun test_convert_sy_to_ytand_swap_yt_to_sy() {
         let scenario = test_scenario::begin(TEST_ADDR);
         let test = &mut scenario;
         {
