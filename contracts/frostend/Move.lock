@@ -2,8 +2,17 @@
 
 [move]
 version = 0
-manifest_digest = "5C658918F7BBEF7A5E11FED23CD91F538E49EAD6825030F3394E5718E4AF71F2"
-deps_digest = "112928C94A84031C09CD9B9D1D44B149B73FC0EEA5FA8D8B2D7CA4D91936335A"
+manifest_digest = "8E99EBBEA1C5B0CAF189EF18C06DB1CFB2C83D06CC378FF0392A14993F1AE8AC"
+deps_digest = "1653E00427ED18E115C12C877565D48328FC230D177101994A0C09B31218CB14"
+
+dependencies = [
+  { name = "Math" },
+  { name = "Sui" },
+]
+
+[[move.package]]
+name = "Math"
+source = { local = "../math" }
 
 dependencies = [
   { name = "Sui" },

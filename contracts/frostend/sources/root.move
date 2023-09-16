@@ -53,10 +53,12 @@ module frostend::root {
 
     public fun create_vault<X>(
         root: &mut Root,
+        issued_at: u64,
+        matures_at: u64,
         ctx: &mut TxContext,
     ) {
         assert!(!vault_exists<X>(root), 1);
-        let vault = vault::new<X>(ctx);
+        let vault = vault::new<X>(issued_at, matures_at, ctx);
         df::add(&mut root.id, vault::get_type_name<X>(), object::id(&vault));
         transfer::public_share_object(vault);
     }

@@ -67,23 +67,4 @@ module frostend::bank {
         let balance_sy = vault::withdraw_sy(amount, vault);
         deposit_sy(balance_sy, bank);
     }
-
-    public fun deposit<X>(
-        coins_sy: vector<Coin<X>>,
-        bank: &mut Bank<X>,
-        ctx: &mut TxContext,
-    ) {
-        let coin_sy = merge_coins(coins_sy, ctx);
-        let balance_sy = coin::into_balance(coin_sy);
-        deposit_sy(balance_sy, bank);
-    }
-
-    public fun withdraw<X>(
-        amount: u64,
-        bank: &mut Bank<X>,
-        ctx: &mut TxContext,
-    ): Coin<X> {
-        let balance_sy = withdraw_sy(amount, bank);
-        coin::from_balance(balance_sy, ctx)
-    }
 }

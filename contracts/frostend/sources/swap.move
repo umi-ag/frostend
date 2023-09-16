@@ -1,4 +1,5 @@
 module frostend::swap {
+    use sui::clock::Clock;
     use sui::coin::{Self, Coin};
     use sui::tx_context::{TxContext};
 
@@ -13,24 +14,24 @@ module frostend::swap {
     public fun swap_sy_to_pt<X>(
         coins_sy: vector<Coin<X>>,
         vault: &mut Vault<X>,
-        bank: &mut Bank<X>,
+        clock: &Clock,
         ctx: &mut TxContext,
     ): Coin<PTCoin<X>> {
         let coin_sy = merge_coins(coins_sy, ctx);
         let balance_sy = coin::into_balance(coin_sy);
-        let balance_pt = actions::swap_sy_to_pt_(balance_sy, vault, bank);
+        let balance_pt = actions::swap_sy_to_pt_(balance_sy, vault, clock);
         coin::from_balance(balance_pt, ctx)
     }
 
     public fun swap_pt_to_sy<X>(
         coins_pt: vector<Coin<PTCoin<X>>>,
         vault: &mut Vault<X>,
-        bank: &mut Bank<X>,
+        clock: &Clock,
         ctx: &mut TxContext,
     ): Coin<X> {
         let coin_pt = merge_coins(coins_pt, ctx);
         let balance_pt = coin::into_balance(coin_pt);
-        let balance_sy = actions::swap_pt_to_sy_(balance_pt, vault, bank);
+        let balance_sy = actions::swap_pt_to_sy_(balance_pt, vault, clock);
         coin::from_balance(balance_sy, ctx)
     }
 
