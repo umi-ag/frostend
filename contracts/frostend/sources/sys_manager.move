@@ -3,7 +3,7 @@ module frostend::sys_manager {
     use std::fixed_point32::{Self, FixedPoint32};
 
     use sui::balance::{Self, Balance};
-    use sui::clock::{Self, Clock};
+    use sui::clock::{Clock};
     use sui::tx_context::{TxContext};
 
     use math::fixedU32;
@@ -14,8 +14,7 @@ module frostend::sys_manager {
 
     friend frostend::actions;
 
-    fun init(ctx: &mut TxContext) {
-    }
+    fun init(_ctx: &TxContext) { }
 
     public(friend) fun swap_sy_to_yt<X>(
         balance_sy: Balance<X>,

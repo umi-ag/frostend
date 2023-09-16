@@ -13,8 +13,7 @@ module frostend::pt_amm {
 
     friend frostend::actions;
 
-    fun init(ctx: &mut TxContext) {
-    }
+    fun init(_ctx: &TxContext) { }
 
     /// (Y/X)^t
     public fun get_price_pt_to_sy<X>(

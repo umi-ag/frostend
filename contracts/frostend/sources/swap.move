@@ -8,8 +8,7 @@ module frostend::swap {
     use frostend::vault::{Vault, PTCoin, YTCoin};
     use frostend::bank::{Bank};
 
-    fun init(ctx: &mut TxContext) {
-    }
+    fun init(_ctx: &TxContext) { }
 
     public fun swap_sy_to_pt<X>(
         coins_sy: vector<Coin<X>>,

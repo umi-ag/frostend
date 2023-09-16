@@ -2,13 +2,9 @@ module frostend::bank {
     use std::ascii::String;
     use std::type_name;
 
-    use sui::coin::{Self, Coin};
     use sui::object::{Self, UID};
     use sui::balance::{Self, Balance};
     use sui::tx_context::{TxContext};
-
-    use frostend::coin_utils::merge_coins;
-    use frostend::vault::{Self, Vault};
 
     friend frostend::ctoken;
     friend frostend::sys_manager;
@@ -19,9 +15,7 @@ module frostend::bank {
         coin_sy_reserve: Balance<X>,
     }
 
-    fun init(ctx: &mut TxContext) {
-
-    }
+    fun init(_ctx: &TxContext) { }
 
     public fun new<X>(
         ctx: &mut TxContext,

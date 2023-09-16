@@ -1,21 +1,17 @@
 module frostend::ctoken {
     use std::debug::print;
 
-    use sui::balance::{Self, Balance};
+    use sui::balance::{Balance};
     use sui::clock::Clock;
     use sui::tx_context::{TxContext};
 
-    use frostend::vault::{Self, Vault, PTCoin, YTCoin};
     use frostend::bank::{Self, Bank};
-    use frostend::pt_amm;
-    use frostend::sys_manager;
 
     use math::fixedU32;
 
     friend frostend::actions;
 
-    fun init(ctx: &mut TxContext) {
-    }
+    fun init(_ctx: &TxContext) { }
 
     public(friend) fun deposit<X>(
         balance_sy: Balance<X>,

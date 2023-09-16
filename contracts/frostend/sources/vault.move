@@ -1,7 +1,6 @@
 module frostend::vault {
     use std::ascii::String;
-    use std::debug::print;
-    use std::fixed_point32::{Self, FixedPoint32};
+    use std::fixed_point32::{FixedPoint32};
     use std::type_name;
 
     use sui::clock::{Self, Clock};
@@ -29,9 +28,7 @@ module frostend::vault {
         matures_at: u64,
     }
 
-    fun init(ctx: &mut TxContext) {
-
-    }
+    fun init(_ctx: &TxContext) { }
 
     public fun new<X>(
         issued_at: u64,
