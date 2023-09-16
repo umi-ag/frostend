@@ -35,13 +35,13 @@ module frostend::root {
         dof::exists_<String>(&mut root.id, bank::get_type_name<X>())
     }
 
-    public fun vault_exists<X>(
-        root: &mut Root,
-    ): bool {
-        dof::exists_<String>(&mut root.id, vault::get_type_name<X>())
-    }
+    // public fun vault_exists<X>(
+    //     root: &mut Root,
+    // ): bool {
+    //     dof::exists_<String>(&mut root.id, vault::get_type_name<X>())
+    // }
 
-    public fun create_bank<X>(
+    public(friend) fun create_bank<X>(
         root: &mut Root,
         ctx: &mut TxContext,
     ) {
@@ -51,15 +51,15 @@ module frostend::root {
         transfer::public_share_object(bank);
     }
 
-    public fun create_vault<X>(
-        root: &mut Root,
+    public(friend) fun create_vault<X>(
+        // root: &mut Root,
         issued_at: u64,
         matures_at: u64,
         ctx: &mut TxContext,
     ) {
-        assert!(!vault_exists<X>(root), 1);
+        // assert!(!vault_exists<X>(root), 1);
         let vault = vault::new<X>(issued_at, matures_at, ctx);
-        df::add(&mut root.id, vault::get_type_name<X>(), object::id(&vault));
+        // df::add(&mut root.id, vault::get_type_name<X>(), object::id(&vault));
         transfer::public_share_object(vault);
     }
 }

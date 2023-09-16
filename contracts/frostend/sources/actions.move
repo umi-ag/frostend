@@ -1,20 +1,44 @@
 module frostend::actions {
     use sui::balance::{Balance};
     use sui::clock::Clock;
+    use sui::coin::{Self, Coin};
     use sui::tx_context::{TxContext};
 
-    use frostend::vault::{Vault, PTCoin, YTCoin};
     use frostend::bank::{Bank};
+    use frostend::coin_utils::merge_coins;
+    use frostend::ctoken;
     use frostend::pt_amm;
     use frostend::sys_manager;
-    use frostend::ctoken;
+    use frostend::root::{Self, Root};
+    use frostend::vault::{Vault, PTCoin, YTCoin};
 
     fun init(_ctx: &TxContext) { }
+
+    public fun create_bank<X>(
+        root: &mut Root,
+        ctx: &mut TxContext,
+    ) {
+        root::create_bank<X>(root, ctx);
+    }
+
+    public fun init_vault<X>(
+        issued_at: u64,
+        matures_at: u64,
+        coins_sy: vector<Coin<X>>,
+        amount_supply: u64,
+        bank: &mut Bank<X>,
+        ctx: &mut TxContext,
+    ): Coin<YTCoin<X>> {
+        let coin_sy = merge_coins(coins_sy, ctx);
+        let balance_sy = coin::into_balance(coin_sy);
+        let balance_yt = sys_manager::init_vault(issued_at, matures_at, balance_sy, amount_supply, bank, ctx);
+        coin::from_balance(balance_yt, ctx)
+    }
 
     /// LP: 1 #SY*$SY -> 1 #cSY*#cSY
     /// BANK: 1 #cSY*#cSY -> 1 #SY*$SY
     /// TODO: mint cSY
-    public(friend) fun deposit<X>(
+    public fun deposit<X>(
         balance_sy: Balance<X>,
         bank: &mut Bank<X>,
     ) {
@@ -23,11 +47,21 @@ module frostend::actions {
 
     /// LP: 1 #cSY*#cSY -> 1 #SY*$SY
     /// BANK: 1 #SY*$SY -> 1 #cSY*#cSY
-    public(friend) fun withdraw<X>(
+    public fun withdraw<X>(
         amount: u64,
         bank: &mut Bank<X>,
     ): Balance<X> {
         ctoken::withdraw(amount, bank)
+    }
+
+    public fun deposit_coins<X>(
+        coins_sy: vector<Coin<X>>,
+        bank: &mut Bank<X>,
+        ctx: &mut TxContext,
+    ) {
+        let coin_sy = merge_coins(coins_sy, ctx);
+        let balance_sy = coin::into_balance(coin_sy);
+        deposit(balance_sy, bank);
     }
 
     /// PETER: dx #SY -> dy #PT

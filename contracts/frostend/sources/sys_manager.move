@@ -2,6 +2,7 @@ module frostend::sys_manager {
     use sui::balance::{Self, Balance};
     use sui::clock::{Clock};
     use sui::tx_context::{TxContext};
+    use sui::transfer;
 
     use math::fixedU32;
 
@@ -12,6 +13,27 @@ module frostend::sys_manager {
     friend frostend::actions;
 
     fun init(_ctx: &TxContext) { }
+
+    public(friend) fun init_vault<X>(
+        issued_at: u64,
+        matures_at: u64,
+        balance_sy: Balance<X>,
+        amount_supply: u64,
+        bank: &mut Bank<X>,
+        ctx: &mut TxContext,
+    ): Balance<YTCoin<X>> {
+        let vault = vault::new<X>(issued_at, matures_at, ctx);
+
+        let amount_sy_to_borrow_from_bank = amount_supply - balance::value(&balance_sy);
+        let balance_sy_bank = bank::withdraw_sy(amount_sy_to_borrow_from_bank, bank);
+        balance::join(&mut balance_sy, balance_sy_bank);
+        let (balance_pt, balance_yt) = vault::mint_pt_and_yt(balance_sy, &mut vault);
+        vault::deposit_pt(balance_pt, &mut vault);
+
+        transfer::public_share_object(vault);
+
+        balance_yt
+    }
 
     /// yan.#SY += -4
     /// yan.#YT += 100
