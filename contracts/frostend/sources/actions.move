@@ -8,6 +8,8 @@ module frostend::actions {
     use frostend::vault::{Self, Vault, PTCoin, YTCoin};
     use frostend::bank::{Self, Bank};
 
+    use math::fixedU32;
+
     fun init(ctx: &mut TxContext) {
     }
 
@@ -54,31 +56,37 @@ module frostend::actions {
         vault::swap_pt_to_sy(balance_pt, vault, clock)
     }
 
-
     /// (dx_YAN + dx_BANK) #SY -> (dx_YAN + dx_BANK) #PT + (dx_YAN + dx_BANK) #YT
     /// YAN
-    ///     #SY: - dx_YAN
-    ///     #YT: +(dx_YAN + dx_BANK)
+    ///     #SY: -(dx_YAN) ... dx_YAN = -4
+    ///     #YT: +(dx_YAN + dx_BANK) ... dy_YAN = +100
     /// VAULT:
-    ///     #SY: +(dx_YAN + dx_BANK)
-    ///     #PT: +(dx_YAN + dx_BANK)
+    ///     #SY: +(dx_YAN + dx_BANK) ... dx = +100
+    ///     #PT: +(dx_YAN + dx_BANK) ... dy = +100
     /// BANK:
-    ///     #SY: -(dx_BANK)
+    ///     #SY: -(dx_BANK) ... dx_BANK = -96
+    /// where
+    ///     abs(dy_YAN) = abs(dx_YAN) / $YT
+    ///     abs(dx_BANK) = abs(dy_YAN) - abs(dx_YAN)
+    ///     abs(dx) = abs(dx_YAN) + abs(dx_BANK)
     public fun swap_sy_to_yt_<X>(
-        balance_sy: Balance<X>,
+        balance_sy: Balance<X>, // -dx_YAN
         vault: &mut Vault<X>,
         bank: &mut Bank<X>,
+        clock: &Clock,
     ): Balance<YTCoin<X>> {
-        let amount = balance::value(&balance_sy);
-        print(&vector[1345, 1]);
-        vault::deposit_sy(balance_sy, vault);
-        print(&vector[1345, 2]);
-        print(vault);
-        bank::borrow_sy(amount, vault, bank);
-        print(&vector[1345, 3]);
-        vault::mint_pt_and_yt(amount, vault);
-        print(&vector[1345, 4]);
-        vault::withdraw_yt(amount, vault)
+        let price_yt = vault::get_price_yt_to_sy(vault, clock);
+        let dx_YAN = fixedU32::from_u64(balance::value(&balance_sy));
+        let dy_YAN = fixedU32::div(dx_YAN, price_yt);
+        let dx_BANK = fixedU32::sub(dy_YAN, dx_YAN);
+
+        let amount_sy_bank = fixedU32::floor(dx_BANK);
+        let balance_sy_bank = bank::withdraw_sy(amount_sy_bank, bank); // 96
+        balance::join(&mut balance_sy, balance_sy_bank); // 100
+        let (balance_pt, balance_yt) = vault::mint_pt_and_yt(balance_sy, vault);
+        vault::deposit_pt(balance_pt, vault);
+
+        balance_yt
     }
 
     /// (dx_YAN + dx_BANK) #PT + (dx_YAN + dx_BANK) #YT -> (dx_YAN + dx_BANK) #SY
@@ -95,11 +103,13 @@ module frostend::actions {
         vault: &mut Vault<X>,
         bank: &mut Bank<X>,
     ): Balance<X> {
-        let amount = balance::value(&balance_yt);
-        vault::deposit_yt(balance_yt, vault);
-        vault::burn_pt_and_yt(amount, vault);
-        bank::payback_sy(amount, vault, bank);
-        vault::withdraw_sy(amount, vault)
+        abort 0;
+        balance::zero()
+        // let amount = balance::value(&balance_yt);
+        // vault::deposit_yt(balance_yt, vault);
+        // vault::burn_pt_and_yt(amount, vault);
+        // bank::payback_sy(amount, vault, bank);
+        // vault::withdraw_sy(amount, vault)
     }
 
     public fun swap_pt_to_yt_<X>(
@@ -107,11 +117,13 @@ module frostend::actions {
         vault: &mut Vault<X>,
         bank: &mut Bank<X>,
     ): Balance<YTCoin<X>> {
-        let amount = balance::value(&balance_pt);
-        vault::deposit_pt(balance_pt, vault);
-        bank::borrow_sy(amount, vault, bank);
-        vault::mint_pt_and_yt(amount, vault);
-        vault::withdraw_yt(amount, vault)
+        abort 0;
+        balance::zero()
+        // let amount = balance::value(&balance_pt);
+        // vault::deposit_pt(balance_pt, vault);
+        // bank::borrow_sy(amount, vault, bank);
+        // vault::mint_pt_and_yt(amount, vault);
+        // vault::withdraw_yt(amount, vault)
     }
 
     public fun swap_yt_to_pt_<X>(
@@ -119,10 +131,12 @@ module frostend::actions {
         vault: &mut Vault<X>,
         bank: &mut Bank<X>,
     ): Balance<PTCoin<X>> {
-        let amount = balance::value(&balance_yt);
-        vault::deposit_yt(balance_yt, vault);
-        vault::burn_pt_and_yt(amount, vault);
-        bank::payback_sy(amount, vault, bank);
-        vault::withdraw_pt(amount, vault)
+        abort 0;
+        balance::zero()
+        // let amount = balance::value(&balance_yt);
+        // vault::deposit_yt(balance_yt, vault);
+        // vault::burn_pt_and_yt(amount, vault);
+        // bank::payback_sy(amount, vault, bank);
+        // vault::withdraw_pt(amount, vault)
     }
 }

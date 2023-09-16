@@ -39,11 +39,12 @@ module frostend::swap {
         coins_sy: vector<Coin<X>>,
         vault: &mut Vault<X>,
         bank: &mut Bank<X>,
+        clock: &Clock,
         ctx: &mut TxContext,
     ): Coin<YTCoin<X>> {
         let coin_sy = merge_coins(coins_sy, ctx);
         let balance_sy = coin::into_balance(coin_sy);
-        let balance_yt = actions::swap_sy_to_yt_(balance_sy, vault, bank);
+        let balance_yt = actions::swap_sy_to_yt_(balance_sy, vault, bank, clock);
         coin::from_balance(balance_yt, ctx)
     }
 

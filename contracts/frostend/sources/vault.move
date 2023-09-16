@@ -74,6 +74,26 @@ module frostend::vault {
         }
     }
 
+    /// (Y/X)^t
+    public fun get_price_pt_to_sy<X>(
+        vault: &Vault<X>,
+        clock: &Clock,
+    ): FixedPoint32 {
+        let x = fixedU32::from_u64(balance::value(&vault.coin_sy_reserve));
+        let y = fixedU32::from_u64(balance::value(&vault.coin_pt_reserve));
+        let t = get_time_to_maturity(vault, clock);
+
+        fixedU32::powf(fixedU32::div(y, x), t)
+    }
+
+    /// 1 - (Y/X)^t
+    public fun get_price_yt_to_sy<X>(
+        vault: &Vault<X>,
+        clock: &Clock,
+    ): FixedPoint32 {
+        fixedU32::sub(fixedU32::from_u64(1), get_price_pt_to_sy(vault, clock))
+    }
+
     /// x_0^(1-t) + y_0^(1-t) = (x_0+dx)^(1-t) + (y_0+dy)^(1-t)
     /// args:
     ///     x_0 > 0
@@ -181,38 +201,59 @@ module frostend::vault {
         balance::split(&mut vault.coin_yt_reserve, amount)
     }
 
-    public(friend) fun mint_pt<X>(
+    fun mint_pt<X>(
         amount: u64,
         vault: &mut Vault<X>,
-    ) {
-        let balance_pt = balance::increase_supply(&mut vault.coin_pt_supply, amount);
-        deposit_pt(balance_pt, vault);
+    ): Balance<PTCoin<X>> {
+        balance::increase_supply(&mut vault.coin_pt_supply, amount)
     }
 
-    public(friend) fun burn_pt<X>(
-        amount: u64,
+    fun burn_pt<X>(
+        balance_pt: Balance<PTCoin<X>>,
         vault: &mut Vault<X>,
     ) {
-        let balance_pt = withdraw_pt(amount, vault);
         balance::decrease_supply(&mut vault.coin_pt_supply, balance_pt);
     }
 
-    public(friend) fun mint_pt_and_yt<X>(
+    fun mint_yt<X>(
         amount: u64,
         vault: &mut Vault<X>,
+    ): Balance<YTCoin<X>> {
+        balance::increase_supply(&mut vault.coin_yt_supply, amount)
+    }
+
+    fun burn_yt<X>(
+        balance_yt: Balance<YTCoin<X>>,
+        vault: &mut Vault<X>,
     ) {
-        mint_pt(amount, vault);
-        let balance_yt = balance::increase_supply(&mut vault.coin_yt_supply, amount);
-        deposit_yt(balance_yt, vault);
+        balance::decrease_supply(&mut vault.coin_yt_supply, balance_yt);
+    }
+
+    public(friend) fun mint_pt_and_yt<X>(
+        balance_sy: Balance<X>,
+        vault: &mut Vault<X>,
+    ): (Balance<PTCoin<X>>, Balance<YTCoin<X>>) {
+        let amount = balance::value(&balance_sy);
+        deposit_sy(balance_sy, vault);
+        let balance_pt = mint_pt(amount, vault);
+        let balance_yt = mint_yt(amount, vault);
+
+        (balance_pt, balance_yt)
     }
 
     public(friend) fun burn_pt_and_yt<X>(
-        amount: u64,
+        balance_pt: Balance<PTCoin<X>>,
+        balance_yt: Balance<YTCoin<X>>,
         vault: &mut Vault<X>,
-    ) {
-        burn_pt(amount, vault);
-        let balance_yt = withdraw_yt(amount, vault);
-        balance::decrease_supply(&mut vault.coin_yt_supply, balance_yt);
+    ): Balance<X> {
+        let amount = balance::value(&balance_pt);
+
+        // TODO: Uncomment this
+        // assert(balance::value(&balance_yt) == amount);
+
+        burn_pt(balance_pt, vault);
+        burn_yt(balance_yt, vault);
+        withdraw_sy(amount, vault)
     }
 
     public fun all_is_zero<X>(
