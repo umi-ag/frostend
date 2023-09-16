@@ -10,7 +10,7 @@ module frostend::bank {
     use frostend::coin_utils::merge_coins;
     use frostend::vault::{Self, Vault};
 
-    friend frostend::actions;
+    friend frostend::ctoken;
     friend frostend::sys_manager;
 
 
@@ -49,23 +49,5 @@ module frostend::bank {
         bank: &mut Bank<X>,
     ): Balance<X> {
         balance::split(&mut bank.coin_sy_reserve, amount)
-    }
-
-    public(friend) fun borrow_sy<X>(
-        amount: u64,
-        vault: &mut Vault<X>,
-        bank: &mut Bank<X>,
-    ) {
-        let balance_sy = withdraw_sy(amount, bank);
-        vault::deposit_sy(balance_sy, vault);
-    }
-
-    public(friend) fun payback_sy<X>(
-        amount: u64,
-        vault: &mut Vault<X>,
-        bank: &mut Bank<X>,
-    ) {
-        let balance_sy = vault::withdraw_sy(amount, vault);
-        deposit_sy(balance_sy, bank);
     }
 }

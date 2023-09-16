@@ -9,6 +9,7 @@ module frostend::actions {
     use frostend::bank::{Self, Bank};
     use frostend::pt_amm;
     use frostend::sys_manager;
+    use frostend::ctoken;
 
     use math::fixedU32;
 
@@ -22,7 +23,7 @@ module frostend::actions {
         balance_sy: Balance<X>,
         bank: &mut Bank<X>,
     ) {
-        bank::deposit_sy(balance_sy, bank);
+        ctoken::deposit(balance_sy, bank);
     }
 
     /// LP: 1 #cSY*#cSY -> 1 #SY*$SY
@@ -31,7 +32,7 @@ module frostend::actions {
         amount: u64,
         bank: &mut Bank<X>,
     ): Balance<X> {
-        bank::withdraw_sy(amount, bank)
+        ctoken::withdraw(amount, bank)
     }
 
     /// PETER: dx #SY -> dy #PT

@@ -11,8 +11,6 @@ module frostend::vault {
 
     use math::fixedU32;
 
-    friend frostend::bank;
-    friend frostend::actions;
     friend frostend::pt_amm;
     friend frostend::sys_manager;
 
