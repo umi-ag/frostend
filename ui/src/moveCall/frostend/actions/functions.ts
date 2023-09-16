@@ -1,29 +1,47 @@
 import {PUBLISHED_AT} from "..";
-import {ObjectArg, Type, obj} from "../../_framework/util";
-import {TransactionBlock} from "@mysten/sui.js/transactions";
+import {ObjectArg, Type, obj, pure, vector} from "../../_framework/util";
+import {TransactionArgument, TransactionBlock} from "@mysten/sui.js/transactions";
 
 export function init( txb: TransactionBlock, ) { return txb.moveCall({ target: `${PUBLISHED_AT}::actions::init`, arguments: [ ], }) }
 
-export interface SwapSyToPt_Args { balance: ObjectArg; vault: ObjectArg; bank: ObjectArg }
+export interface WithdrawArgs { u64: bigint | TransactionArgument; bank: ObjectArg }
 
-export function swapSyToPt_( txb: TransactionBlock, typeArg: Type, args: SwapSyToPt_Args ) { return txb.moveCall({ target: `${PUBLISHED_AT}::actions::swap_sy_to_pt_`, typeArguments: [typeArg], arguments: [ obj(txb, args.balance), obj(txb, args.vault), obj(txb, args.bank) ], }) }
+export function withdraw( txb: TransactionBlock, typeArg: Type, args: WithdrawArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::actions::withdraw`, typeArguments: [typeArg], arguments: [ pure(txb, args.u64, `u64`), obj(txb, args.bank) ], }) }
 
-export interface SwapPtToSy_Args { balance: ObjectArg; vault: ObjectArg; bank: ObjectArg }
+export interface DepositArgs { balance: ObjectArg; bank: ObjectArg }
 
-export function swapPtToSy_( txb: TransactionBlock, typeArg: Type, args: SwapPtToSy_Args ) { return txb.moveCall({ target: `${PUBLISHED_AT}::actions::swap_pt_to_sy_`, typeArguments: [typeArg], arguments: [ obj(txb, args.balance), obj(txb, args.vault), obj(txb, args.bank) ], }) }
+export function deposit( txb: TransactionBlock, typeArg: Type, args: DepositArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::actions::deposit`, typeArguments: [typeArg], arguments: [ obj(txb, args.balance), obj(txb, args.bank) ], }) }
 
-export interface SwapSyToYt_Args { balance: ObjectArg; vault: ObjectArg; bank: ObjectArg }
+export function createBank( txb: TransactionBlock, typeArg: Type, root: ObjectArg ) { return txb.moveCall({ target: `${PUBLISHED_AT}::actions::create_bank`, typeArguments: [typeArg], arguments: [ obj(txb, root) ], }) }
 
-export function swapSyToYt_( txb: TransactionBlock, typeArg: Type, args: SwapSyToYt_Args ) { return txb.moveCall({ target: `${PUBLISHED_AT}::actions::swap_sy_to_yt_`, typeArguments: [typeArg], arguments: [ obj(txb, args.balance), obj(txb, args.vault), obj(txb, args.bank) ], }) }
+export interface InitVaultArgs { u641: bigint | TransactionArgument; u642: bigint | TransactionArgument; vecCoin: Array<ObjectArg> | TransactionArgument; u643: bigint | TransactionArgument; bank: ObjectArg }
 
-export interface SwapYtToSy_Args { balance: ObjectArg; vault: ObjectArg; bank: ObjectArg }
+export function initVault( txb: TransactionBlock, typeArg: Type, args: InitVaultArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::actions::init_vault`, typeArguments: [typeArg], arguments: [ pure(txb, args.u641, `u64`), pure(txb, args.u642, `u64`), vector(txb, `0x2::coin::Coin<${typeArg}>`, args.vecCoin), pure(txb, args.u643, `u64`), obj(txb, args.bank) ], }) }
 
-export function swapYtToSy_( txb: TransactionBlock, typeArg: Type, args: SwapYtToSy_Args ) { return txb.moveCall({ target: `${PUBLISHED_AT}::actions::swap_yt_to_sy_`, typeArguments: [typeArg], arguments: [ obj(txb, args.balance), obj(txb, args.vault), obj(txb, args.bank) ], }) }
+export interface DepositCoinsArgs { vecCoin: Array<ObjectArg> | TransactionArgument; bank: ObjectArg }
 
-export interface SwapPtToYt_Args { balance: ObjectArg; vault: ObjectArg; bank: ObjectArg }
+export function depositCoins( txb: TransactionBlock, typeArg: Type, args: DepositCoinsArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::actions::deposit_coins`, typeArguments: [typeArg], arguments: [ vector(txb, `0x2::coin::Coin<${typeArg}>`, args.vecCoin), obj(txb, args.bank) ], }) }
 
-export function swapPtToYt_( txb: TransactionBlock, typeArg: Type, args: SwapPtToYt_Args ) { return txb.moveCall({ target: `${PUBLISHED_AT}::actions::swap_pt_to_yt_`, typeArguments: [typeArg], arguments: [ obj(txb, args.balance), obj(txb, args.vault), obj(txb, args.bank) ], }) }
+export interface ConvertSyToPtArgs { balance: ObjectArg; vault: ObjectArg; clock: ObjectArg }
 
-export interface SwapYtToPt_Args { balance: ObjectArg; vault: ObjectArg; bank: ObjectArg }
+export function convertSyToPt( txb: TransactionBlock, typeArg: Type, args: ConvertSyToPtArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::actions::convert_sy_to_pt`, typeArguments: [typeArg], arguments: [ obj(txb, args.balance), obj(txb, args.vault), obj(txb, args.clock) ], }) }
 
-export function swapYtToPt_( txb: TransactionBlock, typeArg: Type, args: SwapYtToPt_Args ) { return txb.moveCall({ target: `${PUBLISHED_AT}::actions::swap_yt_to_pt_`, typeArguments: [typeArg], arguments: [ obj(txb, args.balance), obj(txb, args.vault), obj(txb, args.bank) ], }) }
+export interface ConvertPtToSyArgs { balance: ObjectArg; vault: ObjectArg; clock: ObjectArg }
+
+export function convertPtToSy( txb: TransactionBlock, typeArg: Type, args: ConvertPtToSyArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::actions::convert_pt_to_sy`, typeArguments: [typeArg], arguments: [ obj(txb, args.balance), obj(txb, args.vault), obj(txb, args.clock) ], }) }
+
+export interface ConvertSyToYtArgs { balance: ObjectArg; vault: ObjectArg; bank: ObjectArg; clock: ObjectArg }
+
+export function convertSyToYt( txb: TransactionBlock, typeArg: Type, args: ConvertSyToYtArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::actions::convert_sy_to_yt`, typeArguments: [typeArg], arguments: [ obj(txb, args.balance), obj(txb, args.vault), obj(txb, args.bank), obj(txb, args.clock) ], }) }
+
+export interface ConvertYtToSyArgs { balance: ObjectArg; vault: ObjectArg; bank: ObjectArg; clock: ObjectArg }
+
+export function convertYtToSy( txb: TransactionBlock, typeArg: Type, args: ConvertYtToSyArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::actions::convert_yt_to_sy`, typeArguments: [typeArg], arguments: [ obj(txb, args.balance), obj(txb, args.vault), obj(txb, args.bank), obj(txb, args.clock) ], }) }
+
+export interface ConvertPtToYtArgs { balance: ObjectArg; vault: ObjectArg; bank: ObjectArg; clock: ObjectArg }
+
+export function convertPtToYt( txb: TransactionBlock, typeArg: Type, args: ConvertPtToYtArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::actions::convert_pt_to_yt`, typeArguments: [typeArg], arguments: [ obj(txb, args.balance), obj(txb, args.vault), obj(txb, args.bank), obj(txb, args.clock) ], }) }
+
+export interface ConvertYtToPtArgs { balance: ObjectArg; vault: ObjectArg; bank: ObjectArg; clock: ObjectArg }
+
+export function convertYtToPt( txb: TransactionBlock, typeArg: Type, args: ConvertYtToPtArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::actions::convert_yt_to_pt`, typeArguments: [typeArg], arguments: [ obj(txb, args.balance), obj(txb, args.vault), obj(txb, args.bank), obj(txb, args.clock) ], }) }

@@ -1,6 +1,6 @@
 
-export const TRESURY_CAP = '0xa175f7845f11f3c497622556b1622dcf88fe08f96bf01a01a3feb0bf8f7eff12'
-export const ROOT = '0xb8787d148fd59043e24fe326b4dea8b803e80d509ac79f87389dbc9fc5567151'
+export const TRESURY_CAP = '0xc75d89d57acf790d8e0a7f3614a99b7d7202beddbce5bb9b8de6bc2373475eeb'
+export const ROOT = '0xffbc83f7a3e3b72ee2d8a854a6cbd3239ce1c927a52f94eb54d99a0f5f29cabc'
 
-export const BANK = '0x4c767d8a08a6df1fb8cd280e37846f6b5e6bc631b15dbd58c0cb0573a03e976f'
+export const BANK = '0x5ea94ebd2deff68e80211755c1f427addf12e45156f546da7afa6153e8358f9f'
 export const VAULT = '0x3c45dff36923a0bb88c9bd1bae976b5372599fa4d157d12b4818f7bb38b7471c'

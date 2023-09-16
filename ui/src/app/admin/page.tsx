@@ -5,12 +5,13 @@ import { AppBar } from 'src/components/AppBar';
 import { TransactionBlock } from '@mysten/sui.js/transactions'
 import { mintTo } from 'src/moveCall/frostend/stsui-coin/functions';
 import { STSUI_COIN } from 'src/moveCall/frostend/stsui-coin/structs';
-import { createBank, createVault } from 'src/moveCall/frostend/root/functions';
-import { BANK, ROOT, TRESURY_CAP, VAULT } from 'src/config/frostend';
+import { BANK, TRESURY_CAP, VAULT } from 'src/config/frostend';
 import { JsonRpcProvider, Connection } from '@mysten/sui.js';
 import { maybeSplitCoinsAndTransferRest } from 'src/moveCall/frostend/coin-utils/functions';
-import * as bank from 'src/moveCall/frostend/bank/functions';
 import Link from 'next/link';
+import dayjs from 'dayjs';
+import { depositCoins } from 'src/moveCall/frostend/actions/functions';
+import { moveCallCreateBank, moveCallInitVault } from 'src/frostendLib';
 
 
 const provider = new JsonRpcProvider(
@@ -65,14 +66,12 @@ const FaucetCard = (props: {
   )
 }
 
-const VaultAndBankCard = () => {
+const CreateBankCard = () => {
   const { signAndExecuteTransactionBlock } = useWallet();
 
-  const faucet = async () => {
+  const executeTransaction = async () => {
     const txb = new TransactionBlock();
-
-    createBank(txb, STSUI_COIN.$typeName, ROOT)
-    createVault(txb, STSUI_COIN.$typeName, ROOT)
+    moveCallCreateBank(txb)
 
     const r = await signAndExecuteTransactionBlock({
       // @ts-ignore
@@ -86,12 +85,12 @@ const VaultAndBankCard = () => {
     <div className='bg-gray-100 px-3 py-2 rounded-lg w-[200px] h-[200px] flex items-center justify-center'>
       <div className='flex flex-col items-center gap-3'>
         <div className='text-black text-lg font-bold'>
-          new Bank and Vault for stSUI
+          new Bank for stSUI
         </div>
         <button
           className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full"
           onClick={async () => {
-            await faucet();
+            await executeTransaction();
           }}
         >
           create
@@ -99,7 +98,56 @@ const VaultAndBankCard = () => {
       </div>
     </div>
   )
+}
 
+const CreateVaultCard = () => {
+  const { address, signAndExecuteTransactionBlock } = useWallet();
+
+  const executeTransaction = async () => {
+    if (!address) return;
+
+    const maturesAt2024 = dayjs().add(193, 'day')
+    const issuedAt = maturesAt2024.subtract(1, 'year')
+    const maturesAt2025 = maturesAt2024.add(1, 'year')
+
+    console.log(issuedAt.valueOf());
+    console.log(maturesAt2024.valueOf());
+    console.log(maturesAt2025.valueOf());
+
+    const txb = new TransactionBlock();
+    moveCallInitVault(txb, {
+      address,
+      issuedAt: BigInt(issuedAt.valueOf()),
+      maturesAt: BigInt(maturesAt2024.valueOf()),
+      amountSY: BigInt(1e8),
+      amountSupply: BigInt(100e8),
+    })
+
+    const r = await signAndExecuteTransactionBlock({
+      // @ts-ignore
+      transactionBlock: txb
+    });
+    const url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`
+    console.log(url);
+  }
+
+  return (
+    <div className='bg-gray-100 px-3 py-2 rounded-lg w-[200px] h-[200px] flex items-center justify-center'>
+      <div className='flex flex-col items-center gap-3'>
+        <div className='text-black text-lg font-bold'>
+          new Vault for stSUI
+        </div>
+        <button
+          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full"
+          onClick={async () => {
+            await executeTransaction();
+          }}
+        >
+          create
+        </button>
+      </div>
+    </div>
+  )
 }
 
 const bankDeposit = async (txb: TransactionBlock, address: string) => {
@@ -121,7 +169,7 @@ const bankDeposit = async (txb: TransactionBlock, address: string) => {
     address: address,
   })
 
-  bank.deposit(txb, STSUI_COIN.$typeName, {
+  depositCoins(txb, STSUI_COIN.$typeName, {
     vecCoin: txb.makeMoveVec({
       objects: [coin]
     }),
@@ -202,8 +250,9 @@ const Page = () => {
         <div className="text-white flex flex-wrap gap-10">
           <FaucetCard amount={BigInt(100e8)} coinType={STSUI_COIN.$typeName} display='stSUI 100' buttonDisplay='faucet' />
           <FaucetCard amount={BigInt(100e3 * 1e8)} coinType={STSUI_COIN.$typeName} display='stSUI 100_000' buttonDisplay='faucet' />
-          <VaultAndBankCard />
+          <CreateBankCard />
           <BankDespositCard />
+          <CreateVaultCard />
           <ViewObject objectId={BANK} display='View BANK for stSUI' />
           <ViewObject objectId={VAULT} display='View VAULT for stSUI' />
         </div>

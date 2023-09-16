@@ -1,15 +1,16 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { STSUI_COIN } from "src/moveCall/frostend/stsui-coin/structs";
+import { Connection, JsonRpcProvider } from "@mysten/sui.js";
+import { maybeSplitCoinsAndTransferRest } from "src/moveCall/frostend/coin-utils/functions";
+import { BANK, ROOT, VAULT } from "src/config/frostend";
+import { PUBLISHED_AT } from "src/moveCall/frostend";
 import {
   swapPtToSy,
   swapSyToPt,
   swapSyToYt,
   swapYtToSy,
 } from "src/moveCall/frostend/swap/functions";
-import { STSUI_COIN } from "src/moveCall/frostend/stsui-coin/structs";
-import { Connection, JsonRpcProvider } from "@mysten/sui.js";
-import { maybeSplitCoinsAndTransferRest } from "src/moveCall/frostend/coin-utils/functions";
-import { BANK, VAULT } from "src/config/frostend";
-import { PUBLISHED_AT } from "src/moveCall/frostend";
+import { createBank, initVault } from "src/moveCall/frostend/actions/functions";
 
 const provider = new JsonRpcProvider(
   new Connection({
@@ -19,8 +20,10 @@ const provider = new JsonRpcProvider(
 );
 
 export const STSUI_SYCoinType = STSUI_COIN.$typeName;
+
 export const STSUI_PTCoinType =
   `${PUBLISHED_AT}::vault::PTCoin<${STSUI_SYCoinType}>`;
+
 export const STSUI_YTCoinType =
   `${PUBLISHED_AT}::vault::YTCoin<${STSUI_SYCoinType}>`;
 
@@ -36,10 +39,59 @@ export const whichCoinTypeIsSyPtYt = (coinType: string): "sy" | "pt" | "yt" => {
   return isPTCoinType(coinType) ? "pt" : isYTcoinType(coinType) ? "yt" : "sy";
 };
 
+export const moveCallCreateBank = async (txb: TransactionBlock) => {
+  createBank(txb, STSUI_COIN.$typeName, ROOT);
+  return txb;
+};
+
+export const moveCallInitVault = async (
+  txb: TransactionBlock,
+  args: {
+    address: string;
+    issuedAt: bigint,
+    maturesAt: bigint,
+    amountSY: bigint,
+    amountSupply: bigint,
+  }
+) => {
+  const coins = await (async () => {
+    const coins: { coinObjectId: string }[] = [];
+    const coins_sy = await provider.getCoins({
+      owner: args.address,
+      coinType: STSUI_COIN.$typeName,
+    });
+    coins.push(...coins_sy.data);
+    return coins;
+  })();
+
+  const coin = await maybeSplitCoinsAndTransferRest(txb, STSUI_COIN.$typeName, {
+    vecCoin: txb.makeMoveVec({
+      objects: coins.map((coin) => txb.pure(coin.coinObjectId)),
+    }),
+    u64: args.amountSY,
+    address: args.address,
+  });
+
+  const coin_yt = initVault(txb, STSUI_COIN.$typeName, {
+    u641: args.issuedAt,
+    u642: args.maturesAt,
+    vecCoin: txb.makeMoveVec({
+      objects: [coin],
+    }),
+    u643: args.amountSupply,
+    bank: BANK,
+  });
+
+  txb.transferObjects([coin_yt], txb.pure(args.address));
+
+  return txb;
+};
+
 export const moveCallSwapSyToPt = async (
   txb: TransactionBlock,
   args: {
     address: string;
+    amount: bigint;
   },
 ) => {
   const coins = await (async () => {
@@ -59,7 +111,7 @@ export const moveCallSwapSyToPt = async (
       vecCoin: txb.makeMoveVec({
         objects: coins.map((coin) => txb.pure(coin.coinObjectId)),
       }),
-      u64: BigInt(10 * 1e8),
+      u64: args.amount,
       address: args.address,
     },
   );
@@ -67,7 +119,7 @@ export const moveCallSwapSyToPt = async (
   const coin_pt = await swapSyToPt(txb, STSUI_SYCoinType, {
     vecCoin: txb.makeMoveVec({ objects: [coin_sy] }),
     vault: VAULT,
-    bank: BANK,
+    clock: "0x6",
   });
 
   txb.transferObjects([coin_pt], txb.pure(args.address));
@@ -79,6 +131,7 @@ export const moveCallSwapPtToSy = async (
   txb: TransactionBlock,
   args: {
     address: string;
+    amount: bigint;
   },
 ) => {
   const coins = await (async () => {
@@ -98,7 +151,7 @@ export const moveCallSwapPtToSy = async (
       vecCoin: txb.makeMoveVec({
         objects: coins.map((coin) => txb.pure(coin.coinObjectId)),
       }),
-      u64: BigInt(10 * 1e8),
+      u64: args.amount,
       address: args.address,
     },
   );
@@ -106,7 +159,7 @@ export const moveCallSwapPtToSy = async (
   const coin_sy = await swapPtToSy(txb, STSUI_SYCoinType, {
     vecCoin: txb.makeMoveVec({ objects: [coin_pt] }),
     vault: VAULT,
-    bank: BANK,
+    clock: "0x6",
   });
 
   txb.transferObjects([coin_sy], txb.pure(args.address));
@@ -118,6 +171,7 @@ export const moveCallSwapSyToYt = async (
   txb: TransactionBlock,
   args: {
     address: string;
+    amount: bigint;
   },
 ) => {
   const coins = await (async () => {
@@ -137,7 +191,7 @@ export const moveCallSwapSyToYt = async (
       vecCoin: txb.makeMoveVec({
         objects: coins.map((coin) => txb.pure(coin.coinObjectId)),
       }),
-      u64: BigInt(10 * 1e8),
+      u64: args.amount,
       address: args.address,
     },
   );
@@ -146,6 +200,7 @@ export const moveCallSwapSyToYt = async (
     vecCoin: txb.makeMoveVec({ objects: [coin_sy] }),
     vault: VAULT,
     bank: BANK,
+    clock: "0x6",
   });
 
   txb.transferObjects([coin_yt], txb.pure(args.address));
@@ -157,6 +212,7 @@ export const moveCallSwapYtToSy = async (
   txb: TransactionBlock,
   args: {
     address: string;
+    amount: bigint;
   },
 ) => {
   const coins = await (async () => {
@@ -176,7 +232,7 @@ export const moveCallSwapYtToSy = async (
       vecCoin: txb.makeMoveVec({
         objects: coins.map((coin) => txb.pure(coin.coinObjectId)),
       }),
-      u64: BigInt(10 * 1e8),
+      u64: args.amount,
       address: args.address,
     },
   );
@@ -185,6 +241,7 @@ export const moveCallSwapYtToSy = async (
     vecCoin: txb.makeMoveVec({ objects: [coin_yt] }),
     vault: VAULT,
     bank: BANK,
+    clock: "0x6",
   });
 
   txb.transferObjects([coin_sy], txb.pure(args.address));
