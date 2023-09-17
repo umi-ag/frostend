@@ -201,7 +201,10 @@ const TestToast = () => {
     toast.success(<div>
       <p>Swap success!</p>
       <p>explorer url: <a className="text-blue-500 underline" target="_blank" href="https://suiexplorer.com" rel="noreferrer">https://suiexplorer.com</a></p>
-    </div>)
+    </div>, {
+      duration: 4000,
+      position: 'bottom-left',
+    })
   }
 
   return (
