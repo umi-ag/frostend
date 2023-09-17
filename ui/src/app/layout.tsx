@@ -19,7 +19,7 @@ export default function RootLayout({
       <WalletProvider defaultWallets={AllDefaultWallets}>
         <body className="bg-base-300">
           {children}
-          <Toaster />
+          <Toaster position="bottom-left" />
         </body>
       </WalletProvider>
     </html>
