@@ -7,15 +7,15 @@ import {SuiClient, SuiParsedData} from "@mysten/sui.js/client";
 
 /* ============================== PTCoin =============================== */
 
-bcs.registerStructType( "0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::PTCoin<T0>", {
+bcs.registerStructType( "0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::PTCoin<T0>", {
 dummy_field: `bool`,
 } )
 
-export function isPTCoin(type: Type): boolean { return type.startsWith("0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::PTCoin<"); }
+export function isPTCoin(type: Type): boolean { return type.startsWith("0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::PTCoin<"); }
 
 export interface PTCoinFields { dummyField: boolean }
 
-export class PTCoin { static readonly $typeName = "0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::PTCoin"; static readonly $numTypeParams = 1;
+export class PTCoin { static readonly $typeName = "0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::PTCoin"; static readonly $numTypeParams = 1;
 
  readonly $typeArg: Type;
 
@@ -39,15 +39,15 @@ export class PTCoin { static readonly $typeName = "0x165eacd90f3bfa192ccbe0fbd51
 
 /* ============================== YTCoin =============================== */
 
-bcs.registerStructType( "0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::YTCoin<T0>", {
+bcs.registerStructType( "0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::YTCoin<T0>", {
 dummy_field: `bool`,
 } )
 
-export function isYTCoin(type: Type): boolean { return type.startsWith("0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::YTCoin<"); }
+export function isYTCoin(type: Type): boolean { return type.startsWith("0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::YTCoin<"); }
 
 export interface YTCoinFields { dummyField: boolean }
 
-export class YTCoin { static readonly $typeName = "0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::YTCoin"; static readonly $numTypeParams = 1;
+export class YTCoin { static readonly $typeName = "0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::YTCoin"; static readonly $numTypeParams = 1;
 
  readonly $typeArg: Type;
 
@@ -71,20 +71,20 @@ export class YTCoin { static readonly $typeName = "0x165eacd90f3bfa192ccbe0fbd51
 
 /* ============================== Vault =============================== */
 
-bcs.registerStructType( "0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::Vault<T0>", {
+bcs.registerStructType( "0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::Vault<T0>", {
 id: `0x2::object::UID`,
 coin_sy_reserve: `0x2::balance::Balance<T0>`,
-coin_pt_reserve: `0x2::balance::Balance<0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::PTCoin<T0>>`,
-coin_yt_reserve: `0x2::balance::Balance<0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::YTCoin<T0>>`,
-coin_pt_supply: `0x2::balance::Supply<0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::PTCoin<T0>>`,
-coin_yt_supply: `0x2::balance::Supply<0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::YTCoin<T0>>`,
+coin_pt_reserve: `0x2::balance::Balance<0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::PTCoin<T0>>`,
+coin_yt_reserve: `0x2::balance::Balance<0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::YTCoin<T0>>`,
+coin_pt_supply: `0x2::balance::Supply<0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::PTCoin<T0>>`,
+coin_yt_supply: `0x2::balance::Supply<0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::YTCoin<T0>>`,
 } )
 
-export function isVault(type: Type): boolean { return type.startsWith("0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::Vault<"); }
+export function isVault(type: Type): boolean { return type.startsWith("0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::Vault<"); }
 
 export interface VaultFields { id: string; coinSyReserve: Balance; coinPtReserve: Balance; coinYtReserve: Balance; coinPtSupply: Supply; coinYtSupply: Supply }
 
-export class Vault { static readonly $typeName = "0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::Vault"; static readonly $numTypeParams = 1;
+export class Vault { static readonly $typeName = "0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::Vault"; static readonly $numTypeParams = 1;
 
  readonly $typeArg: Type;
 
@@ -94,13 +94,13 @@ export class Vault { static readonly $typeName = "0x165eacd90f3bfa192ccbe0fbd512
 
  this.id = fields.id; this.coinSyReserve = fields.coinSyReserve; this.coinPtReserve = fields.coinPtReserve; this.coinYtReserve = fields.coinYtReserve; this.coinPtSupply = fields.coinPtSupply; this.coinYtSupply = fields.coinYtSupply; }
 
- static fromFields( typeArg: Type, fields: Record<string, any> ): Vault { return new Vault( typeArg, { id: UID.fromFields(fields.id).id, coinSyReserve: Balance.fromFields(`${typeArg}`, fields.coin_sy_reserve), coinPtReserve: Balance.fromFields(`0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::PTCoin<${typeArg}>`, fields.coin_pt_reserve), coinYtReserve: Balance.fromFields(`0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::YTCoin<${typeArg}>`, fields.coin_yt_reserve), coinPtSupply: Supply.fromFields(`0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::PTCoin<${typeArg}>`, fields.coin_pt_supply), coinYtSupply: Supply.fromFields(`0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::YTCoin<${typeArg}>`, fields.coin_yt_supply) } ) }
+ static fromFields( typeArg: Type, fields: Record<string, any> ): Vault { return new Vault( typeArg, { id: UID.fromFields(fields.id).id, coinSyReserve: Balance.fromFields(`${typeArg}`, fields.coin_sy_reserve), coinPtReserve: Balance.fromFields(`0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::PTCoin<${typeArg}>`, fields.coin_pt_reserve), coinYtReserve: Balance.fromFields(`0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::YTCoin<${typeArg}>`, fields.coin_yt_reserve), coinPtSupply: Supply.fromFields(`0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::PTCoin<${typeArg}>`, fields.coin_pt_supply), coinYtSupply: Supply.fromFields(`0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::YTCoin<${typeArg}>`, fields.coin_yt_supply) } ) }
 
  static fromFieldsWithTypes(item: FieldsWithTypes): Vault { if (!isVault(item.type)) { throw new Error("not a Vault type");
 
  } const { typeArgs } = parseTypeName(item.type);
 
- return new Vault( typeArgs[0], { id: item.fields.id.id, coinSyReserve: new Balance( `${typeArgs[0]}`, BigInt(item.fields.coin_sy_reserve) ), coinPtReserve: new Balance( `0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::PTCoin<${typeArgs[0]}>`, BigInt(item.fields.coin_pt_reserve) ), coinYtReserve: new Balance( `0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::vault::YTCoin<${typeArgs[0]}>`, BigInt(item.fields.coin_yt_reserve) ), coinPtSupply: Supply.fromFieldsWithTypes(item.fields.coin_pt_supply), coinYtSupply: Supply.fromFieldsWithTypes(item.fields.coin_yt_supply) } ) }
+ return new Vault( typeArgs[0], { id: item.fields.id.id, coinSyReserve: new Balance( `${typeArgs[0]}`, BigInt(item.fields.coin_sy_reserve) ), coinPtReserve: new Balance( `0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::PTCoin<${typeArgs[0]}>`, BigInt(item.fields.coin_pt_reserve) ), coinYtReserve: new Balance( `0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::vault::YTCoin<${typeArgs[0]}>`, BigInt(item.fields.coin_yt_reserve) ), coinPtSupply: Supply.fromFieldsWithTypes(item.fields.coin_pt_supply), coinYtSupply: Supply.fromFieldsWithTypes(item.fields.coin_yt_supply) } ) }
 
  static fromBcs( typeArg: Type, data: Uint8Array | string, encoding?: Encoding ): Vault { return Vault.fromFields( typeArg, bcs.de([Vault.$typeName, typeArg,], data, encoding) ) }
 
