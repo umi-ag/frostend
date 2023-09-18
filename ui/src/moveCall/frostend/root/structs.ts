@@ -6,15 +6,15 @@ import {SuiClient, SuiParsedData} from "@mysten/sui.js/client";
 
 /* ============================== Root =============================== */
 
-bcs.registerStructType( "0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::root::Root", {
+bcs.registerStructType( "0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::root::Root", {
 id: `0x2::object::UID`,
 } )
 
-export function isRoot(type: Type): boolean { return type === "0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::root::Root"; }
+export function isRoot(type: Type): boolean { return type === "0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::root::Root"; }
 
 export interface RootFields { id: string }
 
-export class Root { static readonly $typeName = "0x165eacd90f3bfa192ccbe0fbd512898ea5db088220e3401e213514ec1d21d400::root::Root"; static readonly $numTypeParams = 0;
+export class Root { static readonly $typeName = "0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286::root::Root"; static readonly $numTypeParams = 0;
 
   readonly id: string
 
