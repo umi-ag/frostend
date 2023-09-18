@@ -12,6 +12,7 @@ import * as bank from 'src/moveCall/frostend/bank/functions';
 import Link from 'next/link';
 import { moveCallFaucet } from 'src/frostendLib';
 import { toast } from 'react-hot-toast';
+import { noticeTxnResultMessage } from 'src/components/TransactionToast';
 
 
 const provider = new JsonRpcProvider(
@@ -27,20 +28,18 @@ const FaucetCard = (props: {
   display: string,
   buttonDisplay: string,
 }) => {
-  const { address, signAndExecuteTransactionBlock } = useWallet();
+  const wallet = useWallet();
 
   const executeTransaction = async () => {
     const txb = new TransactionBlock()
     moveCallFaucet(txb, { amount: props.amount })
 
-    const r = await signAndExecuteTransactionBlock({
+    const r = await wallet.signAndExecuteTransactionBlock({
       // @ts-ignore
       transactionBlock: txb
     });
-    const url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`
-    console.log(url);
+    noticeTxnResultMessage(r)
   }
-
 
   return (
     <div className='bg-gray-100 px-3 py-2 rounded-lg w-[200px] h-[200px] flex items-center justify-center'>
@@ -62,22 +61,19 @@ const FaucetCard = (props: {
 }
 
 const VaultAndBankCard = () => {
-  const { signAndExecuteTransactionBlock } = useWallet();
+  const wallet = useWallet();
 
-
-
-  const faucet = async () => {
+  const executeTransaction = async () => {
     const txb = new TransactionBlock();
 
     createBank(txb, STSUI_COIN.$typeName, ROOT)
     createVault(txb, STSUI_COIN.$typeName, ROOT)
 
-    const r = await signAndExecuteTransactionBlock({
+    const r = await wallet.signAndExecuteTransactionBlock({
       // @ts-ignore
       transactionBlock: txb
     });
-    const url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`
-    console.log(url);
+    noticeTxnResultMessage(r)
   }
 
   return (
@@ -89,7 +85,7 @@ const VaultAndBankCard = () => {
         <button
           className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full"
           onClick={async () => {
-            await faucet();
+            await executeTransaction();
           }}
         >
           create
@@ -130,19 +126,18 @@ const bankDeposit = async (txb: TransactionBlock, address: string) => {
 }
 
 const BankDespositCard = () => {
-  const { address, signAndExecuteTransactionBlock } = useWallet();
+  const wallet = useWallet();
 
   const executeTransaction = async () => {
-    if (!address) return;
+    if (!wallet.address) return;
     const txb = new TransactionBlock()
-    await bankDeposit(txb, address)
+    await bankDeposit(txb, wallet.address)
 
-    const r = await signAndExecuteTransactionBlock({
+    const r = await wallet.signAndExecuteTransactionBlock({
       // @ts-ignore
       transactionBlock: txb
     });
-    const url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`
-    console.log(url);
+    noticeTxnResultMessage(r)
   }
 
   return (
@@ -168,8 +163,6 @@ const ViewObject = (props: {
   objectId: string,
   display: string,
 }) => {
-  const { address, signAndExecuteTransactionBlock } = useWallet();
-
   const url = () => {
     return `https://suiexplorer.com/object/${props.objectId}?network=testnet`
   }

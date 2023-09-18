@@ -17,8 +17,7 @@ export const FaucetButton: React.FC<{ buttonDisplay?: string }> = ({ buttonDispl
       // @ts-ignore
       transactionBlock: txb
     });
-    const url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`
-    noticeTxnResultMessage({ href: url, txHash: r.digest })
+    noticeTxnResultMessage(r)
   }
 
   const style = "bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full"
