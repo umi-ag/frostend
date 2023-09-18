@@ -1,17 +1,17 @@
-import { useWallet } from '@suiet/wallet-kit';
-import React from 'react';
+import { ConnectModal, useWallet } from '@suiet/wallet-kit';
+import React, { useState } from 'react';
 import { TransactionBlock } from '@mysten/sui.js/transactions'
 import { moveCallSwapPtToSy, moveCallSwapSyToPt, moveCallSwapSyToYt, moveCallSwapYtToSy, whichCoinTypeIsSyPtYt } from 'src/frostendLib';
 import { useTradeStore } from 'src/store/trade';
 import { match } from 'ts-pattern'
+import { noticeTxnResultMessage } from '../TransactionToast';
 
 const SwapTransactionButton = () => {
-  const { address, signAndExecuteTransactionBlock } = useWallet()
-  const {
-    sourceCoinType, targetCoinType,
-    sourceCoinAmount,
-  } = useTradeStore()
+  const { address } = useWallet()
+  const wallet = useWallet()
+  const [showModal, setShowModal] = useState(false)
 
+  const { sourceCoinType, targetCoinType } = useTradeStore()
 
   const executeTransaction = async () => {
     if (!address) return;
@@ -24,14 +24,11 @@ const SwapTransactionButton = () => {
       .with(['yt', 'sy'], async () => { await moveCallSwapYtToSy(txb, { address }) })
       .otherwise(() => { throw new Error('invalid coinType') })
 
-    const r = await signAndExecuteTransactionBlock({
+    const r = await wallet.signAndExecuteTransactionBlock({
       // @ts-ignore
       transactionBlock: txb
     });
-    const url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`
-    console.log(url);
-
-    alert(url)
+    noticeTxnResultMessage(r)
   }
 
   const displayMessage = () => {
@@ -43,22 +40,34 @@ const SwapTransactionButton = () => {
       .otherwise(() => { throw new Error('invalid coinType') })
   }
 
-  return (
-    <div className="py-4 w-full text-black">
-      {address ? (
+  const style = `text-lg bg-green-300 hover:bg-green-400 w-full p-4 rounded-full transition duration-200
+          disabled:bg-gray-200 dark:disabled:bg-gray-400 disabled:cursor-not-allowed`
+  return wallet.connected
+    ? (
+      <button
+        className={style}
+        onClick={async () => {
+          await executeTransaction();
+        }}
+      >
+        {displayMessage()}
+      </button>
+    ) : (
+      <ConnectModal
+        open={showModal}
+        onOpenChange={(open) => setShowModal(open)}
+      >
         <button
-          className="text-lg bg-green-300 hover:bg-green-400 w-full p-4 rounded-full transition duration-200
-          disabled:bg-gray-200 dark:disabled:bg-gray-400 disabled:cursor-not-allowed"
-          onClick={executeTransaction}
-        // disabled={networkName() === 'AptosMainnet' || disabled()}
+          className={style}
+          onClick={async () => {
+            wallet.adapter?.connect()
+            // await executeTransaction();
+          }}
         >
-          {displayMessage()}
+          Connect Wallet
         </button>
-      ) : (
-        "Connect Wallet"
-      )}
-    </div>
-  );
+      </ConnectModal>
+    )
 };
 
 export default SwapTransactionButton;
