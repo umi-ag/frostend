@@ -52,6 +52,7 @@ export const AppBar: React.FC = () => {
       </div>
       <div className="snowflake-neon"></div>
       <div className="flex items-center gap-6">
+        <span className="bg-red-500 text-white text-md font-semibold px-3 py-1 rounded-lg">Sui Testnet</span>
         <FaucetButton />
         <div className="font-bold text-lg">
           <WalletConnectButton />

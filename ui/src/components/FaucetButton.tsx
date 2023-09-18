@@ -5,7 +5,6 @@ import { moveCallFaucet } from 'src/frostendLib';
 import { noticeTxnResultMessage } from './TransactionToast';
 
 
-
 export const FaucetButton: React.FC<{ buttonDisplay?: string }> = ({ buttonDisplay = "faucet stSUI" }) => {
   const wallet = useWallet();
   const [showModal, setShowModal] = useState(false)
