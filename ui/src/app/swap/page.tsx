@@ -1,6 +1,5 @@
 "use client";
 
-import { useWallet } from '@suiet/wallet-kit';
 import { AppBar } from 'src/components/AppBar';
 import { SwapComponent } from 'src/components/SwapComponent';
 import { STSUI_PTCoinType, STSUI_SYCoinType, STSUI_YTCoinType } from 'src/frostendLib';
@@ -9,12 +8,9 @@ import { useTradeStore } from 'src/store/trade';
 
 
 const FaucetCard = () => {
-  const { address, signAndExecuteTransactionBlock } = useWallet();
   const {
-    sourceCoinType, targetCoinType,
     setSourceCoinType, setTargetCoinType,
     setSourceCoinAmount, setTargetCoinAmount,
-    sourceCoinAmount,
   } = useTradeStore()
 
   return (
