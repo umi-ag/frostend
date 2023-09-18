@@ -19,6 +19,12 @@ cd contracts/frostend
 sui client publish --gas-budget 123456789 --skip-dependency-verification
 '''
 
+[tasks."deploy:frostend0"]
+script = '''
+cd contracts/frostend_0
+sui client publish --gas-budget 123456789 --skip-dependency-verification
+'''
+
 [tasks."gen:install"]
 script = '''
 cargo install --locked --git https://github.com/kunalabs-io/sui-client-gen.git

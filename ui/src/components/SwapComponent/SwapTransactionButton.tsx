@@ -28,8 +28,7 @@ const SwapTransactionButton = () => {
       // @ts-ignore
       transactionBlock: txb
     });
-    const url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`
-    noticeTxnResultMessage({ href: url, txHash: r.digest })
+    noticeTxnResultMessage(r)
   }
 
   const displayMessage = () => {
