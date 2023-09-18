@@ -2,20 +2,21 @@ import React from 'react';
 import { ConnectButton } from '@suiet/wallet-kit';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import { FaucetButton } from './FaucetButton';
+
 
 const NavLink: React.FC<{
-  href: string
-  children: React.ReactNode,
+  href: string;
+  children: React.ReactNode;
 }> = ({ href, children }) => {
-  // const router = useRouter();
-  // const isActive = router.pathname === href;
-
-  const isActive = false;
+  const pathname = usePathname();
+  const isActive = pathname === href;
 
   return (
     <Link href={href}>
       <span
-        className={`text-lg ${isActive ? 'text-gray-300' : 'text-white'} hover:text-gray-300 transition duration-300`}
+        className={`text-xl font-semibold px-2 py-1 ${isActive ? 'text-white' : 'text-gray-400'} hover:text-gray-300 hover:scale-105 transform transition-all duration-300 ease-in-out`}
       >
         {children}
       </span>
@@ -23,9 +24,11 @@ const NavLink: React.FC<{
   );
 };
 
+
 const WalletConnectButton: React.FC = () => {
   return <ConnectButton>Connect Wallet</ConnectButton>;
 };
+
 
 export const AppBar: React.FC = () => {
   return (
@@ -41,12 +44,15 @@ export const AppBar: React.FC = () => {
         <span className="text-white font-black text-4xl font-genos">
           FrostEnd
         </span>
+        <div className='flex items-center gap-5'>
+          <NavLink href="/">/</NavLink>
+          <NavLink href="/swap">swap</NavLink>
+          <NavLink href="/admin">admin</NavLink>
+        </div>
       </div>
       <div className="snowflake-neon"></div>
       <div className="flex items-center gap-6">
-        <NavLink href="/">/</NavLink>
-        <NavLink href="/swap">/swap</NavLink>
-        <NavLink href="/admin">/admin</NavLink>
+        <FaucetButton />
         <div className="font-bold text-lg">
           <WalletConnectButton />
         </div>
