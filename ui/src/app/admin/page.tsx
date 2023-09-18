@@ -3,15 +3,17 @@
 import { useWallet } from '@suiet/wallet-kit';
 import { AppBar } from 'src/components/AppBar';
 import { TransactionBlock } from '@mysten/sui.js/transactions'
-import { mintTo } from 'src/moveCall/frostend/stsui-coin/functions';
 import { STSUI_COIN } from 'src/moveCall/frostend/stsui-coin/structs';
-import { BANK, TRESURY_CAP, VAULT } from 'src/config/frostend';
 import { JsonRpcProvider, Connection } from '@mysten/sui.js';
 import { maybeSplitCoinsAndTransferRest } from 'src/moveCall/frostend/coin-utils/functions';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import { depositCoins } from 'src/moveCall/frostend/actions/functions';
 import { moveCallCreateBank, moveCallInitVault } from 'src/frostendLib';
+import { moveCallFaucet } from 'src/frostendLib';
+import { toast } from 'react-hot-toast';
+import { noticeTxnResultMessage } from 'src/components/TransactionToast';
+import { BANK, VAULT } from 'src/config/frostend';
 
 
 const provider = new JsonRpcProvider(
@@ -22,30 +24,23 @@ const provider = new JsonRpcProvider(
 );
 
 const FaucetCard = (props: {
-  amount: BigInt,
+  amount: bigint,
   coinType: string,
   display: string,
   buttonDisplay: string,
 }) => {
-  const { address, signAndExecuteTransactionBlock } = useWallet();
+  const wallet = useWallet();
 
   const executeTransaction = async () => {
-    if (!address) return;
     const txb = new TransactionBlock()
-    mintTo(txb, {
-      treasuryCap: TRESURY_CAP,
-      // @ts-ignore
-      u64: props.amount,
-    })
+    moveCallFaucet(txb, { amount: props.amount })
 
-    const r = await signAndExecuteTransactionBlock({
+    const r = await wallet.signAndExecuteTransactionBlock({
       // @ts-ignore
       transactionBlock: txb
     });
-    const url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`
-    console.log(url);
+    noticeTxnResultMessage(r)
   }
-
 
   return (
     <div className='bg-gray-100 px-3 py-2 rounded-lg w-[200px] h-[200px] flex items-center justify-center'>
@@ -67,18 +62,17 @@ const FaucetCard = (props: {
 }
 
 const CreateBankCard = () => {
-  const { signAndExecuteTransactionBlock } = useWallet();
+  const wallet = useWallet();
 
   const executeTransaction = async () => {
     const txb = new TransactionBlock();
     moveCallCreateBank(txb)
 
-    const r = await signAndExecuteTransactionBlock({
+    const r = await wallet.signAndExecuteTransactionBlock({
       // @ts-ignore
       transactionBlock: txb
     });
-    const url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`
-    console.log(url);
+    noticeTxnResultMessage(r)
   }
 
   return (
@@ -180,19 +174,18 @@ const bankDeposit = async (txb: TransactionBlock, address: string) => {
 }
 
 const BankDespositCard = () => {
-  const { address, signAndExecuteTransactionBlock } = useWallet();
+  const wallet = useWallet();
 
   const executeTransaction = async () => {
-    if (!address) return;
+    if (!wallet.address) return;
     const txb = new TransactionBlock()
-    await bankDeposit(txb, address)
+    await bankDeposit(txb, wallet.address)
 
-    const r = await signAndExecuteTransactionBlock({
+    const r = await wallet.signAndExecuteTransactionBlock({
       // @ts-ignore
       transactionBlock: txb
     });
-    const url = `https://suiexplorer.com/txblock/${r.digest}?network=testnet`
-    console.log(url);
+    noticeTxnResultMessage(r)
   }
 
   return (
@@ -218,8 +211,6 @@ const ViewObject = (props: {
   objectId: string,
   display: string,
 }) => {
-  const { address, signAndExecuteTransactionBlock } = useWallet();
-
   const url = () => {
     return `https://suiexplorer.com/object/${props.objectId}?network=testnet`
   }
@@ -242,6 +233,35 @@ const ViewObject = (props: {
   )
 }
 
+const TestToast = () => {
+  const fire = () => {
+    // toast.success('Swap success!');
+    toast.success(<div>
+      <p>Swap success!</p>
+      <p>explorer url: <a className="text-blue-500 underline" target="_blank" href="https://suiexplorer.com" rel="noreferrer">https://suiexplorer.com</a></p>
+    </div>, {
+      duration: 4000,
+      position: 'bottom-left',
+    })
+  }
+
+  return (
+    <div className='bg-gray-100 px-3 py-2 rounded-lg w-[200px] h-[200px] flex items-center justify-center'>
+      <div className='flex flex-col items-center gap-3'>
+        <div className='text-black text-lg font-bold'>
+          Test toast
+        </div>
+        <button
+          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full"
+          onClick={fire}
+        >
+          fire
+        </button>
+      </div>
+    </div>
+  )
+}
+
 const Page = () => {
   return (
     <div className="h-screen bg-blue-500">
@@ -255,6 +275,7 @@ const Page = () => {
           <CreateVaultCard />
           <ViewObject objectId={BANK} display='View BANK for stSUI' />
           <ViewObject objectId={VAULT} display='View VAULT for stSUI' />
+          <TestToast />
         </div>
       </main>
     </div>
