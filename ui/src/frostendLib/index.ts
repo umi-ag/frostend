@@ -8,8 +8,9 @@ import {
 import { STSUI_COIN } from "src/moveCall/frostend/stsui-coin/structs";
 import { Connection, JsonRpcProvider } from "@mysten/sui.js";
 import { maybeSplitCoinsAndTransferRest } from "src/moveCall/frostend/coin-utils/functions";
-import { BANK, VAULT } from "src/config/frostend";
+import { BANK, TRESURY_CAP, VAULT } from "src/config/frostend";
 import { PUBLISHED_AT } from "src/moveCall/frostend";
+import { mintTo } from "src/moveCall/frostend/stsui-coin/functions";
 
 const provider = new JsonRpcProvider(
   new Connection({
@@ -34,6 +35,20 @@ export const isYTcoinType = (coinType: string) => {
 
 export const whichCoinTypeIsSyPtYt = (coinType: string): "sy" | "pt" | "yt" => {
   return isPTCoinType(coinType) ? "pt" : isYTcoinType(coinType) ? "yt" : "sy";
+};
+
+export const moveCallFaucet = async (
+  txb: TransactionBlock,
+  args: {
+    amount: bigint;
+  },
+) => {
+  mintTo(txb, {
+    treasuryCap: TRESURY_CAP,
+    u64: args.amount,
+  });
+
+  return txb;
 };
 
 export const moveCallSwapSyToPt = async (
