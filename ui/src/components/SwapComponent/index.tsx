@@ -183,7 +183,9 @@ export const SwapComponent = () => {
         <TargetBody />
         <TargetFooter />
       </div>
-      <SwapTransactionButton />
+      <div className="py-4 w-full text-black">
+        <SwapTransactionButton />
+      </div>
     </div>
   );
 };
