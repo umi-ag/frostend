@@ -5,9 +5,7 @@ bun run dev
 '''
 
 [tasks."deploy:sui"]
-dependencies = [
-  "deploy:frostend",
-]
+dependencies = ["deploy:frostend"]
 
 [tasks."deploy:umi-utils"]
 script = '''
@@ -15,10 +13,27 @@ cd contracts/umi-utils
 sui client publish --gas-budget 123456789 --skip-dependency-verification
 '''
 
+[tasks."deploy:stsui"]
+script = '''
+cd contracts/stsui
+sui client publish --gas-budget 123456789 --skip-dependency-verification
+'''
+
 [tasks."deploy:frostend"]
 script = '''
 cd contracts/frostend
 sui client publish --gas-budget 123456789 --skip-dependency-verification
+'''
+
+[tasks."deploy:frostend0"]
+script = '''
+cd contracts/frostend_0
+sui client publish --gas-budget 123456789 --skip-dependency-verification
+'''
+
+[tasks."gen:install"]
+script = '''
+cargo install --locked --git https://github.com/kunalabs-io/sui-client-gen.git
 '''
 
 [tasks."gen:sui"]
