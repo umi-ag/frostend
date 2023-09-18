@@ -10,7 +10,7 @@ module frostend::stsui_coin {
     fun init(witness: STSUI_COIN, ctx: &mut TxContext) {
         let (treasury_cap, metadata) = new(witness, ctx);
         transfer::public_freeze_object(metadata);
-        transfer::public_transfer(treasury_cap, tx_context::sender(ctx))
+        transfer::public_share_object(treasury_cap);
     }
 
     fun new<X: drop>(witness: X, ctx: &mut TxContext)
