@@ -2,6 +2,8 @@ import Decimal from 'decimal.js';
 import Image from 'next/image';
 import { CoinProfile } from 'src/coinList';
 import { Vault } from 'src/types';
+import dayjs from 'dayjs';
+import { match } from 'ts-pattern';
 
 const percent = (d: Decimal) => d.mul(100).toNumber();
 
@@ -22,10 +24,18 @@ const CardHeader: React.FC<{ vault: Vault }> = (props) => {
 };
 
 const Maturity: React.FC<{ vault: Vault }> = (props) => {
+  const d = dayjs(props.vault.maturity);
+  const remaining = d.diff(dayjs(), 'day');
+
+  const barColor = match(remaining)
+    .when(x => x > 365, () => 'bg-blue-400')
+    .when(x => x > 7, () => 'bg-orange-500')
+    .otherwise(() => 'bg-red-400');
+
   return (
-    <div className="flex justify-between px-4 py-2 bg-blue-400 text-white mb-4">
+    <div className={`flex justify-between px-4 py-2 text-white mb-4 ${barColor}`}>
       <span>Maturity</span>
-      <span>{props.vault.maturity.toLocaleDateString()} (153 days)</span>
+      <span>{props.vault.maturity.toLocaleDateString()} ({remaining} days)</span>
     </div>
   );
 };
