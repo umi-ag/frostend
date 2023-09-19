@@ -8,9 +8,9 @@ export default function Layout({
   children: React.ReactNode
 }) {
   return (
-    <div className="h-screen bg-blue-500">
+    <div className="min-h-screen bg-blue-500">
       <AppBar />
-      <main className="flex justify-center mt-[120px] flex-wrap">
+      <main className="grid place-items-center py-16">
         {children}
       </main>
     </div>
