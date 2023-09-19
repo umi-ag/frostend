@@ -8,7 +8,7 @@ module sharbet::shasui {
     use sui::tx_context::{Self, TxContext};
     use sui::url::{Self, Url};
 
-    friend sharbet::cvault;
+    friend sharbet::sha_manager;
 
     struct SHASUI has drop {}
 

@@ -1,5 +1,5 @@
 #[allow(unused_field)]
-module sharbet::stake_utils {
+module sharbet::stake_manager {
     use std::vector;
 
     use sui::balance::{Self, Balance};
@@ -13,11 +13,11 @@ module sharbet::stake_utils {
 
     use sharbet::constants;
 
-    friend sharbet::cvault;
+    friend sharbet::sha_manager;
 
     fun init(_ctx: &TxContext) { }
 
-    struct CVault has key {
+    struct StakeProfile has key {
         id: UID,
         reserve_stakedsui: LinkedTable<ID, StakedSui>,
         amount_staked_sui: u64,
@@ -25,28 +25,28 @@ module sharbet::stake_utils {
         pending_sui: Balance<SUI>,
     }
 
-    public fun amount_staked_sui(self: &CVault): u64 {
+    public fun amount_staked_sui(self: &StakeProfile): u64 {
         self.amount_staked_sui
     }
 
-    public fun amount_reward_sui(self: &CVault): u64 {
+    public fun amount_reward_sui(self: &StakeProfile): u64 {
         self.amount_reward_sui
     }
 
-    public fun amount_pending_sui(self: &CVault): u64 {
+    public fun amount_pending_sui(self: &StakeProfile): u64 {
         balance::value(&self.pending_sui)
     }
 
-    public(friend) fun deposit_sui(self: &mut CVault, balance_sui: Balance<SUI>) {
+    public(friend) fun deposit_sui(self: &mut StakeProfile, balance_sui: Balance<SUI>) {
         balance::join(&mut self.pending_sui, balance_sui);
     }
 
-    public(friend) fun withdraw_sui(self: &mut CVault, amount: u64): Balance<SUI> {
+    public(friend) fun withdraw_sui(self: &mut StakeProfile, amount: u64): Balance<SUI> {
         balance::split(&mut self.pending_sui, amount)
     }
 
     fun withdraw_stakedsui(
-        self: &mut CVault,
+        self: &mut StakeProfile,
         amount_requested: u64,
     ): vector<StakedSui> {
         let amount_withdrawn: u64 = 0;
@@ -64,7 +64,7 @@ module sharbet::stake_utils {
     }
 
     public(friend) fun stake_sui(
-        self: &mut CVault,
+        self: &mut StakeProfile,
         wrapper: &mut SuiSystemState,
         validator_address: address,
         ctx: &mut TxContext,
@@ -81,7 +81,7 @@ module sharbet::stake_utils {
     }
 
     public(friend) fun unstake_sui(
-        self: &mut CVault,
+        self: &mut StakeProfile,
         amount_sui_requested: u64,
         wrapper: &mut SuiSystemState,
         validator_address: address,
@@ -96,7 +96,7 @@ module sharbet::stake_utils {
     }
 
     public fun unstake_sui_from_stakedsui_list(
-        self: &mut CVault,
+        self: &mut StakeProfile,
         stakedsui_list: vector<StakedSui>,
         wrapper: &mut SuiSystemState,
         ctx: &mut TxContext,
