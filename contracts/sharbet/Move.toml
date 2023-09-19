@@ -1,0 +1,12 @@
+[package]
+name = "Sharbet"
+version = "0.0.1"
+
+[dependencies]
+Math = {local = "../math"}
+MoveStdlib = {git = "https://github.com/MystenLabs/sui.git", rev = "mainnet-v1.8.2", subdir = "crates/sui-framework/packages/move-stdlib", override = true}
+Sui = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "mainnet-v1.8.2", override = true}
+SuiSystem = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-system", rev = "main"}
+
+[addresses]
+sharbet = "0x0"
