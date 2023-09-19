@@ -1,6 +1,7 @@
 module sharbet::shasui {
     use std::option;
 
+    use sui::balance::{Self, Balance};
     use sui::coin::{Self, Coin, TreasuryCap, CoinMetadata};
     use sui::event;
     use sui::transfer;
@@ -57,10 +58,11 @@ module sharbet::shasui {
 
     public(friend) fun burn(
         treasury_cap: &mut TreasuryCap<SHASUI>,
-        coin: Coin<SHASUI>,
+        balance: Balance<SHASUI>,
         ctx: &mut TxContext
     ) {
-        event::emit(EventBurn { amount: coin::value(&coin), user: tx_context::sender(ctx) });
+        event::emit(EventBurn { amount: balance::value(&balance), user: tx_context::sender(ctx) });
+        let coin = coin::from_balance(balance, ctx);
         coin::burn(treasury_cap, coin);
     }
 
