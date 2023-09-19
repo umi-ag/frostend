@@ -14,33 +14,11 @@ module sharbet::cvault {
 
     use math::fixedU32;
     use sharbet::shasui::{Self, SHASUI};
-    use sharbet::stake_utils;
+    use sharbet::stake_utils::{Self, CVault};
 
-    friend sharbet::manager;
-
-    const ONE_SUI: u64 = 1_000_000_000;
 
     fun init(_ctx: &TxContext) { }
 
-    struct CVault has key {
-        id: UID,
-        reserve_stakedsui: LinkedTable<ID, StakedSui>,
-        pending_sui: Balance<SUI>,
-        amount_staked_sui: u64,
-        amount_reward_sui: u64,
-    }
-
-    public fun amount_staked_sui(self: &CVault): u64 {
-        self.amount_staked_sui
-    }
-
-    public fun amount_reward_sui(self: &CVault): u64 {
-        self.amount_reward_sui
-    }
-
-    public fun amount_pending_sui(self: &CVault): u64 {
-        balance::value(&self.pending_sui)
-    }
 
     public fun price_shasui_to_sui(
         self: &CVault,
@@ -49,50 +27,39 @@ module sharbet::cvault {
         fixedU32::div(
             fixedU32::from_u64(shasui::total_supply(treasury)),
             fixedU32::from_u64(
-                amount_staked_sui(self) + amount_reward_sui(self)
+                stake_utils::amount_staked_sui(self) + stake_utils::amount_reward_sui(self)
             ),
         )
     }
 
-    public(friend) fun deposit_sui(self: &mut CVault, balance_sui: Balance<SUI>) {
-        balance::join(&mut self.pending_sui, balance_sui);
+    public fun mint_shasui(
+        cvault: &mut CVault,
+        balance_sui: Balance<SUI>,
+        wrapper: &mut SuiSystemState,
+        treasury_shasui: &mut TreasuryCap<SHASUI>,
+        validator_address: address,
+        ctx: &mut TxContext,
+    ): Balance<SHASUI> {
+        let balance_shasui = mint_shasui_from_amount_sui(cvault, &balance_sui, treasury_shasui, ctx);
+        stake_utils::deposit_sui(cvault, balance_sui);
+        stake_utils::stake_sui(cvault, wrapper, validator_address, ctx);
+        balance_shasui
     }
 
-    public(friend) fun withdraw_pending_sui(
-        self: &mut CVault,
-        amount: u64,
+    public fun burn_shasui(
+        cvault: &mut CVault,
+        balance_shasui: Balance<SHASUI>,
+        wrapper: &mut SuiSystemState,
+        treasury_shasui: &mut TreasuryCap<SHASUI>,
+        validator_address: address,
+        ctx: &mut TxContext,
     ): Balance<SUI> {
-        balance::split(&mut self.pending_sui, amount)
+        let amount_sui_to_withdraw = burn_shasui_into_amount_sui(cvault, balance_shasui, wrapper, treasury_shasui, ctx);
+        let balance_sui = stake_utils::unstake_sui(cvault, amount_sui_to_withdraw, wrapper, validator_address, ctx);
+        balance_sui
     }
 
-    public(friend) fun deposit_stakedsui(
-        self: &mut CVault,
-        stakedsui: StakedSui
-    ) {
-        let amount_stakedsui = staking_pool::staked_sui_amount(&stakedsui);
-        linked_table::push_back(&mut self.reserve_stakedsui, object::id(&stakedsui), stakedsui);
-        self.amount_staked_sui = self.amount_staked_sui + amount_stakedsui;
-    }
-
-    public(friend) fun withdraw_stakedsui(
-        self: &mut CVault,
-        amount_requested: u64,
-    ): vector<StakedSui> {
-        let amount_withdrawn: u64 = 0;
-        let stakedsui_list = vector::empty<StakedSui>();
-
-        while (amount_withdrawn < amount_requested) {
-            let (_key, stakedsui) = linked_table::pop_front(&mut self.reserve_stakedsui);
-            let amount_stakedsui = staking_pool::staked_sui_amount(&stakedsui);
-            vector::push_back(&mut stakedsui_list, stakedsui);
-            amount_withdrawn = amount_withdrawn + amount_stakedsui;
-        };
-
-        self.amount_staked_sui = self.amount_staked_sui - amount_withdrawn;
-        stakedsui_list
-    }
-
-    public(friend) fun mint_shasui_from_amount_sui(
+    fun mint_shasui_from_amount_sui(
         self: &mut CVault,
         balance_sui: &Balance<SUI>,
         treasury_shasui: &mut TreasuryCap<SHASUI>,
@@ -103,7 +70,7 @@ module sharbet::cvault {
         coin::into_balance(coin_shasui)
     }
 
-    public(friend) fun burn_shasui_into_amount_sui(
+    fun burn_shasui_into_amount_sui(
         self: &mut CVault,
         balance_shasui: Balance<SHASUI>,
         wrapper: &mut SuiSystemState,

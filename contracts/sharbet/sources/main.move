@@ -17,9 +17,8 @@ module sharbet::main {
 
     use math::u64;
     use sharbet::shasui::{Self, SHASUI};
-    use sharbet::cvault::{Self, CVault};
-    use sharbet::stake_utils;
-    use sharbet::manager;
+    use sharbet::cvault::{Self};
+    use sharbet::stake_utils::{Self, CVault};
 
 
     fun init(_ctx: &TxContext) { }
@@ -33,7 +32,7 @@ module sharbet::main {
         ctx: &mut TxContext,
     ): Coin<SHASUI> {
         let balance_sui = coin::into_balance(coin_sui);
-        let balance_shasui = manager::stake_sui_to_validator(cvault, wrapper, validator_address, treasury_shasui, balance_sui, ctx);
+        let balance_shasui = cvault::mint_shasui(cvault, balance_sui, wrapper, treasury_shasui, validator_address, ctx);
         let coin_shasui = coin::from_balance(balance_shasui, ctx);
         coin_shasui
     }
@@ -43,10 +42,11 @@ module sharbet::main {
         coin_shasui: Coin<SHASUI>,
         wrapper: &mut SuiSystemState,
         treasury_shasui: &mut TreasuryCap<SHASUI>,
+        validator_address: address,
         ctx: &mut TxContext,
     ): Coin<SUI> {
         let balance_shasui = coin::into_balance(coin_shasui);
-        let balance_sui = manager::burn_shasui(cvault, balance_shasui, wrapper, treasury_shasui, ctx);
+        let balance_sui = cvault::burn_shasui(cvault, balance_shasui, wrapper, treasury_shasui, validator_address, ctx);
         coin::from_balance(balance_sui, ctx)
     }
 }
