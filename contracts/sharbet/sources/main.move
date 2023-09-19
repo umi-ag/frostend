@@ -17,6 +17,7 @@ module sharbet::main {
     use math::u64;
     use sharbet::shasui::{Self, SHASUI};
     use sharbet::cvault::{Self, CVault};
+    use sharbet::stake_utils;
 
     const ONE_SUI: u64 = 1_000_000_000;
 
@@ -51,14 +52,14 @@ module sharbet::main {
     }
 
     public fun unstake(
-        wrapper: &mut SuiSystemState,
         cvault: &mut CVault,
-        treasury_shasui: &mut TreasuryCap<SHASUI>,
         coin_shasui: Coin<SHASUI>,
+        wrapper: &mut SuiSystemState,
+        treasury_shasui: &mut TreasuryCap<SHASUI>,
         ctx: &mut TxContext,
     ): Coin<SUI> {
         let balance_shasui = coin::into_balance(coin_shasui);
-        let balance_sui = unstake_sui_from_validator(wrapper, cvault, treasury_shasui, balance_shasui, ctx);
+        let balance_sui = cvault::burn_shasui(cvault, balance_shasui, wrapper, treasury_shasui, ctx);
         coin::from_balance(balance_sui, ctx)
     }
 
@@ -75,47 +76,8 @@ module sharbet::main {
         };
 
         let balance_pending_sui = cvault::withdraw_pending_sui(cvault, amount_pending_sui);
-        let stakedsui = request_add_stake(wrapper, validator_address, balance_pending_sui, ctx);
+        let stakedsui = stake_utils::request_add_stake(wrapper, validator_address, balance_pending_sui, ctx);
         let balnace_shasui = cvault::deposit_stakedsui_and_mint_shasui(cvault, stakedsui, treasury_shasui, ctx);
         balnace_shasui
     }
-
-    fun unstake_sui_from_validator(
-        wrapper: &mut SuiSystemState,
-        cvault: &mut CVault,
-        treasury_shasui: &mut TreasuryCap<SHASUI>,
-        balance_shasui: Balance<SHASUI>,
-        ctx: &mut TxContext
-    ): Balance<SUI> {
-        let stakedsui_list = cvault::withdraw_stakedsui_and_burn_shasui(cvault, balance_shasui, treasury_shasui, ctx);
-        let balance_sui_unstaked = balance::zero<SUI>();
-
-        while (!vector::is_empty(&stakedsui_list)) {
-            let stakedsui = vector::pop_back(&mut stakedsui_list);
-            let balance_sui = request_withdraw_stake(wrapper, stakedsui, ctx);
-            balance::join(&mut balance_sui_unstaked, balance_sui);
-        };
-        vector::destroy_empty(stakedsui_list);
-
-        balance_sui_unstaked
-    }
-
-    fun request_add_stake(
-        wrapper: &mut SuiSystemState,
-        validator_address: address,
-        balance_sui: Balance<SUI>,
-        ctx: &mut TxContext,
-    ): StakedSui  {
-        let coin_sui = coin::from_balance(balance_sui, ctx);
-        sui_system::request_add_stake_non_entry(wrapper, coin_sui, validator_address, ctx)
-    }
-
-    fun request_withdraw_stake(
-        wrapper: &mut SuiSystemState,
-        stakedsui: StakedSui,
-        ctx: &mut TxContext,
-    ): Balance<SUI>  {
-        sui_system::request_withdraw_stake_non_entry(wrapper, stakedsui, ctx)
-    }
-
 }
