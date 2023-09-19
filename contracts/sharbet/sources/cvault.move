@@ -1,8 +1,10 @@
+#[allow(unused_field)]
 module sharbet::cvault {
     use sui::balance::{Self, Balance};
     use sui::coin::{Self, TreasuryCap};
     use std::fixed_point32::{FixedPoint32};
-    use sui::object::{UID};
+    use sui::linked_table::{Self, LinkedTable};
+    use sui::object::{Self, ID, UID};
     use sui::sui::{SUI};
     use sui::tx_context::{TxContext};
     use sui_system::staking_pool::{Self, StakedSui};
@@ -15,7 +17,7 @@ module sharbet::cvault {
 
     struct CVault has key {
         id: UID,
-        reserve_stakedsui: vector<StakedSui>,
+        reserve_stakedsui: LinkedTable<ID, StakedSui>,
         pending_sui: Balance<SUI>,
         amount_staked_sui: u64,
         amount_reward_sui: u64,
@@ -42,20 +44,26 @@ module sharbet::cvault {
         stakedsui: StakedSui
     ) {
         let amount_stakedsui = staking_pool::staked_sui_amount(&stakedsui);
-
-        vector::push_back(&mut self.reserve_stakedsui, stakedsui);
+        linked_table::push_back(&mut self.reserve_stakedsui, object::id(&stakedsui), stakedsui);
         self.amount_staked_sui = self.amount_staked_sui + amount_stakedsui;
     }
 
     fun withdraw_stakedsui(
         self: &mut CVault,
-    ): StakedSui {
-        let stakedsui = vector::pop_back(&mut self.reserve_stakedsui);
+        amount_requested: u64,
+    ): vector<StakedSui> {
+        let amount_withdrawn: u64 = 0;
+        let stakedsui_list = vector::empty<StakedSui>();
 
-        let amount_stakedsui = staking_pool::staked_sui_amount(&stakedsui);
-        self.amount_staked_sui = self.amount_staked_sui - amount_stakedsui;
+        while (amount_withdrawn < amount_requested) {
+            let (_key, stakedsui) = linked_table::pop_front(&mut self.reserve_stakedsui);
+            let amount_stakedsui = staking_pool::staked_sui_amount(&stakedsui);
+            vector::push_back(&mut stakedsui_list, stakedsui);
+            amount_withdrawn = amount_withdrawn + amount_stakedsui;
+        };
 
-        stakedsui
+        self.amount_staked_sui = self.amount_staked_sui - amount_withdrawn;
+        stakedsui_list
     }
 
     fun mint_shasui_from_amount_sui(
@@ -110,12 +118,10 @@ module sharbet::cvault {
         balance_shasui: Balance<SHASUI>,
         treasury_shasui: &mut TreasuryCap<SHASUI>,
         ctx: &mut TxContext,
-    ): StakedSui {
+    ): vector<StakedSui> {
         let amount_sui = burn_shasui_into_amount_sui(self, balance_shasui, treasury_shasui, ctx);
-        // TODO: Use amount_sui
-        let stakedsui = withdraw_stakedsui(self);
-
-        stakedsui
+        let stakedsui_list = withdraw_stakedsui(self, amount_sui);
+        stakedsui_list
     }
 
     public(friend) fun withdraw_pending_sui(

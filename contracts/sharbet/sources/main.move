@@ -1,5 +1,8 @@
 module sharbet::main {
     use std::option;
+    use std::vector;
+
+    use std::debug::print;
     use sui::balance::{Self, Balance};
     use sui::coin::{Self, Coin, TreasuryCap, CoinMetadata};
     use sui::linked_table::{Self, LinkedTable};
@@ -51,9 +54,10 @@ module sharbet::main {
         wrapper: &mut SuiSystemState,
         cvault: &mut CVault,
         treasury_shasui: &mut TreasuryCap<SHASUI>,
-        balance_shasui: Balance<SHASUI>,
+        coin_shasui: Coin<SHASUI>,
         ctx: &mut TxContext,
     ): Coin<SUI> {
+        let balance_shasui = coin::into_balance(coin_shasui);
         let balance_sui = unstake_sui_from_validator(wrapper, cvault, treasury_shasui, balance_shasui, ctx);
         coin::from_balance(balance_sui, ctx)
     }
@@ -67,7 +71,7 @@ module sharbet::main {
     ): Balance<SHASUI> {
         let amount_pending_sui = cvault::amount_pending_sui(cvault);
         if (amount_pending_sui < ONE_SUI) {
-            return balance::zero();
+            return balance::zero()
         };
 
         let balance_pending_sui = cvault::withdraw_pending_sui(cvault, amount_pending_sui);
@@ -83,9 +87,17 @@ module sharbet::main {
         balance_shasui: Balance<SHASUI>,
         ctx: &mut TxContext
     ): Balance<SUI> {
-        let stakedsui = cvault::withdraw_stakedsui_and_burn_shasui(cvault, balance_shasui, treasury_shasui, ctx);
-        let balance_sui = request_withdraw_stake(wrapper, stakedsui, ctx);
-        balance_sui
+        let stakedsui_list = cvault::withdraw_stakedsui_and_burn_shasui(cvault, balance_shasui, treasury_shasui, ctx);
+        let balance_sui_unstaked = balance::zero<SUI>();
+
+        while (!vector::is_empty(&stakedsui_list)) {
+            let stakedsui = vector::pop_back(&mut stakedsui_list);
+            let balance_sui = request_withdraw_stake(wrapper, stakedsui, ctx);
+            balance::join(&mut balance_sui_unstaked, balance_sui);
+        };
+        vector::destroy_empty(stakedsui_list);
+
+        balance_sui_unstaked
     }
 
     fun request_add_stake(
