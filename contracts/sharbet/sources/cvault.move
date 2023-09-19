@@ -5,13 +5,19 @@ module sharbet::cvault {
     use sui::object::{Self, UID, ID};
     use sui::sui::{SUI};
     use sui::tx_context::{Self, TxContext};
+    use sui_system::staking_pool::{Self, StakedSui};
+    use std::vector;
 
     use math::fixedU32;
     use sharbet::shasui::{Self, SHASUI};
 
+    friend sharbet::main;
+
     struct CVault has key {
         id: UID,
         reserve_sui: Balance<SUI>,
+        reserve_stakedsui: vector<StakedSui>,
+        pending_sui: Balance<SUI>,
         amount_staked_sui: u64,
         amount_reward_sui: u64,
     }
@@ -24,8 +30,29 @@ module sharbet::cvault {
         self.amount_reward_sui
     }
 
-    public fun deposit_sui(self: &mut CVault, sui_balance: Balance<SUI>) {
+    public fun amount_pending_sui(self: &CVault): u64 {
+        balance::value(&self.pending_sui)
+    }
+
+    public(friend) fun deposit_sui(self: &mut CVault, sui_balance: Balance<SUI>) {
         balance::join(&mut self.reserve_sui, sui_balance);
+    }
+
+    public(friend) fun deposit_stakedsui(
+        self: &mut CVault,
+        stakedsui: StakedSui
+    ) {
+        let amount_stakedsui = staking_pool::staked_sui_amount(&stakedsui);
+
+        vector::push_back(&mut self.reserve_stakedsui, stakedsui);
+        self.amount_staked_sui = self.amount_staked_sui + amount_stakedsui;
+    }
+
+    public(friend) fun withdraw_pending_sui(
+        self: &mut CVault,
+        amount: u64,
+    ): Balance<SUI> {
+        balance::split(&mut self.pending_sui, amount)
     }
 
     public fun price_shasui_to_sui(
@@ -40,7 +67,7 @@ module sharbet::cvault {
         )
     }
 
-    public fun mint_shasui(
+    public(friend) fun mint_shasui(
         self: &mut CVault,
         sui_balance: Balance<SUI>,
         treasury: &mut TreasuryCap<SHASUI>,
