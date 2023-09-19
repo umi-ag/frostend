@@ -1,3 +1,4 @@
+#[allow(unused_field)]
 module sharbet::stake_utils {
     use std::vector;
 

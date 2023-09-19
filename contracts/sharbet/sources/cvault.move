@@ -16,7 +16,11 @@ module sharbet::cvault {
     use sharbet::shasui::{Self, SHASUI};
     use sharbet::stake_utils;
 
-    friend sharbet::main;
+    friend sharbet::manager;
+
+    const ONE_SUI: u64 = 1_000_000_000;
+
+    fun init(_ctx: &TxContext) { }
 
     struct CVault has key {
         id: UID,
@@ -54,7 +58,14 @@ module sharbet::cvault {
         balance::join(&mut self.pending_sui, balance_sui);
     }
 
-    fun deposit_stakedsui(
+    public(friend) fun withdraw_pending_sui(
+        self: &mut CVault,
+        amount: u64,
+    ): Balance<SUI> {
+        balance::split(&mut self.pending_sui, amount)
+    }
+
+    public(friend) fun deposit_stakedsui(
         self: &mut CVault,
         stakedsui: StakedSui
     ) {
@@ -63,7 +74,7 @@ module sharbet::cvault {
         self.amount_staked_sui = self.amount_staked_sui + amount_stakedsui;
     }
 
-    fun withdraw_stakedsui(
+    public(friend) fun withdraw_stakedsui(
         self: &mut CVault,
         amount_requested: u64,
     ): vector<StakedSui> {
@@ -81,47 +92,7 @@ module sharbet::cvault {
         stakedsui_list
     }
 
-    public(friend) fun withdraw_pending_sui(
-        self: &mut CVault,
-        amount: u64,
-    ): Balance<SUI> {
-        balance::split(&mut self.pending_sui, amount)
-    }
-
-    /// SUI -> shaSUI
-    public(friend) fun mint_shasui(
-        self: &mut CVault,
-        balance_sui: Balance<SUI>,
-        wrapper: &mut SuiSystemState,
-        treasury_shasui: &mut TreasuryCap<SHASUI>,
-        validator_address: address,
-        ctx: &mut TxContext,
-    ): Balance<SHASUI> {
-        let balance_shasui = mint_shasui_from_amount_sui(self, &balance_sui, treasury_shasui, ctx);
-        let stakedsui = stake_utils::request_add_stake(wrapper, validator_address, balance_sui, ctx);
-        deposit_stakedsui(self, stakedsui);
-        balance_shasui
-    }
-
-    /// shaSUI -> SUI
-    public(friend) fun burn_shasui(
-        self: &mut CVault,
-        balance_shasui: Balance<SHASUI>,
-        wrapper: &mut SuiSystemState,
-        treasury_shasui: &mut TreasuryCap<SHASUI>,
-        ctx: &mut TxContext,
-    ): Balance<SUI> {
-        let amount_sui_to_withdraw = burn_shasui_into_amount_sui(self, balance_shasui, wrapper, treasury_shasui, ctx);
-
-        let stakedsui_list = withdraw_stakedsui(self, amount_sui_to_withdraw);
-        let balance_sui_unstaked = stake_utils::request_withdraw_stake(wrapper, stakedsui_list, ctx);
-        let balance_sui_to_withdraw = balance::split(&mut balance_sui_unstaked, amount_sui_to_withdraw);
-        deposit_sui(self, balance_sui_unstaked);
-
-        balance_sui_to_withdraw
-    }
-
-    fun mint_shasui_from_amount_sui(
+    public(friend) fun mint_shasui_from_amount_sui(
         self: &mut CVault,
         balance_sui: &Balance<SUI>,
         treasury_shasui: &mut TreasuryCap<SHASUI>,
@@ -132,7 +103,7 @@ module sharbet::cvault {
         coin::into_balance(coin_shasui)
     }
 
-    fun burn_shasui_into_amount_sui(
+    public(friend) fun burn_shasui_into_amount_sui(
         self: &mut CVault,
         balance_shasui: Balance<SHASUI>,
         wrapper: &mut SuiSystemState,

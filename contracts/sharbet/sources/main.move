@@ -1,3 +1,4 @@
+#[allow(unused_field)]
 module sharbet::main {
     use std::option;
     use std::vector;
@@ -18,8 +19,8 @@ module sharbet::main {
     use sharbet::shasui::{Self, SHASUI};
     use sharbet::cvault::{Self, CVault};
     use sharbet::stake_utils;
+    use sharbet::manager;
 
-    const ONE_SUI: u64 = 1_000_000_000;
 
     fun init(_ctx: &TxContext) { }
 
@@ -32,8 +33,7 @@ module sharbet::main {
         ctx: &mut TxContext,
     ): Coin<SHASUI> {
         let balance_sui = coin::into_balance(coin_sui);
-        cvault::deposit_sui(cvault, balance_sui);
-        let balance_shasui = stake_sui_to_validator(wrapper, validator_address, cvault, treasury_shasui, ctx);
+        let balance_shasui = manager::stake_sui_to_validator(cvault, wrapper, validator_address, treasury_shasui, balance_sui, ctx);
         let coin_shasui = coin::from_balance(balance_shasui, ctx);
         coin_shasui
     }
@@ -46,24 +46,7 @@ module sharbet::main {
         ctx: &mut TxContext,
     ): Coin<SUI> {
         let balance_shasui = coin::into_balance(coin_shasui);
-        let balance_sui = cvault::burn_shasui(cvault, balance_shasui, wrapper, treasury_shasui, ctx);
+        let balance_sui = manager::burn_shasui(cvault, balance_shasui, wrapper, treasury_shasui, ctx);
         coin::from_balance(balance_sui, ctx)
-    }
-
-    fun stake_sui_to_validator(
-        wrapper: &mut SuiSystemState,
-        validator_address: address,
-        cvault: &mut CVault,
-        treasury_shasui: &mut TreasuryCap<SHASUI>,
-        ctx: &mut TxContext
-    ): Balance<SHASUI> {
-        let amount_pending_sui = cvault::amount_pending_sui(cvault);
-        if (amount_pending_sui < ONE_SUI) {
-            return balance::zero()
-        };
-
-        let balance_pending_sui = cvault::withdraw_pending_sui(cvault, amount_pending_sui);
-        let balnace_shasui = cvault::mint_shasui(cvault, balance_pending_sui, wrapper, treasury_shasui, validator_address, ctx);
-        balnace_shasui
     }
 }
