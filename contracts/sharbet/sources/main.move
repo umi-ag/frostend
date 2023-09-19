@@ -21,44 +21,41 @@ module sharbet::main {
 
     public fun stake(
         wrapper: &mut SuiSystemState,
+        validator_address: address,
         cvault: &mut CVault,
         shasui_treasury: &mut TreasuryCap<SHASUI>,
         sui_coin: Coin<SUI>,
-        validator_address: address,
         ctx: &mut TxContext,
     ): Coin<SHASUI> {
         let sui_balance = coin::into_balance(sui_coin);
-        let sui_amount = balance::value(&sui_balance);
-
-        let shasui_balance = cvault::mint_shasui(cvault, sui_balance, shasui_treasury, ctx);
-
+        cvault::deposit_sui(cvault, sui_balance);
+        let shasui_balance = stake_sui_to_validator(wrapper, validator_address, cvault, shasui_treasury, ctx);
         let shasui_coin = coin::from_balance(shasui_balance, ctx);
         shasui_coin
     }
 
-    fun stake_pool(
+    fun stake_sui_to_validator(
         wrapper: &mut SuiSystemState,
-        cvault: &mut CVault,
         validator_address: address,
-        ctx: &mut TxContext,
-    ) {
+        cvault: &mut CVault,
+        shasui_treasury: &mut TreasuryCap<SHASUI>,
+        ctx: &mut TxContext
+    ): Balance<SHASUI> {
         let amount_pending_sui = cvault::amount_pending_sui(cvault);
         if (amount_pending_sui < ONE_SUI) {
-            return
+            return balance::zero();
         };
 
         let balance_pending_sui = cvault::withdraw_pending_sui(cvault, amount_pending_sui);
-        let staked_sui = request_add_stake(wrapper, balance_pending_sui, validator_address, ctx);
-
-        cvault::deposit_stakedsui(cvault, staked_sui);
-        // validator_set::add_stake(&mut self.validator_set, validator, staked_sui, ctx);
-        // add_total_staked_unsafe(self, amount_pending_sui, ctx);
+        let stakedsui = request_add_stake(wrapper, validator_address, balance_pending_sui, ctx);
+        let balnace_shasui = cvault::deposit_stakedsui_and_mint_shasui(cvault, stakedsui, shasui_treasury, ctx);
+        balnace_shasui
     }
 
-    public fun request_add_stake(
+    fun request_add_stake(
         wrapper: &mut SuiSystemState,
-        sui_balance: Balance<SUI>,
         validator_address: address,
+        sui_balance: Balance<SUI>,
         ctx: &mut TxContext,
     ): StakedSui  {
         let sui_coin = coin::from_balance(sui_balance, ctx);
