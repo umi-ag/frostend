@@ -21,19 +21,6 @@ module sharbet::main {
 
     const ONE_SUI: u64 = 1_000_000_000;
 
-    struct ValidatorData has key, store {
-        id: UID, // front end to grab and display data,
-        staking_pool_id: ID, // The ID of the Validator's {StakingPool}
-        staked_sui_table: LinkedTable<u64, StakedSui>, // activation_epoch => StakedSui
-        total_principal: u64 // Total amount of StakedSui principal deposited in this validator
-    }
-
-    struct PoolStorage has key {
-        id: UID,
-        validators_table: LinkedTable<address, ValidatorData>, // We need a linked table to iterate through all validators once every epoch to ensure all pool data is accurate
-        total_principal: u64, // Total amount of StakedSui principal deposited in Interest lst Package
-    }
-
     fun init(_ctx: &TxContext) { }
 
     public fun stake(
@@ -76,8 +63,7 @@ module sharbet::main {
         };
 
         let balance_pending_sui = cvault::withdraw_pending_sui(cvault, amount_pending_sui);
-        let stakedsui = stake_utils::request_add_stake(wrapper, validator_address, balance_pending_sui, ctx);
-        let balnace_shasui = cvault::deposit_stakedsui_and_mint_shasui(cvault, stakedsui, treasury_shasui, ctx);
+        let balnace_shasui = cvault::mint_shasui(cvault, balance_pending_sui, wrapper, treasury_shasui, validator_address, ctx);
         balnace_shasui
     }
 }
