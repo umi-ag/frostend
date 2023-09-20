@@ -70,9 +70,17 @@ module sharbet::shasui {
         transfer::public_transfer(treasury_cap, recipient);
     }
 
+    #[test_only]
+    public fun init_for_testing(ctx: &mut TxContext) {
+        init(SHASUI {}, ctx);
+    }
 
     #[test_only]
-    public fun test_init(ctx: &mut TxContext) {
-        init(SHASUI {}, ctx)
+    public fun mint_for_testing(
+        treasury_cap: &mut TreasuryCap<SHASUI>,
+        amount: u64,
+        ctx: &mut TxContext,
+    ): Coin<SHASUI> {
+        mint(treasury_cap, amount, ctx)
     }
 }

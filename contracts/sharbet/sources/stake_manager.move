@@ -3,10 +3,11 @@ module sharbet::stake_manager {
     use std::vector;
 
     use sui::balance::{Self, Balance};
-    use sui::coin::{Self, Coin};
+    use sui::coin::{Self};
     use sui::linked_table::{Self, LinkedTable};
     use sui::object::{Self, ID, UID};
     use sui::sui::{SUI};
+    use sui::transfer;
     use sui::tx_context::{TxContext};
     use sui_system::sui_system::{Self, SuiSystemState};
     use sui_system::staking_pool::{Self, StakedSui};
@@ -15,14 +16,24 @@ module sharbet::stake_manager {
 
     friend sharbet::sha_manager;
 
-    fun init(_ctx: &TxContext) { }
-
-    struct StakeProfile has key {
+    struct StakeProfile has key, store {
         id: UID,
         reserve_stakedsui: LinkedTable<ID, StakedSui>,
         amount_staked_sui: u64,
         amount_reward_sui: u64,
         pending_sui: Balance<SUI>,
+    }
+
+    fun init(ctx: &mut TxContext) {
+        let stake_profile = StakeProfile {
+            id: object::new(ctx),
+            reserve_stakedsui: linked_table::new(ctx),
+            amount_reward_sui: 0,
+            amount_staked_sui: 0,
+            pending_sui: balance::zero(),
+        };
+
+        transfer::public_share_object(stake_profile);
     }
 
     public fun amount_staked_sui(self: &StakeProfile): u64 {
@@ -84,7 +95,6 @@ module sharbet::stake_manager {
         self: &mut StakeProfile,
         amount_sui_requested: u64,
         wrapper: &mut SuiSystemState,
-        validator_address: address,
         ctx: &mut TxContext,
     ): Balance<SUI> {
         let stakedsui_list = withdraw_stakedsui(self, amount_sui_requested);
@@ -131,5 +141,10 @@ module sharbet::stake_manager {
         vector::destroy_empty(stakedsui_list);
 
         balance_sui_unstaked
+    }
+
+    #[test_only]
+    public fun init_for_testing(ctx: &mut TxContext) {
+        init(ctx);
     }
 }

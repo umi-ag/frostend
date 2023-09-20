@@ -1,24 +1,13 @@
 #[allow(unused_field)]
-module sharbet::main {
-    use std::option;
-    use std::vector;
-
-    use std::debug::print;
-    use sui::balance::{Self, Balance};
-    use sui::coin::{Self, Coin, TreasuryCap, CoinMetadata};
-    use sui::linked_table::{Self, LinkedTable};
-    use sui::object::{Self, UID, ID};
+module sharbet::actions {
+    use sui::coin::{Self, Coin, TreasuryCap};
     use sui::sui::{SUI};
-    use sui::transfer;
-    use sui::tx_context::{Self, TxContext};
-    use sui::clock::{Self, Clock};
-    use sui_system::sui_system::{Self, SuiSystemState};
-    use sui_system::staking_pool::{Self, StakedSui};
+    use sui::tx_context::{TxContext};
+    use sui_system::sui_system::{SuiSystemState};
 
-    use math::u64;
-    use sharbet::shasui::{Self, SHASUI};
+    use sharbet::shasui::{SHASUI};
     use sharbet::sha_manager::{Self};
-    use sharbet::stake_manager::{Self, StakeProfile};
+    use sharbet::stake_manager::{StakeProfile};
 
     fun init(_ctx: &TxContext) { }
 
@@ -41,11 +30,10 @@ module sharbet::main {
         coin_shasui: Coin<SHASUI>,
         wrapper: &mut SuiSystemState,
         treasury_shasui: &mut TreasuryCap<SHASUI>,
-        validator_address: address,
         ctx: &mut TxContext,
     ): Coin<SUI> {
         let balance_shasui = coin::into_balance(coin_shasui);
-        let balance_sui = sha_manager::burn_shasui(stake_profile, balance_shasui, wrapper, treasury_shasui, validator_address, ctx);
+        let balance_sui = sha_manager::burn_shasui(stake_profile, balance_shasui, wrapper, treasury_shasui, ctx);
         coin::from_balance(balance_sui, ctx)
     }
 }

@@ -1,18 +1,14 @@
 #[allow(unused_field)]
 module sharbet::sha_manager {
-    use std::vector;
-
     use sui::balance::{Self, Balance};
     use sui::coin::{Self, TreasuryCap};
     use std::fixed_point32::{FixedPoint32};
-    use sui::linked_table::{Self, LinkedTable};
-    use sui::object::{Self, ID, UID};
     use sui::sui::{SUI};
     use sui::tx_context::{TxContext};
-    use sui_system::staking_pool::{Self, StakedSui};
-    use sui_system::sui_system::{Self, SuiSystemState};
+    use sui_system::sui_system::{SuiSystemState};
 
     use math::fixedU32;
+    use math::u64;
     use sharbet::shasui::{Self, SHASUI};
     use sharbet::stake_manager::{Self, StakeProfile};
 
@@ -51,11 +47,10 @@ module sharbet::sha_manager {
         balance_shasui: Balance<SHASUI>,
         wrapper: &mut SuiSystemState,
         treasury_shasui: &mut TreasuryCap<SHASUI>,
-        validator_address: address,
         ctx: &mut TxContext,
     ): Balance<SUI> {
-        let amount_sui_to_withdraw = burn_shasui_into_amount_sui(stake_profile, balance_shasui, wrapper, treasury_shasui, ctx);
-        let balance_sui = stake_manager::unstake_sui(stake_profile, amount_sui_to_withdraw, wrapper, validator_address, ctx);
+        let amount_sui_to_withdraw = burn_shasui_into_amount_sui(stake_profile, balance_shasui, treasury_shasui, ctx);
+        let balance_sui = stake_manager::unstake_sui(stake_profile, amount_sui_to_withdraw, wrapper, ctx);
         balance_sui
     }
 
@@ -65,7 +60,7 @@ module sharbet::sha_manager {
         treasury_shasui: &mut TreasuryCap<SHASUI>,
         ctx: &mut TxContext
     ): Balance<SHASUI> {
-        let amount_shasui_to_mint = compute_amount_shasui_to_mint(self, balance_sui, treasury_shasui, ctx);
+        let amount_shasui_to_mint = compute_amount_shasui_to_mint(self, balance_sui, treasury_shasui);
         let coin_shasui = shasui::mint(treasury_shasui, amount_shasui_to_mint, ctx);
         coin::into_balance(coin_shasui)
     }
@@ -73,7 +68,6 @@ module sharbet::sha_manager {
     fun burn_shasui_into_amount_sui(
         self: &mut StakeProfile,
         balance_shasui: Balance<SHASUI>,
-        wrapper: &mut SuiSystemState,
         treasury_shasui: &mut TreasuryCap<SHASUI>,
         ctx: &mut TxContext,
     ): u64 {
@@ -86,30 +80,36 @@ module sharbet::sha_manager {
         self: &mut StakeProfile,
         balance_sui: &Balance<SUI>,
         treasury: &mut TreasuryCap<SHASUI>,
-        ctx: &mut TxContext
     ): u64 {
-        let amount_sui = balance::value(balance_sui);
-        let amount_shasui_to_mint = fixedU32::floor(
-            fixedU32::mul(
-                fixedU32::from_u64(amount_sui),
-                price_shasui_to_sui(self, treasury)
-            )
-        );
-        amount_shasui_to_mint
+        let delta_x = balance::value(balance_sui);
+        let x = stake_manager::amount_staked_sui(self) + stake_manager::amount_reward_sui(self);
+        let y = shasui::total_supply(treasury);
+
+        if (x == 0) {
+            delta_x
+        } else {
+            u64::mul_div(delta_x, y,x)
+        }
     }
 
     fun compute_amount_sui_to_withdraw(
         self: &StakeProfile,
         balance_shasui: &Balance<SHASUI>,
-        treasury_shasui: &TreasuryCap<SHASUI>,
+        treasury: &mut TreasuryCap<SHASUI>,
     ): u64 {
-        let amount_shasui = balance::value(balance_shasui);
-        let amount_sui = fixedU32::floor(
-            fixedU32::div(
-                fixedU32::from_u64(amount_shasui),
-                price_shasui_to_sui(self, treasury_shasui)
-            )
-        );
-        amount_sui
+        let delta_y = balance::value(balance_shasui);
+        let x = stake_manager::amount_staked_sui(self) + stake_manager::amount_reward_sui(self);
+        let y = shasui::total_supply(treasury);
+
+        if (y == 0) {
+            delta_y
+        } else {
+            u64::mul_div(delta_y, x, y)
+        }
+    }
+
+    #[test_only]
+    public fun init_for_testing(ctx: &mut TxContext) {
+        init(ctx);
     }
 }
