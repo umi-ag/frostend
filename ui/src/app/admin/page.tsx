@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { moveCallFaucet } from 'src/frostendLib';
 import { toast } from 'react-hot-toast';
 import { noticeTxnResultMessage } from 'src/components/TransactionToast';
-
+import { moveCallCoinSui, moveCallHot, moveCallStake } from 'src/sharbetLib';
 
 const provider = new JsonRpcProvider(
   new Connection({
@@ -214,6 +214,115 @@ const TestToast = () => {
   )
 }
 
+const StakeCard = () => {
+  const wallet = useWallet();
+
+  const executeTransaction = async () => {
+    const txb = new TransactionBlock();
+
+    moveCallStake(txb, {
+      intentAddress: wallet.address!,
+      validatorAddress: '0x70977fada000eb0da05483191f19de7cda9a9aa63db18d17bb55c69756b8454e',
+      amount: BigInt(1e9)
+    },)
+
+    const r = await wallet.signAndExecuteTransactionBlock({
+      // @ts-ignore
+      transactionBlock: txb
+    });
+    noticeTxnResultMessage(r)
+  }
+
+  return (
+    <div className='bg-gray-100 px-3 py-2 rounded-lg w-[200px] h-[200px] flex items-center justify-center'>
+      <div className='flex flex-col items-center gap-3'>
+        <div className='text-black text-lg font-bold'>
+          shaSUI
+        </div>
+        <button
+          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full"
+          onClick={async () => {
+            await executeTransaction();
+          }}
+        >
+          stake
+        </button>
+      </div>
+    </div>
+  )
+}
+
+const CoolCard = () => {
+  const wallet = useWallet();
+
+  const executeTransaction = async () => {
+    const txb = new TransactionBlock();
+    {
+      const amount = BigInt(100)
+      const coinSui = await moveCallCoinSui(txb, { amount })
+      txb.transferObjects([coinSui], txb.pure(wallet.address!))
+    }
+    const r = await wallet.signAndExecuteTransactionBlock({
+      // @ts-ignore
+      transactionBlock: txb
+    });
+    noticeTxnResultMessage(r)
+  }
+
+  return (
+    <div className='bg-gray-100 px-3 py-2 rounded-lg w-[200px] h-[200px] flex items-center justify-center'>
+      <div className='flex flex-col items-center gap-3'>
+        <div className='text-black text-lg font-bold'>
+          Sharbet
+        </div>
+        <button
+          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full"
+          onClick={async () => {
+            await executeTransaction();
+          }}
+        >
+          Cool
+        </button>
+      </div>
+    </div>
+  )
+}
+
+
+const EventCard = () => {
+  const wallet = useWallet();
+
+  const executeTransaction = async () => {
+    const txb = new TransactionBlock();
+    await moveCallHot(txb, {
+      address: wallet.address!,
+    })
+    const r = await wallet.signAndExecuteTransactionBlock({
+      // @ts-ignore
+      transactionBlock: txb
+    });
+    noticeTxnResultMessage(r)
+  }
+
+  return (
+    <div className='bg-gray-100 px-3 py-2 rounded-lg w-[200px] h-[200px] flex items-center justify-center'>
+      <div className='flex flex-col items-center gap-3'>
+        <div className='text-black text-lg font-bold'>
+          Sharbet
+        </div>
+        <button
+          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full"
+          onClick={async () => {
+            await executeTransaction();
+          }}
+        >
+          Hot
+        </button>
+      </div>
+    </div>
+  )
+}
+
 const Page = () => {
   return (
     <div className="h-screen bg-blue-500">
@@ -227,6 +336,9 @@ const Page = () => {
           <ViewObject objectId={BANK} display='View BANK for stSUI' />
           <ViewObject objectId={VAULT} display='View VAULT for stSUI' />
           <TestToast />
+          <StakeCard />
+          <CoolCard />
+          <EventCard />
         </div>
       </main>
     </div>
