@@ -4,8 +4,28 @@ cd ui
 bun run dev
 '''
 
-# [tasks."deploy:sui"]
-# dependencies = ["deploy:frostend"]
+[tasks."up"]
+dependencies = ["install:sui", "install:gen", "up:ui"]
+
+[tasks."install"]
+dependencies = ["install:sui", "install:gen"]
+
+[tasks."install:sui"]
+script = '''
+cargo install --git https://github.com/origin-byte/suivm
+suivm use mainnet-v1.9.1
+'''
+
+[tasks."install:gen"]
+script = '''
+cargo install --locked --git https://github.com/kunalabs-io/sui-client-gen.git
+'''
+
+[tasks."up:ui"]
+script = '''
+cd ui
+bun update
+'''
 
 [tasks."deploy:umi-utils"]
 script = '''
