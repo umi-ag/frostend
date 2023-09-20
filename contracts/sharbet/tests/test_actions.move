@@ -36,28 +36,6 @@ module sharbet::test_actions {
         test::end(scenario_val);
     }
 
-    // #[test]
-    // fun test_shasui(){
-    //     init_sui_system_state();
-    //     let scenario = test::begin(ALICE);
-    //     let test = &mut scenario;
-    //     {
-    //         let ctx = test::ctx(test);
-    //         shasui::init_for_testing(ctx);
-    //         stake_manager::init_for_testing(ctx);
-    //     };
-    //     test::next_tx(test, ALICE);
-    //     {
-    //         let ctx = test::ctx(test);
-    //         // let treasury_shasui = test::take_shared<TreasuryCap<SHASUI>>(test);
-    //         let stake_profile = test::take_shared<StakeProfile>(test);
-
-    //         // test::return_shared(treasury_shasui);
-    //         test::return_shared(stake_profile);
-    //     };
-    //     test::end(scenario);
-    // }
-
     fun init_go() {
         let scenario = test::begin(@0x114514);
         let test = &mut scenario;

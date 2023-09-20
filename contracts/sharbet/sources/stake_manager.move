@@ -3,7 +3,7 @@ module sharbet::stake_manager {
     use std::vector;
 
     use sui::balance::{Self, Balance};
-    use sui::coin::{Self};
+    use sui::coin::{Self, Coin};
     use sui::linked_table::{Self, LinkedTable};
     use sui::object::{Self, ID, UID};
     use sui::sui::{SUI};
@@ -48,12 +48,15 @@ module sharbet::stake_manager {
         balance::value(&self.pending_sui)
     }
 
-    public(friend) fun deposit_sui(self: &mut StakeProfile, balance_sui: Balance<SUI>) {
+    // TODO: Make public(friend)
+    public fun deposit_sui(self: &mut StakeProfile, coin_sui: Coin<SUI>) {
+        let balance_sui = coin::into_balance(coin_sui);
         balance::join(&mut self.pending_sui, balance_sui);
     }
 
     public(friend) fun withdraw_sui(self: &mut StakeProfile, amount: u64): Balance<SUI> {
-        balance::split(&mut self.pending_sui, amount)
+        let balance_sui = balance::split(&mut self.pending_sui, amount);
+        balance_sui
     }
 
     fun withdraw_stakedsui(
@@ -74,7 +77,8 @@ module sharbet::stake_manager {
         stakedsui_list
     }
 
-    public(friend) fun stake_sui(
+    // TODO: Make public(friend)
+    public fun stake_sui(
         self: &mut StakeProfile,
         wrapper: &mut SuiSystemState,
         validator_address: address,
@@ -86,7 +90,7 @@ module sharbet::stake_manager {
         };
 
         let balance_sui = withdraw_sui(self, constants::ONE_SUI());
-        let stakedsui = request_add_stake(wrapper, validator_address, balance_sui, ctx);
+        let stakedsui = request_add_stake_from_balance(wrapper, validator_address, balance_sui, ctx);
         self.amount_staked_sui = self.amount_staked_sui + staking_pool::staked_sui_amount(&stakedsui);
         linked_table::push_back(&mut self.reserve_stakedsui, object::id(&stakedsui), stakedsui);
     }
@@ -96,13 +100,13 @@ module sharbet::stake_manager {
         amount_sui_requested: u64,
         wrapper: &mut SuiSystemState,
         ctx: &mut TxContext,
-    ): Balance<SUI> {
+    ): Coin<SUI> {
         let stakedsui_list = withdraw_stakedsui(self, amount_sui_requested);
-        let balance_sui_unstaked = unstake_sui_from_stakedsui_list(self, stakedsui_list, wrapper, ctx);
-        let balance_sui_to_withdraw = balance::split(&mut balance_sui_unstaked, amount_sui_requested);
-        deposit_sui(self, balance_sui_unstaked);
+        let coin_sui_unstaked = unstake_sui_from_stakedsui_list(self, stakedsui_list, wrapper, ctx);
+        let coin_sui_to_withdraw = coin::split(&mut coin_sui_unstaked, amount_sui_requested, ctx);
+        deposit_sui(self, coin_sui_unstaked);
 
-        balance_sui_to_withdraw
+        coin_sui_to_withdraw
     }
 
     public fun unstake_sui_from_stakedsui_list(
@@ -110,13 +114,13 @@ module sharbet::stake_manager {
         stakedsui_list: vector<StakedSui>,
         wrapper: &mut SuiSystemState,
         ctx: &mut TxContext,
-    ): Balance<SUI> {
-        let balance_sui_unstaked = request_withdraw_stake(wrapper, stakedsui_list, ctx);
-        self.amount_staked_sui = self.amount_staked_sui - balance::value(&balance_sui_unstaked);
-        balance_sui_unstaked
+    ): Coin<SUI> {
+        let coin_sui_unstaked = request_withdraw_stake(wrapper, stakedsui_list, ctx);
+        self.amount_staked_sui = self.amount_staked_sui - coin::value(&coin_sui_unstaked);
+        coin_sui_unstaked
     }
 
-    fun request_add_stake(
+    fun request_add_stake_from_balance(
         wrapper: &mut SuiSystemState,
         validator_address: address,
         balance_sui: Balance<SUI>,
@@ -130,7 +134,7 @@ module sharbet::stake_manager {
         wrapper: &mut SuiSystemState,
         stakedsui_list: vector<StakedSui>,
         ctx: &mut TxContext,
-    ): Balance<SUI>  {
+    ): Coin<SUI>  {
         let balance_sui_unstaked = balance::zero<SUI>();
 
         while (!vector::is_empty(&stakedsui_list)) {
@@ -140,7 +144,7 @@ module sharbet::stake_manager {
         };
         vector::destroy_empty(stakedsui_list);
 
-        balance_sui_unstaked
+        coin::from_balance(balance_sui_unstaked, ctx)
     }
 
     #[test_only]
