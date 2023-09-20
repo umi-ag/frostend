@@ -13,88 +13,8 @@ import Link from 'next/link';
 import { moveCallFaucet } from 'src/frostendLib';
 import { toast } from 'react-hot-toast';
 import { noticeTxnResultMessage } from 'src/components/TransactionToast';
-
-
-const provider = new JsonRpcProvider(
-  new Connection({
-    // fullnode: "https://fullnode.testnet.sui.io:443",
-    fullnode: "https://fullnode.testnet.sui.io",
-  }),
-);
-
-const FaucetCard = (props: {
-  amount: bigint,
-  coinType: string,
-  display: string,
-  buttonDisplay: string,
-}) => {
-  const wallet = useWallet();
-
-  const executeTransaction = async () => {
-    const txb = new TransactionBlock()
-    moveCallFaucet(txb, { amount: props.amount })
-
-    const r = await wallet.signAndExecuteTransactionBlock({
-      // @ts-ignore
-      transactionBlock: txb
-    });
-    noticeTxnResultMessage(r)
-  }
-
-  return (
-    <div className='bg-gray-100 px-3 py-2 rounded-lg w-[200px] h-[200px] flex items-center justify-center'>
-      <div className='flex flex-col items-center gap-3'>
-        <div className='text-black text-lg font-bold'>
-          {props.display}
-        </div>
-        <button
-          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full"
-          onClick={async () => {
-            await executeTransaction();
-          }}
-        >
-          {props.buttonDisplay}
-        </button>
-      </div>
-    </div>
-  )
-}
-
-const VaultAndBankCard = () => {
-  const wallet = useWallet();
-
-  const executeTransaction = async () => {
-    const txb = new TransactionBlock();
-
-    createBank(txb, STSUI_COIN.$typeName, ROOT)
-    createVault(txb, STSUI_COIN.$typeName, ROOT)
-
-    const r = await wallet.signAndExecuteTransactionBlock({
-      // @ts-ignore
-      transactionBlock: txb
-    });
-    noticeTxnResultMessage(r)
-  }
-
-  return (
-    <div className='bg-gray-100 px-3 py-2 rounded-lg w-[200px] h-[200px] flex items-center justify-center'>
-      <div className='flex flex-col items-center gap-3'>
-        <div className='text-black text-lg font-bold'>
-          new Bank and Vault for stSUI
-        </div>
-        <button
-          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full"
-          onClick={async () => {
-            await executeTransaction();
-          }}
-        >
-          create
-        </button>
-      </div>
-    </div>
-  )
-
-}
+import { moveCallStakeSuiToMintShasui } from 'src/sharbetLib';
+import { MouseEventHandler } from 'react';
 
 const bankDeposit = async (txb: TransactionBlock, address: string) => {
   const coins = await (async () => {
@@ -125,39 +45,73 @@ const bankDeposit = async (txb: TransactionBlock, address: string) => {
   return txb
 }
 
-const BankDespositCard = () => {
+const provider = new JsonRpcProvider(
+  new Connection({
+    fullnode: "https://fullnode.testnet.sui.io",
+  }),
+);
+
+const Card = (props: {
+  title: string,
+  buttonText: string,
+  onClick: MouseEventHandler<HTMLButtonElement> | undefined
+}) => (
+  <div className='bg-gray-100 px-3 py-2 rounded-lg w-[200px] h-[200px] flex items-center justify-center'>
+    <div className='flex flex-col items-center gap-3'>
+      <div className='text-black text-lg font-bold'>
+        {props.title}
+      </div>
+      <button
+        className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full"
+        onClick={props.onClick}
+      >
+        {props.buttonText}
+      </button>
+    </div>
+  </div>
+);
+
+const FaucetCard = (props: {
+  amount: bigint,
+  coinType: string,
+  display: string,
+  buttonDisplay: string,
+}) => {
   const wallet = useWallet();
 
   const executeTransaction = async () => {
-    if (!wallet.address) return;
-    const txb = new TransactionBlock()
-    await bankDeposit(txb, wallet.address)
+    const txb = new TransactionBlock();
+    moveCallFaucet(txb, { amount: props.amount })
 
     const r = await wallet.signAndExecuteTransactionBlock({
       // @ts-ignore
       transactionBlock: txb
     });
-    noticeTxnResultMessage(r)
-  }
+    noticeTxnResultMessage(r);
+  };
 
-  return (
-    <div className='bg-gray-100 px-3 py-2 rounded-lg w-[200px] h-[200px] flex items-center justify-center'>
-      <div className='flex flex-col items-center gap-3'>
-        <div className='text-black text-lg font-bold'>
-          Bank for stSUI
-        </div>
-        <button
-          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full"
-          onClick={async () => {
-            await executeTransaction();
-          }}
-        >
-          deposit
-        </button>
-      </div>
-    </div>
-  )
-}
+  return <Card title={props.display} buttonText={props.buttonDisplay} onClick={executeTransaction} />;
+};
+
+const VaultAndBankCard = () => {
+  const wallet = useWallet();
+
+  const executeTransaction = async () => {
+    const txb = new TransactionBlock();
+
+    createBank(txb, STSUI_COIN.$typeName, ROOT);
+    createVault(txb, STSUI_COIN.$typeName, ROOT);
+
+    const r = await wallet.signAndExecuteTransactionBlock({
+      // @ts-ignore
+      transactionBlock: txb
+    });
+    noticeTxnResultMessage(r);
+  };
+
+  return <Card title="new Bank and Vault for stSUI" buttonText="create" onClick={executeTransaction} />;
+};
+
 
 const ViewObject = (props: {
   objectId: string,
@@ -174,45 +128,36 @@ const ViewObject = (props: {
           {props.display}
         </div>
         <Link href={url()} target='_blank'>
-          <button
-            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full"
-          >
+          <button className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full">
             explorer
           </button>
         </Link>
       </div>
     </div>
-  )
-}
+  );
+};
 
-const TestToast = () => {
-  const fire = () => {
-    // toast.success('Swap success!');
-    toast.success(<div>
-      <p>Swap success!</p>
-      <p>explorer url: <a className="text-blue-500 underline" target="_blank" href="https://suiexplorer.com" rel="noreferrer">https://suiexplorer.com</a></p>
-    </div>, {
-      duration: 4000,
-      position: 'bottom-left',
+const StakeCard = () => {
+  const wallet = useWallet();
+
+  const executeTransaction = async () => {
+    if (!wallet.address) return;
+    const txb = new TransactionBlock();
+
+    await moveCallStakeSuiToMintShasui(txb, {
+      address: wallet.address!,
+      amount: BigInt(100),
     })
-  }
 
-  return (
-    <div className='bg-gray-100 px-3 py-2 rounded-lg w-[200px] h-[200px] flex items-center justify-center'>
-      <div className='flex flex-col items-center gap-3'>
-        <div className='text-black text-lg font-bold'>
-          Test toast
-        </div>
-        <button
-          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full"
-          onClick={fire}
-        >
-          fire
-        </button>
-      </div>
-    </div>
-  )
-}
+    const r = await wallet.signAndExecuteTransactionBlock({
+      // @ts-ignore
+      transactionBlock: txb
+    });
+    noticeTxnResultMessage(r);
+  };
+
+  return <Card title="Satke SUI" buttonText="deposit" onClick={executeTransaction} />;
+};
 
 const Page = () => {
   return (
@@ -223,14 +168,14 @@ const Page = () => {
           <FaucetCard amount={BigInt(100e8)} coinType={STSUI_COIN.$typeName} display='stSUI 100' buttonDisplay='faucet' />
           <FaucetCard amount={BigInt(100e3 * 1e8)} coinType={STSUI_COIN.$typeName} display='stSUI 100_000' buttonDisplay='faucet' />
           <VaultAndBankCard />
-          <BankDespositCard />
           <ViewObject objectId={BANK} display='View BANK for stSUI' />
           <ViewObject objectId={VAULT} display='View VAULT for stSUI' />
-          <TestToast />
+          <Card title="Test toast" buttonText="fire" onClick={() => toast.success('Swap success!')} />
+          <StakeCard />
         </div>
       </main>
     </div>
-  )
-}
+  );
+};
 
 export default Page;
