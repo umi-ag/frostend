@@ -1,14 +1,13 @@
 module sharbet::shasui {
     use std::option;
 
-    use sui::balance::{Self, Balance};
     use sui::coin::{Self, Coin, TreasuryCap, CoinMetadata};
     use sui::event;
     use sui::transfer;
     use sui::tx_context::{Self, TxContext};
     use sui::url::{Self, Url};
 
-    friend sharbet::cvault;
+    friend sharbet::sha_manager;
 
     struct SHASUI has drop {}
 
@@ -58,11 +57,10 @@ module sharbet::shasui {
 
     public(friend) fun burn(
         treasury_cap: &mut TreasuryCap<SHASUI>,
-        balance: Balance<SHASUI>,
+        coin: Coin<SHASUI>,
         ctx: &mut TxContext
     ) {
-        event::emit(EventBurn { amount: balance::value(&balance), user: tx_context::sender(ctx) });
-        let coin = coin::from_balance(balance, ctx);
+        event::emit(EventBurn { amount: coin::value(&coin), user: tx_context::sender(ctx) });
         coin::burn(treasury_cap, coin);
     }
 
@@ -70,9 +68,17 @@ module sharbet::shasui {
         transfer::public_transfer(treasury_cap, recipient);
     }
 
+    #[test_only]
+    public fun init_for_testing(ctx: &mut TxContext) {
+        init(SHASUI {}, ctx);
+    }
 
     #[test_only]
-    public fun test_init(ctx: &mut TxContext) {
-        init(SHASUI {}, ctx)
+    public fun mint_for_testing(
+        treasury_cap: &mut TreasuryCap<SHASUI>,
+        amount: u64,
+        ctx: &mut TxContext,
+    ): Coin<SHASUI> {
+        mint(treasury_cap, amount, ctx)
     }
 }

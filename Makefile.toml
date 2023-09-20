@@ -4,12 +4,18 @@ cd ui
 bun run dev
 '''
 
-[tasks."deploy:sui"]
-dependencies = ["deploy:frostend"]
+# [tasks."deploy:sui"]
+# dependencies = ["deploy:frostend"]
 
 [tasks."deploy:umi-utils"]
 script = '''
 cd contracts/umi-utils
+sui client publish --gas-budget 123456789 --skip-dependency-verification
+'''
+
+[tasks."deploy:sharbet"]
+script = '''
+cd contracts/sharbet
 sui client publish --gas-budget 123456789 --skip-dependency-verification
 '''
 
