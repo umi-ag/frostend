@@ -4,13 +4,13 @@ import {TransactionArgument, TransactionBlock} from "@mysten/sui.js/transactions
 
 export function init( txb: TransactionBlock, ) { return txb.moveCall({ target: `${PUBLISHED_AT}::sha_manager::init`, arguments: [ ], }) }
 
-export interface MintShasuiArgs { stakeProfile: ObjectArg; coin: ObjectArg; suiSystemState: ObjectArg; treasuryCap: ObjectArg; address: string | TransactionArgument }
+export interface StakeSuiToMintShasuiArgs { stakeProfile: ObjectArg; coin: ObjectArg; suiSystemState: ObjectArg; treasuryCap: ObjectArg; address: string | TransactionArgument }
 
-export function mintShasui( txb: TransactionBlock, args: MintShasuiArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::sha_manager::mint_shasui`, arguments: [ obj(txb, args.stakeProfile), obj(txb, args.coin), obj(txb, args.suiSystemState), obj(txb, args.treasuryCap), pure(txb, args.address, `address`) ], }) }
+export function stakeSuiToMintShasui( txb: TransactionBlock, args: StakeSuiToMintShasuiArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::sha_manager::stake_sui_to_mint_shasui`, arguments: [ obj(txb, args.stakeProfile), obj(txb, args.coin), obj(txb, args.suiSystemState), obj(txb, args.treasuryCap), pure(txb, args.address, `address`) ], }) }
 
-export interface BurnShasuiArgs { stakeProfile: ObjectArg; coin: ObjectArg; suiSystemState: ObjectArg; treasuryCap: ObjectArg }
+export interface UnstakeSuiToBurnShasuiArgs { stakeProfile: ObjectArg; coin: ObjectArg; suiSystemState: ObjectArg; treasuryCap: ObjectArg }
 
-export function burnShasui( txb: TransactionBlock, args: BurnShasuiArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::sha_manager::burn_shasui`, arguments: [ obj(txb, args.stakeProfile), obj(txb, args.coin), obj(txb, args.suiSystemState), obj(txb, args.treasuryCap) ], }) }
+export function unstakeSuiToBurnShasui( txb: TransactionBlock, args: UnstakeSuiToBurnShasuiArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::sha_manager::unstake_sui_to_burn_shasui`, arguments: [ obj(txb, args.stakeProfile), obj(txb, args.coin), obj(txb, args.suiSystemState), obj(txb, args.treasuryCap) ], }) }
 
 export interface MintShasuiFromAmountSuiArgs { stakeProfile: ObjectArg; u64: bigint | TransactionArgument; treasuryCap: ObjectArg }
 
