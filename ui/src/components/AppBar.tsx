@@ -46,6 +46,7 @@ export const AppBar: React.FC = () => {
         </span>
         <div className='flex items-center gap-5'>
           <NavLink href="/">/</NavLink>
+          <NavLink href="/vaults">vaults</NavLink>
           <NavLink href="/swap">swap</NavLink>
           <NavLink href="/admin">admin</NavLink>
           <NavLink href="/kiosk">kiosk</NavLink>
