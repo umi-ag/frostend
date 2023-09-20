@@ -1,12 +1,7 @@
-import { JsonRpcProvider, testnetConnection } from '@mysten/sui.js';
+import { SuiClient } from "@mysten/sui.js/client";
 
-/**
- * create providerSuiTestnet method
- * @returns
- */
-export const providerSuiTestnet = () => {
-  const provider = new JsonRpcProvider(
-    testnetConnection,
-  );
-  return provider;
+export const suiClient = () => {
+  return new SuiClient({
+    url: "https://fullnode.testnet.sui.io:443",
+  });
 };

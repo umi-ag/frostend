@@ -8,7 +8,7 @@ import {SuiClient, SuiParsedData} from "@mysten/sui.js/client";
 
 /* ============================== StakeProfile =============================== */
 
-bcs.registerStructType( "0x19925dd737bfcf899f8eda836a204b4da661cbea40591610e73026a6b9f79b18::stake_manager::StakeProfile", {
+bcs.registerStructType( "0x6a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8::stake_manager::StakeProfile", {
 id: `0x2::object::UID`,
 reserve_stakedsui: `0x2::linked_table::LinkedTable<0x2::object::ID, 0x3::staking_pool::StakedSui>`,
 amount_staked_sui: `u64`,
@@ -16,11 +16,11 @@ amount_reward_sui: `u64`,
 pending_sui: `0x2::balance::Balance<0x2::sui::SUI>`,
 } )
 
-export function isStakeProfile(type: Type): boolean { return type === "0x19925dd737bfcf899f8eda836a204b4da661cbea40591610e73026a6b9f79b18::stake_manager::StakeProfile"; }
+export function isStakeProfile(type: Type): boolean { return type === "0x6a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8::stake_manager::StakeProfile"; }
 
 export interface StakeProfileFields { id: string; reserveStakedsui: LinkedTable<string>; amountStakedSui: bigint; amountRewardSui: bigint; pendingSui: Balance }
 
-export class StakeProfile { static readonly $typeName = "0x19925dd737bfcf899f8eda836a204b4da661cbea40591610e73026a6b9f79b18::stake_manager::StakeProfile"; static readonly $numTypeParams = 0;
+export class StakeProfile { static readonly $typeName = "0x6a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8::stake_manager::StakeProfile"; static readonly $numTypeParams = 0;
 
   readonly id: string; readonly reserveStakedsui: LinkedTable<string>; readonly amountStakedSui: bigint; readonly amountRewardSui: bigint; readonly pendingSui: Balance
 

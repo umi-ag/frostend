@@ -5,4 +5,4 @@ rpc = "https://fullnode.testnet.sui.io:443"
 [packages]
 Sui = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/mainnet"}
 frostend = {id = "0xfb5075d2c8cee0810eab47d90ff41206dcbc1409b6fa404eafacbcd2aea61286"}
-sharbet = {id = "0x19925dd737bfcf899f8eda836a204b4da661cbea40591610e73026a6b9f79b18"}
+sharbet = {id = "0x06a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8"}
