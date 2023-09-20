@@ -1,6 +1,7 @@
 import * as eventEmit from "./event-emit/structs";
 import * as shasui from "./shasui/structs";
 import * as stakeManager from "./stake-manager/structs";
+import * as unstakePolicy from "./unstake-policy/structs";
 import {StructClassLoader} from "../_framework/loader";
 
 export function registerClasses(loader: StructClassLoader) { loader.register(eventEmit.EventDebug);
@@ -9,4 +10,5 @@ loader.register(stakeManager.StakeProfile);
 loader.register(shasui.SHASUI);
 loader.register(shasui.EventMint);
 loader.register(shasui.EventBurn);
+loader.register(unstakePolicy.Rule);
  }
