@@ -36,17 +36,6 @@ module sharbet::test_actions {
         test::end(scenario_val);
     }
 
-    fun init_go() {
-        let scenario = test::begin(@0x114514);
-        let test = &mut scenario;
-        {
-            let ctx = test::ctx(test);
-            shasui::init_for_testing(ctx);
-            stake_manager::init_for_testing(ctx);
-        };
-        test::end(scenario);
-    }
-
     #[test]
     fun test_A1(){
         let scenario = test::begin(@0x0);
@@ -143,7 +132,7 @@ module sharbet::test_actions {
                 let stake_profile = test::take_shared<StakeProfile>(test);
                 let treasury_shasui = test::take_shared<TreasuryCap<SHASUI>>(test);
 
-                let coin_shsaui = actions::stake(
+                let coin_shsaui = actions::stake_sui_to_mint_shasui(
                     &mut wrapper,
                     MYSTEN_LABS,
                     &mut stake_profile,
@@ -165,42 +154,4 @@ module sharbet::test_actions {
         test::end(scenario);
     }
 
-    #[test]
-    fun test_A6(){
-        let scenario = test::begin(@0x1);
-        let test = &mut scenario;
-        {
-            init_sui_system_state();
-            test::next_tx(test, ALICE);
-            {
-                shasui::init_for_testing(ctx(test));
-                stake_manager::init_for_testing(ctx(test));
-            };
-            test::next_tx(test, ALICE);
-            {
-                let wrapper = test::take_shared<SuiSystemState>(test);
-                let stake_profile = test::take_shared<StakeProfile>(test);
-                let treasury_shasui = test::take_shared<TreasuryCap<SHASUI>>(test);
-
-                let coin_shsaui = actions::stake(
-                    &mut wrapper,
-                    MYSTEN_LABS,
-                    &mut stake_profile,
-                    &mut treasury_shasui,
-                    mint<SUI>(100, 9, ctx(test)),
-                    ctx(test),
-                );
-                print(&coin_shsaui);
-                transfer::public_transfer(coin_shsaui, ALICE);
-
-                print(&stake_profile);
-                print(&treasury_shasui);
-
-                test::return_shared(wrapper);
-                test::return_shared(stake_profile);
-                test::return_shared(treasury_shasui);
-            };
-        };
-        test::end(scenario);
-    }
 }

@@ -9,8 +9,8 @@ module sharbet::sha_manager {
     use sharbet::shasui::{Self, SHASUI};
     use sharbet::stake_manager::{Self, StakeProfile};
     use sharbet::event_emit;
-    // use sharbet::events::{EventDebug};
 
+    friend sharbet::actions;
 
     fun init(_ctx: &TxContext) { }
 
@@ -26,7 +26,7 @@ module sharbet::sha_manager {
     //     )
     // }
 
-    public fun mint_shasui(
+    public(friend) fun stake_sui_to_mint_shasui(
         stake_profile: &mut StakeProfile,
         coin_sui: Coin<SUI>,
         wrapper: &mut SuiSystemState,
@@ -35,7 +35,7 @@ module sharbet::sha_manager {
         ctx: &mut TxContext,
     ): Coin<SHASUI> {
         event_emit::debug(114);
-        let coin_shasui = mint_shasui_from_amount_sui(stake_profile, &coin_sui, treasury_shasui, ctx);
+        let coin_shasui = mint_shasui_from_amount_sui(stake_profile, coin::value(&coin_sui), treasury_shasui, ctx);
         event_emit::vec(vector[1340, 1]);
         stake_manager::deposit_sui(stake_profile, coin_sui);
         event_emit::vec(vector[1340, 2]);
@@ -44,7 +44,7 @@ module sharbet::sha_manager {
         coin_shasui
     }
 
-    public fun burn_shasui(
+    public(friend) fun unstake_sui_to_burn_shasui(
         stake_profile: &mut StakeProfile,
         coin_shasui: Coin<SHASUI>,
         wrapper: &mut SuiSystemState,
@@ -56,14 +56,13 @@ module sharbet::sha_manager {
         coin_sui
     }
 
-    // TODO: Remove public
-    public fun mint_shasui_from_amount_sui(
+    fun mint_shasui_from_amount_sui(
         self: &mut StakeProfile,
-        coin_sui: &Coin<SUI>,
+        amount_sui: u64,
         treasury_shasui: &mut TreasuryCap<SHASUI>,
         ctx: &mut TxContext
     ): Coin<SHASUI> {
-        let amount_shasui_to_mint = compute_amount_shasui_to_mint(self, coin_sui, treasury_shasui);
+        let amount_shasui_to_mint = compute_amount_shasui_to_mint(self, amount_sui, treasury_shasui);
         let coin_shasui = shasui::mint(treasury_shasui, amount_shasui_to_mint, ctx);
         coin_shasui
     }
@@ -81,18 +80,21 @@ module sharbet::sha_manager {
 
     fun compute_amount_shasui_to_mint(
         self: &mut StakeProfile,
-        coin_sui: &Coin<SUI>,
+        amount_sui: u64,
         treasury: &mut TreasuryCap<SHASUI>,
     ): u64 {
-        let delta_x = coin::value(coin_sui);
+        let delta_x = amount_sui;
         let x = stake_manager::amount_staked_sui(self) + stake_manager::amount_reward_sui(self);
         let y = shasui::total_supply(treasury);
 
-        if (x == 0) {
+        let r = if (x == 0) {
             delta_x
         } else {
-            u64::mul_div(delta_x, y,x)
-        }
+            u64::mul_div(delta_x, y, x)
+        };
+
+        event_emit::vec(vector[r, x, y, delta_x]);
+        r
     }
 
     fun compute_amount_sui_to_withdraw(
@@ -104,11 +106,14 @@ module sharbet::sha_manager {
         let x = stake_manager::amount_staked_sui(self) + stake_manager::amount_reward_sui(self);
         let y = shasui::total_supply(treasury);
 
-        if (y == 0) {
+        let r = if (y == 0) {
             delta_y
         } else {
             u64::mul_div(delta_y, x, y)
-        }
+        };
+
+        event_emit::vec(vector[r, x, y, delta_y]);
+        r
     }
 
     #[test_only]

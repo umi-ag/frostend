@@ -48,8 +48,7 @@ module sharbet::stake_manager {
         balance::value(&self.pending_sui)
     }
 
-    // TODO: Make public(friend)
-    public fun deposit_sui(self: &mut StakeProfile, coin_sui: Coin<SUI>) {
+    public(friend) fun deposit_sui(self: &mut StakeProfile, coin_sui: Coin<SUI>) {
         let balance_sui = coin::into_balance(coin_sui);
         balance::join(&mut self.pending_sui, balance_sui);
     }
@@ -77,8 +76,8 @@ module sharbet::stake_manager {
         stakedsui_list
     }
 
-    // TODO: Make public(friend)
-    public fun stake_sui(
+    // TODO: Add amount to argument
+    public(friend) fun stake_sui(
         self: &mut StakeProfile,
         wrapper: &mut SuiSystemState,
         validator_address: address,
