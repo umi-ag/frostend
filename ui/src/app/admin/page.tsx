@@ -6,50 +6,12 @@ import { TransactionBlock } from '@mysten/sui.js/transactions'
 import { STSUI_COIN } from 'src/moveCall/frostend/stsui-coin/structs';
 import { createBank, createVault } from 'src/moveCall/frostend/root/functions';
 import { BANK, ROOT, VAULT } from 'src/config/frostend';
-import { JsonRpcProvider, Connection } from '@mysten/sui.js';
-import { maybeSplitCoinsAndTransferRest } from 'src/moveCall/frostend/coin-utils/functions';
-import * as bank from 'src/moveCall/frostend/bank/functions';
 import Link from 'next/link';
 import { moveCallFaucet } from 'src/frostendLib';
 import { toast } from 'react-hot-toast';
 import { noticeTxnResultMessage } from 'src/components/TransactionToast';
-import { moveCallStakeSuiToMintShasui } from 'src/sharbetLib';
 import { MouseEventHandler } from 'react';
-
-const bankDeposit = async (txb: TransactionBlock, address: string) => {
-  const coins = await (async () => {
-    const coins: { coinObjectId: string }[] = [];
-    const coins_sy = await provider.getCoins({
-      owner: address,
-      coinType: STSUI_COIN.$typeName,
-    })
-    coins.push(...coins_sy.data)
-    return coins
-  })()
-
-  const coin = await maybeSplitCoinsAndTransferRest(txb, STSUI_COIN.$typeName, {
-    vecCoin: txb.makeMoveVec({
-      objects: coins.map(coin => txb.pure(coin.coinObjectId)),
-    }),
-    u64: BigInt(1000 * 1e8),
-    address: address,
-  })
-
-  bank.deposit(txb, STSUI_COIN.$typeName, {
-    vecCoin: txb.makeMoveVec({
-      objects: [coin]
-    }),
-    bank: BANK,
-  })
-
-  return txb
-}
-
-const provider = new JsonRpcProvider(
-  new Connection({
-    fullnode: "https://fullnode.testnet.sui.io",
-  }),
-);
+import { sharbetMoveCall } from 'src/sharbetLib';
 
 const Card = (props: {
   title: string,
@@ -144,7 +106,7 @@ const StakeCard = () => {
     if (!wallet.address) return;
     const txb = new TransactionBlock();
 
-    await moveCallStakeSuiToMintShasui(txb, {
+    await sharbetMoveCall.stakeSuiToMintShasui(txb, {
       address: wallet.address!,
       amount: BigInt(100),
     })
