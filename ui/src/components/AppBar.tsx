@@ -24,11 +24,9 @@ const NavLink: React.FC<{
   );
 };
 
-
 const WalletConnectButton: React.FC = () => {
   return <ConnectButton>Connect Wallet</ConnectButton>;
 };
-
 
 export const AppBar: React.FC = () => {
   return (
@@ -45,11 +43,10 @@ export const AppBar: React.FC = () => {
           FrostEnd
         </span>
         <div className='flex items-center gap-5'>
-          <NavLink href="/">/</NavLink>
+          <NavLink href="/stake">stake</NavLink>
           <NavLink href="/vaults">vaults</NavLink>
           <NavLink href="/swap">swap</NavLink>
           <NavLink href="/admin">admin</NavLink>
-          <NavLink href="/stake">stake</NavLink>
         </div>
       </div>
       <div className="snowflake-neon"></div>
@@ -62,5 +59,4 @@ export const AppBar: React.FC = () => {
       </div>
     </div>
   );
-
 };
