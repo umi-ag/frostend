@@ -1,23 +1,19 @@
 import Decimal from 'decimal.js';
-import Image from 'next/image';
-import { CoinProfile } from 'src/coinList';
 import { Vault } from 'src/types';
 import dayjs from 'dayjs';
 import { match } from 'ts-pattern';
+import { CoinIcon } from './CoinIcon';
 
 const percent = (d: Decimal) => d.mul(100).toNumber();
 
-export const CoinIcon: React.FC<{ coin: CoinProfile }> = (props) => (
-  <Image src={props.coin.iconUrl as string} alt={props.coin.name} width={50} height={50} />
-);
 
 const CardHeader: React.FC<{ vault: Vault }> = (props) => {
   return (
     <div className="flex gap-4 px-4 mb-4">
-      <CoinIcon coin={props.vault.coin} />
+      <CoinIcon coin={props.vault.coin} size={50} />
       <div className="">
-        <p className="text-2xl font-bold">stSUI</p>
-        <p className="text-sm text-gray-400">Staked SUI</p>
+        <p className="text-2xl font-bold">{props.vault.coin.symbol}</p>
+        <p className="text-sm text-gray-400">{props.vault.coin.name}</p>
       </div>
     </div>
   );
