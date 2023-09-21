@@ -44,17 +44,14 @@ export const moveCallFaucet = async (
 };
 
 export const frostendMoveCall = {
-  async swapSyToPt(
-    txb: TransactionBlock,
-    args: {
-      address: string;
-      amount: bigint;
-    },
-  ) {
+  async swapSyToPt(txb: TransactionBlock, args: {
+    address: string;
+    amount: bigint;
+  }) {
     const coin_sy = await moveCallTakeCoin(txb, {
       coinType: STSUI_SYCoinType,
       address: args.address,
-      amount: args.amount
+      amount: args.amount,
     });
 
     const coin_pt = await swapSyToPt(txb, STSUI_SYCoinType, {
@@ -68,17 +65,14 @@ export const frostendMoveCall = {
     return txb;
   },
 
-  async swapPtToSy(
-    txb: TransactionBlock,
-    args: {
-      address: string;
-      amount: bigint;
-    },
-  ) {
+  async swapPtToSy(txb: TransactionBlock, args: {
+    address: string;
+    amount: bigint;
+  }) {
     const coin_pt = await moveCallTakeCoin(txb, {
       coinType: STSUI_PTCoinType,
       address: args.address,
-      amount: args.amount
+      amount: args.amount,
     });
 
     const coin_sy = await swapPtToSy(txb, STSUI_SYCoinType, {
@@ -92,17 +86,14 @@ export const frostendMoveCall = {
     return txb;
   },
 
-  async swapSyToYt(
-    txb: TransactionBlock,
-    args: {
-      address: string;
-      amount: bigint;
-    },
-  ) {
+  async swapSyToYt(txb: TransactionBlock, args: {
+    address: string;
+    amount: bigint;
+  }) {
     const coin_sy = await moveCallTakeCoin(txb, {
       coinType: STSUI_SYCoinType,
       address: args.address,
-      amount: args.amount
+      amount: args.amount,
     });
 
     const coin_yt = await swapSyToYt(txb, STSUI_SYCoinType, {
@@ -116,17 +107,14 @@ export const frostendMoveCall = {
     return txb;
   },
 
-  async swapYtToSy(
-    txb: TransactionBlock,
-    args: {
-      address: string;
-      amount: bigint;
-    },
-  ) {
+  async swapYtToSy(txb: TransactionBlock, args: {
+    address: string;
+    amount: bigint;
+  }) {
     const coin_yt = await moveCallTakeCoin(txb, {
       coinType: STSUI_YTCoinType,
       address: args.address,
-      amount: args.amount
+      amount: args.amount,
     });
 
     const coin_sy = await swapYtToSy(txb, STSUI_SYCoinType, {
