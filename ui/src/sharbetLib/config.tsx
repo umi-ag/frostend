@@ -1,3 +1,6 @@
 
-export const STAKE_PROFILE = "0x2f631e86eb5a6d4fe78a9c97db303744bd398f9cc84a34af862416e408085449"
-export const TREASURY_SHASUI = "0x0d0b5371ff93d4d4d23cb0168e836a7b9cfc2ef56f88311e1a3de92fc9e92dcc"
+// https://suiexplorer.com/txblock/FhNZKe4tsQv2pZ6ikjFprAy2ufZcApX83Hq7Q99boXH6?network=testnet
+
+export const STAKE_PROFILE = "0x5af0c059f924f71550a8de59e4e000d0cabbd286366c857d4c238bd907bc3931"
+export const TREASURY_SHASUI = "0x740fdaae143e5752cd0a82ef9c0dddcf745d5f99e6ee498c9578e7b72f28bd4c"
+export const TREASURY_UNSTSUI = "0xcfb6f214ef1b5b83842c4f5b803fc608d119c1c6c14aee4f853527d1488e230a"
