@@ -1,13 +1,13 @@
-import { STAKE_PROFILE, TREASURY_SHASUI } from "./config";
+import { STAKE_PROFILE, TREASURY_SHASUI, TREASURY_UNSTSUI } from "./config";
 import { SUI_SYSTEM_STATE_OBJECT_ID } from "@suiet/wallet-kit";
 import { SUI_TYPE_ARG } from '@mysten/sui.js/utils';
-import { stakeSuiToMintShasui, unstakeSuiToBurnShasui } from "src/moveCall/sharbet/actions/functions";
+import { burnShasuiToMintUnstsui, stakeSuiToMintShasui } from "src/moveCall/sharbet/actions/functions";
 import { SHASUI } from "src/moveCall/sharbet/shasui/structs";
 import { TransactionBlock, TransactionArgument } from "@mysten/sui.js/transactions";
 import { suiClient } from "src/config/sui";
-import { confirmRequest, placeAndList, purchase } from '@mysten/kiosk';
-import { add, confirm } from "src/moveCall/sharbet/unstake-policy/functions";
+import { confirmRequest, createKioskAndShare, createTransferPolicy, placeAndList, purchase } from '@mysten/kiosk';
 import { zero } from "src/moveCall/sui/coin/functions";
+import { burnUnstsuiToUnstakeSui } from "src/moveCall/sharbet/sha-manager/functions";
 
 
 const VALIDATOR_ADDRESS = '0x70977fada000eb0da05483191f19de7cda9a9aa63db18d17bb55c69756b8454e'
@@ -30,9 +30,8 @@ export const sharbetMoveCall = {
       address: VALIDATOR_ADDRESS,
     })
     txb.transferObjects([coinTarget], txb.pure(args.address))
-  }
-  ,
-  async unstakeSuiToBurnShasui(txb: TransactionBlock, args: {
+  },
+  async burnShasuiToMintUnstsui(txb: TransactionBlock, args: {
     address: string
     amount: bigint,
   }) {
@@ -41,10 +40,27 @@ export const sharbetMoveCall = {
       address: args.address,
       amount: args.amount,
     })
-    const coinTarget = unstakeSuiToBurnShasui(txb, {
+    const coinTarget = burnShasuiToMintUnstsui(txb, {
       coin: coinSource,
       stakeProfile: STAKE_PROFILE,
       treasuryCap: TREASURY_SHASUI,
+      unstSuiTreasuryCap: TREASURY_UNSTSUI,
+    })
+    txb.transferObjects([coinTarget], txb.pure(args.address))
+  },
+  async burnUnstsuiToUnstakeSui(txb: TransactionBlock, args: {
+    address: string
+    amount: bigint,
+  }) {
+    const coinSource = await moveCallTakeCoin(txb, {
+      coinType: SHASUI.$typeName,
+      address: args.address,
+      amount: args.amount,
+    })
+    const coinTarget = burnUnstsuiToUnstakeSui(txb, {
+      unstakeTicket: coinSource,
+      stakeProfile: STAKE_PROFILE,
+      unstSuiTreasuryCap: TREASURY_UNSTSUI,
       suiSystemState: SUI_SYSTEM_STATE_OBJECT_ID,
     })
     txb.transferObjects([coinTarget], txb.pure(args.address))
@@ -85,34 +101,39 @@ export const moveCallTakeCoin = async (txb: TransactionBlock, args: {
 }
 
 export const moveCallOpenKiosk = async (txb: TransactionBlock, args: {
+  address: string
 }) => {
-  txb.moveCall({
-    target: '0x2::kiosk::default'
-  });
+  const kioskOwnerCap = createKioskAndShare(txb);
+  txb.transferObjects([kioskOwnerCap], txb.pure(args.address!));
 }
 
 export const moveCallCreateTransferPolicy = async (txb: TransactionBlock, args: {
   address: string
 }) => {
-  // const transferPolicyCap = createTransferPolicy(
+  const transferPolicyCap = createTransferPolicy(
+    txb,
+    SUI_TYPE_ARG,
+    txb.pure("0x2"),
+  );
+  txb.transferObjects([transferPolicyCap], txb.pure(args.address));
+
+  // const transferPolicyCap = moveCallKiosk.createTransferPolicy(
   //   txb,
-  //   SUI_TYPE_ARG,
-  //   txb.pure(PUBLISHED_AT),
+  //   `${moveCallZKEscrow.PACKAGE_ID}::my_hero::Hero`,
+  //   txb.pure(moveCallZKEscrow.PUBLISHER_ID),
   // );
-  // txb.transferObjects([transferPolicyCap], txb.pure(args.address));
 }
 
-export const moveCAllAttachProofPolicy = async (props: {
+export const moveCallAttachProofPolicy = async (props: {
   txb: TransactionBlock;
   type: string;
   policy_id: string;
   policy_cap_id: string;
 }) => {
-  const { txb } = props;
-  add(txb, SUI_TYPE_ARG, {
-    transferPolicy: props.policy_id,
-    transferPolicyCap: props.policy_cap_id,
-  })
+  // add(txb, SUI_TYPE_ARG, {
+  //   transferPolicy: props.policy_id,
+  //   transferPolicyCap: props.policy_cap_id,
+  // })
 };
 
 export const moveCallPlaceAndList = async (txb: TransactionBlock, args: {
@@ -145,10 +166,10 @@ export const moveCallConfirmPolicy = async (txb: TransactionBlock, args: {
   policy_id: string;
   transferRequest: TransactionArgument;
 }) => {
-  confirm(txb, SUI_TYPE_ARG, {
-    transferPolicy: args.policy_id,
-    transferRequest: args.transferRequest,
-  })
+  // confirm(txb, SUI_TYPE_ARG, {
+  //   transferPolicy: args.policy_id,
+  //   transferRequest: args.transferRequest,
+  // })
 }
 
 export const moveCallPurchase = async (txb: TransactionBlock, args: {

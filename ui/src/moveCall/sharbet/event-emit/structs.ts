@@ -4,15 +4,15 @@ import {Encoding} from "@mysten/bcs";
 
 /* ============================== EventDebug =============================== */
 
-bcs.registerStructType( "0x6a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8::event_emit::EventDebug", {
+bcs.registerStructType( "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::event_emit::EventDebug", {
 value: `u64`,
 } )
 
-export function isEventDebug(type: Type): boolean { return type === "0x6a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8::event_emit::EventDebug"; }
+export function isEventDebug(type: Type): boolean { return type === "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::event_emit::EventDebug"; }
 
 export interface EventDebugFields { value: bigint }
 
-export class EventDebug { static readonly $typeName = "0x6a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8::event_emit::EventDebug"; static readonly $numTypeParams = 0;
+export class EventDebug { static readonly $typeName = "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::event_emit::EventDebug"; static readonly $numTypeParams = 0;
 
   readonly value: bigint
 
@@ -30,15 +30,15 @@ export class EventDebug { static readonly $typeName = "0x6a14eff987270fd32ef7397
 
 /* ============================== EventVector =============================== */
 
-bcs.registerStructType( "0x6a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8::event_emit::EventVector", {
+bcs.registerStructType( "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::event_emit::EventVector", {
 value: `vector<u64>`,
 } )
 
-export function isEventVector(type: Type): boolean { return type === "0x6a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8::event_emit::EventVector"; }
+export function isEventVector(type: Type): boolean { return type === "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::event_emit::EventVector"; }
 
 export interface EventVectorFields { value: Array<bigint> }
 
-export class EventVector { static readonly $typeName = "0x6a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8::event_emit::EventVector"; static readonly $numTypeParams = 0;
+export class EventVector { static readonly $typeName = "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::event_emit::EventVector"; static readonly $numTypeParams = 0;
 
   readonly value: Array<bigint>
 
