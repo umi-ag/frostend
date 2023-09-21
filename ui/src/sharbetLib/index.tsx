@@ -31,6 +31,7 @@ export const sharbetMoveCall = {
     })
     txb.transferObjects([coinTarget], txb.pure(args.address))
   },
+
   async burnShasuiToMintUnstsui(txb: TransactionBlock, args: {
     address: string
     amount: bigint,
@@ -48,6 +49,7 @@ export const sharbetMoveCall = {
     })
     txb.transferObjects([coinTarget], txb.pure(args.address))
   },
+
   async burnUnstsuiToUnstakeSui(txb: TransactionBlock, args: {
     address: string
     amount: bigint,

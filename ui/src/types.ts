@@ -1,5 +1,4 @@
-import Decimal from 'decimal.js';
-import { CoinProfile } from './coinList';
+import Decimal from "decimal.js";
 
 type Eyecatch = {
   url: string;
@@ -19,18 +18,19 @@ export type NewsItem = {
   category: null;
 };
 
+
 export type NewsItemList = NewsItem[];
 
 export type VerifierInputs = {
   vk: string;
   public_inputs: string;
   proof_points: string;
-}
+};
 
 export type Vault = {
-  underlyingCoin: CoinProfile;
-  ptCoin: CoinProfile;
-  ytCoin: CoinProfile;
+  protocol: string;
+  syAssetType: string;
+  principalAssetType: string;
   maturity: Date;
   maturityCode: string;
   longYieldAPY: Decimal;
@@ -40,5 +40,4 @@ export type Vault = {
   underlyingAPY: Decimal;
   underlyingAssetPrice: Decimal;
   impliedAPY: Decimal;
-}
-
+};

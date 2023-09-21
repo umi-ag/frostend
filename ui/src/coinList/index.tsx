@@ -1,4 +1,5 @@
 import { STSUI_PTCoinType, STSUI_SYCoinType, STSUI_YTCoinType } from "src/frostendLib"
+import { SUI } from "src/moveCall/sui/sui/structs";
 
 
 export type CoinProfile = {
@@ -16,12 +17,21 @@ export type CoinProfile = {
 const coinList: CoinProfile[] = [
   {
     id: "",
+    name: "SUI",
+    symbol: "SUI",
+    description: "SUI",
+    iconUrl: "/img/coins/sui.png",
+    coinType: SUI.$typeName,
+    decimals: 8,
+  },
+  {
+    id: "",
     name: "Sharbet Staked SUI",
     symbol: "shaSUI",
     description: "Sharbet Staked SUI",
-    iconUrl: "/img/coins/shasui.png",
     coinType: STSUI_SYCoinType,
-    decimals: 8,
+    iconUrl: "/img/coins/shasui.png",
+    decimals: 9,
   },
   {
     id: "",

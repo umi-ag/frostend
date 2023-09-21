@@ -6,17 +6,21 @@ import { CoinIcon } from './CoinIcon';
 import { useRouter } from 'next/navigation';
 import { useTradeStore } from 'src/store/trade';
 import { getPriceByCoinType } from 'src/frostendLib/priceList';
+import { getCoinProfileByCoinType } from 'src/coinList';
 
 const percent = (d: Decimal) => d.mul(100).toNumber();
 
 const CardHeader: React.FC<{ vault: Vault }> = (props) => {
-  const coin = props.vault.underlyingCoin;
+  const syCoinProfile = getCoinProfileByCoinType(props.vault.syAssetType)!
+  const principalCoinProfile = getCoinProfileByCoinType(props.vault.principalAssetType)!
+  const displayName = () => `${principalCoinProfile?.symbol} staked in ${props.vault.protocol}`;
+
   return (
     <div className="flex gap-4 px-4 mb-4">
-      <CoinIcon coin={coin} size={50} />
-      <div className="text-left">
-        <p className="text-2xl font-bold">{coin.symbol}{props.vault.maturityCode}</p>
-        <p className="text-sm text-gray-400">{coin.name}</p>
+      <CoinIcon coin={syCoinProfile} size={50} />
+      <div className="">
+        <p className="text-2xl font-bold">{syCoinProfile.symbol}</p>
+        <p className="text-sm text-gray-400">{displayName()}</p>
       </div>
     </div>
   );
@@ -105,8 +109,8 @@ export const VaultCard: React.FC<{ vault: Vault }> = (props) => {
 
   const goSwap = () => {
     router.push('/swap');
-    const sourceCoinType = props.vault.underlyingCoin.coinType;
-    const targetCoinType = props.vault.ytCoin.coinType;
+    const sourceCoinType = props.vault.syAssetType;
+    const targetCoinType = props.vault.principalAssetType;
     tradeStore.setSourceCoinType(sourceCoinType);
     tradeStore.setTargetCoinType(targetCoinType);
 
