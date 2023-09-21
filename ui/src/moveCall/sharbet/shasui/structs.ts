@@ -4,15 +4,15 @@ import {Encoding} from "@mysten/bcs";
 
 /* ============================== SHASUI =============================== */
 
-bcs.registerStructType( "0x6a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8::shasui::SHASUI", {
+bcs.registerStructType( "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::SHASUI", {
 dummy_field: `bool`,
 } )
 
-export function isSHASUI(type: Type): boolean { return type === "0x6a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8::shasui::SHASUI"; }
+export function isSHASUI(type: Type): boolean { return type === "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::SHASUI"; }
 
 export interface SHASUIFields { dummyField: boolean }
 
-export class SHASUI { static readonly $typeName = "0x6a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8::shasui::SHASUI"; static readonly $numTypeParams = 0;
+export class SHASUI { static readonly $typeName = "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::SHASUI"; static readonly $numTypeParams = 0;
 
   readonly dummyField: boolean
 
@@ -30,16 +30,16 @@ export class SHASUI { static readonly $typeName = "0x6a14eff987270fd32ef739731e6
 
 /* ============================== EventMint =============================== */
 
-bcs.registerStructType( "0x6a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8::shasui::EventMint", {
+bcs.registerStructType( "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::EventMint", {
 amount: `u64`,
 user: `address`,
 } )
 
-export function isEventMint(type: Type): boolean { return type === "0x6a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8::shasui::EventMint"; }
+export function isEventMint(type: Type): boolean { return type === "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::EventMint"; }
 
 export interface EventMintFields { amount: bigint; user: string }
 
-export class EventMint { static readonly $typeName = "0x6a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8::shasui::EventMint"; static readonly $numTypeParams = 0;
+export class EventMint { static readonly $typeName = "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::EventMint"; static readonly $numTypeParams = 0;
 
   readonly amount: bigint; readonly user: string
 
@@ -57,16 +57,16 @@ export class EventMint { static readonly $typeName = "0x6a14eff987270fd32ef73973
 
 /* ============================== EventBurn =============================== */
 
-bcs.registerStructType( "0x6a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8::shasui::EventBurn", {
+bcs.registerStructType( "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::EventBurn", {
 amount: `u64`,
 user: `address`,
 } )
 
-export function isEventBurn(type: Type): boolean { return type === "0x6a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8::shasui::EventBurn"; }
+export function isEventBurn(type: Type): boolean { return type === "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::EventBurn"; }
 
 export interface EventBurnFields { amount: bigint; user: string }
 
-export class EventBurn { static readonly $typeName = "0x6a14eff987270fd32ef739731e60f8925ca36f0394a8b1da7d846798f3aa6a8::shasui::EventBurn"; static readonly $numTypeParams = 0;
+export class EventBurn { static readonly $typeName = "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::EventBurn"; static readonly $numTypeParams = 0;
 
   readonly amount: bigint; readonly user: string
 
