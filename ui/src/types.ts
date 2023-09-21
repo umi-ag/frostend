@@ -30,9 +30,11 @@ export type VerifierInputs = {
 export type Vault = {
   protocol: string;
   syAssetType: string;
+  ptAssetType: string;
+  ytAssetType: string;
   principalAssetType: string;
-  // coin: CoinProfile;
   maturity: Date;
+  maturityCode: string;
   longYieldAPY: Decimal;
   ytPrice: Decimal;
   fixedAPY: Decimal;
