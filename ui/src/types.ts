@@ -28,8 +28,11 @@ export type VerifierInputs = {
 }
 
 export type Vault = {
-  coin: CoinProfile;
+  underlyingCoin: CoinProfile;
+  ptCoin: CoinProfile;
+  ytCoin: CoinProfile;
   maturity: Date;
+  maturityCode: string;
   longYieldAPY: Decimal;
   ytPrice: Decimal;
   fixedAPY: Decimal;
