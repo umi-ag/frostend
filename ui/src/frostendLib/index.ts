@@ -43,94 +43,88 @@ export const moveCallFaucet = async (
   return txb;
 };
 
-export const moveCallSwapSyToPt = async (
-  txb: TransactionBlock,
-  args: {
+export const frostendMoveCall = {
+  async swapSyToPt(txb: TransactionBlock, args: {
     address: string;
+    amount: bigint;
+  }) {
+    const coin_sy = await moveCallTakeCoin(txb, {
+      coinType: STSUI_SYCoinType,
+      address: args.address,
+      amount: args.amount,
+    });
+
+    const coin_pt = await swapSyToPt(txb, STSUI_SYCoinType, {
+      vecCoin: txb.makeMoveVec({ objects: [coin_sy] }),
+      vault: VAULT,
+      bank: BANK,
+    });
+
+    txb.transferObjects([coin_pt], txb.pure(args.address));
+
+    return txb;
   },
-) => {
-  const coin_sy = await moveCallTakeCoin(txb, {
-    coinType: STSUI_SYCoinType,
-    address: args.address,
-    amount: BigInt(10 * 1e8),
-  });
 
-  const coin_pt = await swapSyToPt(txb, STSUI_SYCoinType, {
-    vecCoin: txb.makeMoveVec({ objects: [coin_sy] }),
-    vault: VAULT,
-    bank: BANK,
-  });
-
-  txb.transferObjects([coin_pt], txb.pure(args.address));
-
-  return txb;
-};
-
-export const moveCallSwapPtToSy = async (
-  txb: TransactionBlock,
-  args: {
+  async swapPtToSy(txb: TransactionBlock, args: {
     address: string;
+    amount: bigint;
+  }) {
+    const coin_pt = await moveCallTakeCoin(txb, {
+      coinType: STSUI_PTCoinType,
+      address: args.address,
+      amount: args.amount,
+    });
+
+    const coin_sy = await swapPtToSy(txb, STSUI_SYCoinType, {
+      vecCoin: txb.makeMoveVec({ objects: [coin_pt] }),
+      vault: VAULT,
+      bank: BANK,
+    });
+
+    txb.transferObjects([coin_sy], txb.pure(args.address));
+
+    return txb;
   },
-) => {
-  const coin_pt = await moveCallTakeCoin(txb, {
-    coinType: STSUI_PTCoinType,
-    address: args.address,
-    amount: BigInt(10 * 1e8),
-  });
 
-  const coin_sy = await swapPtToSy(txb, STSUI_SYCoinType, {
-    vecCoin: txb.makeMoveVec({ objects: [coin_pt] }),
-    vault: VAULT,
-    bank: BANK,
-  });
-
-  txb.transferObjects([coin_sy], txb.pure(args.address));
-
-  return txb;
-};
-
-export const moveCallSwapSyToYt = async (
-  txb: TransactionBlock,
-  args: {
+  async swapSyToYt(txb: TransactionBlock, args: {
     address: string;
+    amount: bigint;
+  }) {
+    const coin_sy = await moveCallTakeCoin(txb, {
+      coinType: STSUI_SYCoinType,
+      address: args.address,
+      amount: args.amount,
+    });
+
+    const coin_yt = await swapSyToYt(txb, STSUI_SYCoinType, {
+      vecCoin: txb.makeMoveVec({ objects: [coin_sy] }),
+      vault: VAULT,
+      bank: BANK,
+    });
+
+    txb.transferObjects([coin_yt], txb.pure(args.address));
+
+    return txb;
   },
-) => {
-  const coin_sy = await moveCallTakeCoin(txb, {
-    coinType: STSUI_SYCoinType,
-    address: args.address,
-    amount: BigInt(10 * 1e8),
-  });
 
-  const coin_yt = await swapSyToYt(txb, STSUI_SYCoinType, {
-    vecCoin: txb.makeMoveVec({ objects: [coin_sy] }),
-    vault: VAULT,
-    bank: BANK,
-  });
-
-  txb.transferObjects([coin_yt], txb.pure(args.address));
-
-  return txb;
-};
-
-export const moveCallSwapYtToSy = async (
-  txb: TransactionBlock,
-  args: {
+  async swapYtToSy(txb: TransactionBlock, args: {
     address: string;
+    amount: bigint;
+  }) {
+    const coin_yt = await moveCallTakeCoin(txb, {
+      coinType: STSUI_YTCoinType,
+      address: args.address,
+      amount: args.amount,
+    });
+
+    const coin_sy = await swapYtToSy(txb, STSUI_SYCoinType, {
+      vecCoin: txb.makeMoveVec({ objects: [coin_yt] }),
+      vault: VAULT,
+      bank: BANK,
+    });
+
+    txb.transferObjects([coin_sy], txb.pure(args.address));
+
+    return txb;
   },
-) => {
-  const coin_yt = await moveCallTakeCoin(txb, {
-    coinType: STSUI_YTCoinType,
-    address: args.address,
-    amount: BigInt(10 * 1e8),
-  });
-
-  const coin_sy = await swapYtToSy(txb, STSUI_SYCoinType, {
-    vecCoin: txb.makeMoveVec({ objects: [coin_yt] }),
-    vault: VAULT,
-    bank: BANK,
-  });
-
-  txb.transferObjects([coin_sy], txb.pure(args.address));
-
-  return txb;
 };
