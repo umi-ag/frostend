@@ -8,10 +8,9 @@ module sharbet::actions {
     use sharbet::shasui::{SHASUI};
     use sharbet::sha_manager::{Self};
     use sharbet::stake_manager::{StakeProfile};
+    use sharbet::unstake_ticket::{UnstakeTicket, UnstSuiTreasuryCap};
 
-    fun init(_ctx: &TxContext) { }
-
-    public fun stake_sui_to_mint_shasui(
+    public fun mint_shasui(
         wrapper: &mut SuiSystemState,
         validator_address: address,
         stake_profile: &mut StakeProfile,
@@ -22,13 +21,13 @@ module sharbet::actions {
         sha_manager::stake_sui_to_mint_shasui(stake_profile, coin_sui, wrapper, treasury_shasui, validator_address, ctx)
     }
 
-    public fun unstake_sui_to_burn_shasui(
+    public fun burn_shasui(
         stake_profile: &mut StakeProfile,
         coin_shasui: Coin<SHASUI>,
-        wrapper: &mut SuiSystemState,
         treasury_shasui: &mut TreasuryCap<SHASUI>,
+        treasury_unstsui: &mut UnstSuiTreasuryCap,
         ctx: &mut TxContext,
-    ): Coin<SUI> {
-        sha_manager::unstake_sui_to_burn_shasui(stake_profile, coin_shasui, wrapper, treasury_shasui, ctx)
+    ): UnstakeTicket {
+        sha_manager::unstake_sui_to_burn_shasui(stake_profile, coin_shasui, treasury_shasui, treasury_unstsui, ctx)
     }
 }

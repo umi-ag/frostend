@@ -12,6 +12,7 @@ module sharbet::test_actions {
     use sharbet::shasui::{Self, SHASUI};
     use sharbet::stake_manager::{Self, StakeProfile};
     use sharbet::test_utils::{mint};
+    use sharbet::unstake_ticket::{Self, UnstakeTicket, UnstSuiTreasuryCap};
     use sui::test_scenario::{Self as test, ctx};
     use sui_system::governance_test_utils::{
         create_sui_system_state_for_testing,
@@ -67,11 +68,12 @@ module sharbet::test_actions {
             test::next_tx(test, ALICE);
             {
                 let treasury_shasui = test::take_shared<TreasuryCap<SHASUI>>(test);
-                let ctx = test::ctx(test);
+                {
+                    let ctx = test::ctx(test);
 
-                let coin_shasui = shasui::mint_for_testing(&mut treasury_shasui, 100, ctx);
-                transfer::public_transfer(coin_shasui, ALICE);
-
+                    let coin_shasui = shasui::mint_for_testing(&mut treasury_shasui, 100, ctx);
+                    transfer::public_transfer(coin_shasui, ALICE);
+                };
                 test::return_shared(treasury_shasui);
             };
         };
@@ -131,21 +133,21 @@ module sharbet::test_actions {
                 let wrapper = test::take_shared<SuiSystemState>(test);
                 let stake_profile = test::take_shared<StakeProfile>(test);
                 let treasury_shasui = test::take_shared<TreasuryCap<SHASUI>>(test);
+                {
+                    let coin_shsaui = actions::mint_shasui(
+                        &mut wrapper,
+                        MYSTEN_LABS,
+                        &mut stake_profile,
+                        &mut treasury_shasui,
+                        mint<SUI>(100, 9, ctx(test)),
+                        ctx(test),
+                    );
+                    print(&coin_shsaui);
+                    transfer::public_transfer(coin_shsaui, ALICE);
 
-                let coin_shsaui = actions::stake_sui_to_mint_shasui(
-                    &mut wrapper,
-                    MYSTEN_LABS,
-                    &mut stake_profile,
-                    &mut treasury_shasui,
-                    mint<SUI>(100, 9, ctx(test)),
-                    ctx(test),
-                );
-                print(&coin_shsaui);
-                transfer::public_transfer(coin_shsaui, ALICE);
-
-                print(&stake_profile);
-                print(&treasury_shasui);
-
+                    print(&stake_profile);
+                    print(&treasury_shasui);
+                };
                 test::return_shared(wrapper);
                 test::return_shared(stake_profile);
                 test::return_shared(treasury_shasui);
@@ -154,4 +156,51 @@ module sharbet::test_actions {
         test::end(scenario);
     }
 
+    #[test]
+    fun test_A6(){
+        let scenario = test::begin(@0x1);
+        let test = &mut scenario;
+        {
+            init_sui_system_state();
+            test::next_tx(test, ALICE);
+            {
+                shasui::init_for_testing(ctx(test));
+                stake_manager::init_for_testing(ctx(test));
+                unstake_ticket::init_for_testing(ctx(test));
+            };
+            test::next_tx(test, ALICE);
+            {
+                let wrapper = test::take_shared<SuiSystemState>(test);
+                let stake_profile = test::take_shared<StakeProfile>(test);
+                let treasury_shasui = test::take_shared<TreasuryCap<SHASUI>>(test);
+                let treasury_unstsui = test::take_shared<UnstSuiTreasuryCap>(test);
+                {
+
+                    let coin_shsaui = actions::mint_shasui(
+                        &mut wrapper,
+                        MYSTEN_LABS,
+                        &mut stake_profile,
+                        &mut treasury_shasui,
+                        mint<SUI>(100, 9, ctx(test)),
+                        ctx(test),
+                    );
+                    let unstake_ticket = actions::burn_shasui(
+                        &mut stake_profile,
+                        coin_shsaui,
+                        &mut treasury_shasui,
+                        &mut treasury_unstsui,
+                        ctx(test),
+                    );
+                    print(&unstake_ticket);
+                    transfer::public_transfer(unstake_ticket, ALICE);
+
+                };
+                test::return_shared(wrapper);
+                test::return_shared(stake_profile);
+                test::return_shared(treasury_shasui);
+                test::return_shared(treasury_unstsui);
+            };
+        };
+        test::end(scenario);
+    }
 }

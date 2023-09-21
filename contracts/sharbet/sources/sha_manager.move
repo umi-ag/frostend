@@ -9,6 +9,8 @@ module sharbet::sha_manager {
     use sharbet::shasui::{Self, SHASUI};
     use sharbet::stake_manager::{Self, StakeProfile};
     use sharbet::event_emit;
+    use sharbet::unstake_ticket::{Self, UnstakeTicket, UnstSuiTreasuryCap};
+    use sharbet::constants::{MAX_U64};
 
     friend sharbet::actions;
 
@@ -47,13 +49,13 @@ module sharbet::sha_manager {
     public(friend) fun unstake_sui_to_burn_shasui(
         stake_profile: &mut StakeProfile,
         coin_shasui: Coin<SHASUI>,
-        wrapper: &mut SuiSystemState,
         treasury_shasui: &mut TreasuryCap<SHASUI>,
+        treasury_unstsui: &mut UnstSuiTreasuryCap,
         ctx: &mut TxContext,
-    ): Coin<SUI> {
+    ): UnstakeTicket {
         let amount_sui_to_withdraw = burn_shasui_into_amount_sui(stake_profile, coin_shasui, treasury_shasui, ctx);
-        let coin_sui = stake_manager::unstake_sui(stake_profile, amount_sui_to_withdraw, wrapper, ctx);
-        coin_sui
+        let unstake_ticket = unstake_ticket::mint(treasury_unstsui, amount_sui_to_withdraw, MAX_U64(), ctx);
+        unstake_ticket
     }
 
     fun mint_shasui_from_amount_sui(
