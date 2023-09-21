@@ -4,7 +4,7 @@ import { VaultCard } from 'src/components/VaultCard';
 import { Vault } from 'src/types';
 import { vaults } from './const';
 
-const vaultId = (v: Vault) => `${v.coin.coinType}-${v.maturity.toISOString()}`;
+const vaultId = (v: Vault) => `${v.underlyingCoin.coinType}-${v.maturityCode}-${v.maturity.toISOString()}`;
 
 const Page = () => {
   return (
