@@ -1,4 +1,3 @@
-
 #[test_only]
 module frostend::test_swap {
     use std::debug::print;
@@ -35,7 +34,7 @@ module frostend::test_swap {
         {
             let ctx = test_scenario::ctx(test);
 
-            let bank = bank::new<STSUI_COIN>( ctx);
+            let bank = bank::new<STSUI_COIN>(ctx);
             let vault = vault::new<STSUI_COIN>(ctx);
             transfer::public_transfer(bank, tx_context::sender(ctx));
             transfer::public_transfer(vault, tx_context::sender(ctx));
@@ -99,7 +98,6 @@ module frostend::test_swap {
         test_scenario::end(scenario);
 
         assert_eq(true, true);
-
     }
 
 
