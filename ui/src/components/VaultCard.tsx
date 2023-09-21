@@ -3,17 +3,23 @@ import { Vault } from 'src/types';
 import dayjs from 'dayjs';
 import { match } from 'ts-pattern';
 import { CoinIcon } from './CoinIcon';
+import { getCoinProfileByCoinType } from 'src/coinList';
 
 const percent = (d: Decimal) => d.mul(100).toNumber();
 
 
 const CardHeader: React.FC<{ vault: Vault }> = (props) => {
+  const syCoinProfile = getCoinProfileByCoinType(props.vault.syAssetType)!
+  const principalCoinProfile = getCoinProfileByCoinType(props.vault.principalAssetType)!
+  const displayName = () => `${principalCoinProfile?.symbol} staked in ${props.vault.protocol}`;
+
   return (
     <div className="flex gap-4 px-4 mb-4">
-      <CoinIcon coin={props.vault.coin} size={50} />
+      <CoinIcon coin={syCoinProfile} size={50} />
       <div className="">
-        <p className="text-2xl font-bold">{props.vault.coin.symbol}</p>
-        <p className="text-sm text-gray-400">{props.vault.coin.name}</p>
+        <p className="text-2xl font-bold">{syCoinProfile.symbol}</p>
+        {/* <p className="text-sm text-gray-400">{props.vault.coin.name}</p> */}
+        <p className="text-sm text-gray-400">{displayName()}</p>
       </div>
     </div>
   );
