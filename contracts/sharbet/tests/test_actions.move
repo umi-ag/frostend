@@ -38,24 +38,6 @@ module sharbet::test_actions {
     }
 
     #[test]
-    fun test_A1(){
-        let scenario = test::begin(@0x0);
-        let test = &mut scenario;
-        {
-            let ctx = test::ctx(test);
-            stake_manager::init_for_testing(ctx);
-        };
-        test::next_tx(test, ALICE);
-        {
-            let stake_profile = test::take_shared<StakeProfile>(test);
-            let ctx = test::ctx(test);
-
-            test::return_shared(stake_profile);
-        };
-        test::end(scenario);
-    }
-
-    #[test]
     fun test_A2(){
         let scenario = test::begin(@0x0);
         let test = &mut scenario;
@@ -118,45 +100,6 @@ module sharbet::test_actions {
     }
 
     #[test]
-    fun test_A5(){
-        let scenario = test::begin(@0x1);
-        let test = &mut scenario;
-        {
-            init_sui_system_state();
-            test::next_tx(test, ALICE);
-            {
-                shasui::init_for_testing(ctx(test));
-                stake_manager::init_for_testing(ctx(test));
-            };
-            test::next_tx(test, ALICE);
-            {
-                let wrapper = test::take_shared<SuiSystemState>(test);
-                let stake_profile = test::take_shared<StakeProfile>(test);
-                let treasury_shasui = test::take_shared<TreasuryCap<SHASUI>>(test);
-                {
-                    let coin_shsaui = actions::mint_shasui(
-                        &mut wrapper,
-                        MYSTEN_LABS,
-                        &mut stake_profile,
-                        &mut treasury_shasui,
-                        mint<SUI>(100, 9, ctx(test)),
-                        ctx(test),
-                    );
-                    print(&coin_shsaui);
-                    transfer::public_transfer(coin_shsaui, ALICE);
-
-                    print(&stake_profile);
-                    print(&treasury_shasui);
-                };
-                test::return_shared(wrapper);
-                test::return_shared(stake_profile);
-                test::return_shared(treasury_shasui);
-            };
-        };
-        test::end(scenario);
-    }
-
-    #[test]
     fun test_A6(){
         let scenario = test::begin(@0x1);
         let test = &mut scenario;
@@ -175,16 +118,15 @@ module sharbet::test_actions {
                 let treasury_shasui = test::take_shared<TreasuryCap<SHASUI>>(test);
                 let treasury_unstsui = test::take_shared<UnstSuiTreasuryCap>(test);
                 {
-
-                    let coin_shsaui = actions::mint_shasui(
-                        &mut wrapper,
-                        MYSTEN_LABS,
+                    let coin_shsaui = actions::stake_sui_to_mint_shasui(
                         &mut stake_profile,
-                        &mut treasury_shasui,
                         mint<SUI>(100, 9, ctx(test)),
+                        &mut wrapper,
+                        &mut treasury_shasui,
+                        MYSTEN_LABS,
                         ctx(test),
                     );
-                    let unstake_ticket = actions::burn_shasui(
+                    let unstake_ticket = actions::burn_shasui_to_mint_unstsui(
                         &mut stake_profile,
                         coin_shsaui,
                         &mut treasury_shasui,
@@ -193,7 +135,6 @@ module sharbet::test_actions {
                     );
                     print(&unstake_ticket);
                     transfer::public_transfer(unstake_ticket, ALICE);
-
                 };
                 test::return_shared(wrapper);
                 test::return_shared(stake_profile);

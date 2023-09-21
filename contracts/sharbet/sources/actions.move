@@ -10,24 +10,38 @@ module sharbet::actions {
     use sharbet::stake_manager::{StakeProfile};
     use sharbet::unstake_ticket::{UnstakeTicket, UnstSuiTreasuryCap};
 
-    public fun mint_shasui(
-        wrapper: &mut SuiSystemState,
-        validator_address: address,
+
+    /// SUI -> shaSUI
+    public fun stake_sui_to_mint_shasui(
         stake_profile: &mut StakeProfile,
-        treasury_shasui: &mut TreasuryCap<SHASUI>,
         coin_sui: Coin<SUI>,
+        wrapper: &mut SuiSystemState,
+        treasury_shasui: &mut TreasuryCap<SHASUI>,
+        validator_address: address,
         ctx: &mut TxContext,
     ): Coin<SHASUI> {
         sha_manager::stake_sui_to_mint_shasui(stake_profile, coin_sui, wrapper, treasury_shasui, validator_address, ctx)
     }
 
-    public fun burn_shasui(
+    /// shaSUI -> unstSUI
+    public fun burn_shasui_to_mint_unstsui(
         stake_profile: &mut StakeProfile,
         coin_shasui: Coin<SHASUI>,
         treasury_shasui: &mut TreasuryCap<SHASUI>,
         treasury_unstsui: &mut UnstSuiTreasuryCap,
         ctx: &mut TxContext,
     ): UnstakeTicket {
-        sha_manager::unstake_sui_to_burn_shasui(stake_profile, coin_shasui, treasury_shasui, treasury_unstsui, ctx)
+        sha_manager::burn_shasui_to_mint_unstsui(stake_profile, coin_shasui, treasury_shasui, treasury_unstsui, ctx)
+    }
+
+    /// unstSUI -> SUI
+    public fun burn_unstsui_to_unstake_sui(
+        stake_profile: &mut StakeProfile,
+        unstsui: UnstakeTicket,
+        wrapper: &mut SuiSystemState,
+        treasury_unstsui: &mut UnstSuiTreasuryCap,
+        ctx: &mut TxContext,
+    ): Coin<SUI> {
+        sha_manager::burn_unstsui_to_unstake_sui(stake_profile, unstsui, wrapper, treasury_unstsui, ctx)
     }
 }

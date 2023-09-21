@@ -28,6 +28,7 @@ module sharbet::sha_manager {
     //     )
     // }
 
+    /// SUI -> shaSUI
     public(friend) fun stake_sui_to_mint_shasui(
         stake_profile: &mut StakeProfile,
         coin_sui: Coin<SUI>,
@@ -46,7 +47,8 @@ module sharbet::sha_manager {
         coin_shasui
     }
 
-    public(friend) fun unstake_sui_to_burn_shasui(
+    /// shaSUI -> unstSUI
+    public(friend) fun burn_shasui_to_mint_unstsui(
         stake_profile: &mut StakeProfile,
         coin_shasui: Coin<SHASUI>,
         treasury_shasui: &mut TreasuryCap<SHASUI>,
@@ -56,6 +58,19 @@ module sharbet::sha_manager {
         let amount_sui_to_withdraw = burn_shasui_into_amount_sui(stake_profile, coin_shasui, treasury_shasui, ctx);
         let unstake_ticket = unstake_ticket::mint(treasury_unstsui, amount_sui_to_withdraw, MAX_U64(), ctx);
         unstake_ticket
+    }
+
+    /// unstSUI -> SUI
+    public(friend) fun burn_unstsui_to_unstake_sui(
+        stake_profile: &mut StakeProfile,
+        unstsui: UnstakeTicket,
+        wrapper: &mut SuiSystemState,
+        treasury_unstsui: &mut UnstSuiTreasuryCap,
+        ctx: &mut TxContext,
+    ): Coin<SUI> {
+        let amount_sui_to_unstake = unstake_ticket::burn(treasury_unstsui, unstsui);
+        let coin_sui = stake_manager::unstake_sui(stake_profile, amount_sui_to_unstake, wrapper, ctx);
+        coin_sui
     }
 
     fun mint_shasui_from_amount_sui(
