@@ -43,8 +43,8 @@ const YtAPY: React.FC<{ vault: Vault }> = (props) => {
   return (
     <div className="grid grid-cols-[auto_1fr] items-center gap-4 px-4 mb-2">
       <p className='w-12 rounded border border-blue-600 text-blue-600 bg-blue-50 text-center'>YT</p>
-      <div className="pb-3">
-        <div className="flex justify-between items-end">
+      <div className="">
+        <div className="flex justify-between items-center">
           <span className='text-sm'>Long Yield APY</span>
           <span className='text-2xl font-bold'>{percent(props.vault.longYieldAPY)}%</span>
         </div>
@@ -61,8 +61,8 @@ const PtAPY: React.FC<{ vault: Vault }> = (props) => {
   return (
     <div className="grid grid-cols-[auto_1fr] items-center gap-4 px-4 mb-2">
       <p className='w-12 rounded border border-green-600 text-green-600 bg-green-50 text-center'>PT</p>
-      <div className="pb-3">
-        <div className="flex justify-between items-end">
+      <div className="">
+        <div className="flex justify-between items-center">
           <span className="text-sm">Fixed APY</span>
           <span className='text-2xl font-bold'>{percent(props.vault.fixedAPY)}%</span>
         </div>
@@ -120,7 +120,8 @@ export const VaultCard: React.FC<{ vault: Vault }> = (props) => {
 
   return (
     <button
-      className="w-[300px] rounded-xl shadow-xl hover:shadow-2xl bg-white py-4 hover:-translate-x-2 hover:-translate-y-2 transition-all duration-300"
+      // className="w-[300px] rounded-xl shadow-xl hover:shadow-2xl bg-white py-4 hover:-translate-x-2 hover:-translate-y-2 transition-all duration-300"
+      className="w-[300px] rounded-xl shadow-xl hover:shadow-2xl bg-white py-4"
       onClick={goSwap}
     >
       <CardHeader vault={props.vault} />
