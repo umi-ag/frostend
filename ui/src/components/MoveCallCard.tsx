@@ -2,7 +2,6 @@
 import { useWallet } from '@suiet/wallet-kit';
 import { TransactionBlock } from '@mysten/sui.js/transactions'
 import { noticeTxnResultMessage } from 'src/components/TransactionToast';
-import { sharbetMoveCall } from 'src/sharbetLib';
 import { MouseEventHandler } from 'react';
 
 export const TransactionButtonCard = (props: {
@@ -37,10 +36,6 @@ export const MoveCallCard = (props: {
     if (!wallet.address) return;
     const txb = new TransactionBlock();
     await props.moveCall(txb)
-    await sharbetMoveCall.stakeSuiToMintShasui(txb, {
-      address: wallet.address!,
-      amount: BigInt(100),
-    })
 
     const r = await wallet.signAndExecuteTransactionBlock({
       // @ts-ignore

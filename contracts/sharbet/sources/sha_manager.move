@@ -9,23 +9,12 @@ module sharbet::sha_manager {
     use sharbet::shasui::{Self, SHASUI};
     use sharbet::stake_manager::{Self, StakeProfile};
     use sharbet::event_emit;
+    use sharbet::unstsui::{Self, UnstakeTicket, UnstSuiTreasuryCap};
+    use sharbet::constants::{MAX_U64};
 
     friend sharbet::actions;
 
-    fun init(_ctx: &TxContext) { }
-
-    // public fun price_shasui_to_sui(
-    //     self: &StakeProfile,
-    //     treasury: &TreasuryCap<SHASUI>,
-    // ): FixedPoint32 {
-    //     fixedU32::div(
-    //         fixedU32::from_u64(shasui::total_supply(treasury)),
-    //         fixedU32::from_u64(
-    //             stake_manager::amount_staked_sui(self) + stake_manager::amount_reward_sui(self)
-    //         ),
-    //     )
-    // }
-
+    /// SUI -> shaSUI
     public(friend) fun stake_sui_to_mint_shasui(
         stake_profile: &mut StakeProfile,
         coin_sui: Coin<SUI>,
@@ -44,15 +33,29 @@ module sharbet::sha_manager {
         coin_shasui
     }
 
-    public(friend) fun unstake_sui_to_burn_shasui(
+    /// shaSUI -> unstSUI
+    public(friend) fun burn_shasui_to_mint_unstsui(
         stake_profile: &mut StakeProfile,
         coin_shasui: Coin<SHASUI>,
-        wrapper: &mut SuiSystemState,
         treasury_shasui: &mut TreasuryCap<SHASUI>,
+        treasury_unstsui: &mut UnstSuiTreasuryCap,
+        ctx: &mut TxContext,
+    ): UnstakeTicket {
+        let amount_sui_to_withdraw = burn_shasui_into_amount_sui(stake_profile, coin_shasui, treasury_shasui, ctx);
+        let unstake_ticket = unstsui::mint(treasury_unstsui, amount_sui_to_withdraw, MAX_U64(), ctx);
+        unstake_ticket
+    }
+
+    /// unstSUI -> SUI
+    public(friend) fun burn_unstsui_to_unstake_sui(
+        stake_profile: &mut StakeProfile,
+        unstsui: UnstakeTicket,
+        wrapper: &mut SuiSystemState,
+        treasury_unstsui: &mut UnstSuiTreasuryCap,
         ctx: &mut TxContext,
     ): Coin<SUI> {
-        let amount_sui_to_withdraw = burn_shasui_into_amount_sui(stake_profile, coin_shasui, treasury_shasui, ctx);
-        let coin_sui = stake_manager::unstake_sui(stake_profile, amount_sui_to_withdraw, wrapper, ctx);
+        let amount_sui_to_unstake = unstsui::burn(treasury_unstsui, unstsui);
+        let coin_sui = stake_manager::unstake_sui(stake_profile, amount_sui_to_unstake, wrapper, ctx);
         coin_sui
     }
 
@@ -114,10 +117,5 @@ module sharbet::sha_manager {
 
         event_emit::vec(vector[r, x, y, delta_y]);
         r
-    }
-
-    #[test_only]
-    public fun init_for_testing(ctx: &mut TxContext) {
-        init(ctx);
     }
 }

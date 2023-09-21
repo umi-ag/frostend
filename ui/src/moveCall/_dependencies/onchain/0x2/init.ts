@@ -1,3 +1,4 @@
+import * as authenticatorState from "./authenticator-state/structs";
 import * as bag from "./bag/structs";
 import * as balance from "./balance/structs";
 import * as bcs from "./bcs/structs";
@@ -48,6 +49,11 @@ loader.register(coin.CoinMetadata);
 loader.register(coin.TreasuryCap);
 loader.register(coin.CurrencyCreated);
 loader.register(dynamicField.Field);
+loader.register(authenticatorState.AuthenticatorState);
+loader.register(authenticatorState.AuthenticatorStateInner);
+loader.register(authenticatorState.JWK);
+loader.register(authenticatorState.JwkId);
+loader.register(authenticatorState.ActiveJwk);
 loader.register(bag.Bag);
 loader.register(table.Table);
 loader.register(tableVec.TableVec);
