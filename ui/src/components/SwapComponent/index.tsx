@@ -1,7 +1,6 @@
 import React from 'react';
 import { AiOutlineArrowDown } from 'react-icons/ai';
 import { useWallet } from '@suiet/wallet-kit';
-import Image from 'next/image';
 import { getCoinProfileByCoinType } from 'src/coinList';
 import { FaChevronDown } from "react-icons/fa6";
 import SwapTransactionButton from './SwapTransactionButton';
@@ -9,6 +8,8 @@ import { useTradeStore } from 'src/store/trade';
 import { Decimal } from 'decimal.js';
 import { NumericFormat, OnValueChange } from 'react-number-format';
 import { getPriceByCoinType } from 'src/frostendLib/priceList';
+import { CoinIcon } from '../CoinIcon';
+
 
 export const InputBase: React.FC = (props) => {
   return (
@@ -80,9 +81,9 @@ export const SwapComponent = () => {
 
     return (
       <div className='flex justify-between items-center pl-1 pr-3'>
-        <button className='w-[200px] flex items-center gap-2 hover:bg-slate-200'>
+        <button className='w-[300px] flex items-center justify-between px-3 py-1 gap-2 hover:bg-slate-200 rounded-full'>
           <div className='flex items-center gap-2'>
-            <Image src={coinProfile().iconUrl ?? ""} width={24} height={24} alt={""} />
+            <CoinIcon coin={coinProfile()} size={32}/>
             <span className='text-xl text-black font-medium'>
               {coinProfile().symbol}
             </span>
@@ -135,9 +136,9 @@ export const SwapComponent = () => {
 
     return (
       <div className='flex justify-between items-center pl-1 pr-3'>
-        <button className='w-[200px] flex items-center gap-2 hover:bg-slate-200'>
+        <button className='w-[300px] flex items-center justify-between px-3 py-1 gap-2 hover:bg-slate-200 rounded-full'>
           <div className='flex items-center gap-2'>
-            <Image src={coinProfile().iconUrl ?? ""} width={24} height={24} alt={""} />
+            <CoinIcon coin={coinProfile()} size={32}/>
             <span className='text-xl text-black font-medium'>
               {coinProfile().symbol}
             </span>

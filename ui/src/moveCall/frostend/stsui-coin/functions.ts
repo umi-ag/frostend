@@ -2,11 +2,11 @@ import {PUBLISHED_AT} from "..";
 import {GenericArg, ObjectArg, Type, generic, obj, pure} from "../../_framework/util";
 import {TransactionArgument, TransactionBlock} from "@mysten/sui.js/transactions";
 
+export function init( txb: TransactionBlock, stsuiCoin: ObjectArg ) { return txb.moveCall({ target: `${PUBLISHED_AT}::stsui_coin::init`, arguments: [ obj(txb, stsuiCoin) ], }) }
+
 export interface TransferArgs { treasuryCap: ObjectArg; address: string | TransactionArgument }
 
 export function transfer( txb: TransactionBlock, args: TransferArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::stsui_coin::transfer`, arguments: [ obj(txb, args.treasuryCap), pure(txb, args.address, `address`) ], }) }
-
-export function init( txb: TransactionBlock, stsuiCoin: ObjectArg ) { return txb.moveCall({ target: `${PUBLISHED_AT}::stsui_coin::init`, arguments: [ obj(txb, stsuiCoin) ], }) }
 
 export function new_( txb: TransactionBlock, typeArg: Type, t0: GenericArg ) { return txb.moveCall({ target: `${PUBLISHED_AT}::stsui_coin::new`, typeArguments: [typeArg], arguments: [ generic(txb, `${typeArg}`, t0) ], }) }
 
