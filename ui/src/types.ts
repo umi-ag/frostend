@@ -1,3 +1,6 @@
+import Decimal from 'decimal.js';
+import { CoinProfile } from './coinList';
+
 type Eyecatch = {
   url: string;
   height: number;
@@ -23,3 +26,16 @@ export type VerifierInputs = {
   public_inputs: string;
   proof_points: string;
 }
+
+export type Vault = {
+  coin: CoinProfile;
+  maturity: Date;
+  longYieldAPY: Decimal;
+  ytPrice: Decimal;
+  fixedAPY: Decimal;
+  ptPrice: Decimal;
+  underlyingAPY: Decimal;
+  underlyingAssetPrice: Decimal;
+  impliedAPY: Decimal;
+}
+
