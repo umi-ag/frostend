@@ -12,7 +12,7 @@ module sharbet::test_actions {
     use sharbet::shasui::{Self, SHASUI};
     use sharbet::stake_manager::{Self, StakeProfile};
     use sharbet::test_utils::{mint};
-    use sharbet::unstake_ticket::{Self, UnstakeTicket, UnstSuiTreasuryCap};
+    use sharbet::unstsui::{Self, UnstakeTicket, UnstSuiTreasuryCap};
     use sui::test_scenario::{Self as test, ctx};
     use sui_system::governance_test_utils::{
         create_sui_system_state_for_testing,
@@ -109,7 +109,7 @@ module sharbet::test_actions {
             {
                 shasui::init_for_testing(ctx(test));
                 stake_manager::init_for_testing(ctx(test));
-                unstake_ticket::init_for_testing(ctx(test));
+                unstsui::init_for_testing(ctx(test));
             };
             test::next_tx(test, ALICE);
             {

@@ -9,24 +9,10 @@ module sharbet::sha_manager {
     use sharbet::shasui::{Self, SHASUI};
     use sharbet::stake_manager::{Self, StakeProfile};
     use sharbet::event_emit;
-    use sharbet::unstake_ticket::{Self, UnstakeTicket, UnstSuiTreasuryCap};
+    use sharbet::unstsui::{Self, UnstakeTicket, UnstSuiTreasuryCap};
     use sharbet::constants::{MAX_U64};
 
     friend sharbet::actions;
-
-    fun init(_ctx: &TxContext) { }
-
-    // public fun price_shasui_to_sui(
-    //     self: &StakeProfile,
-    //     treasury: &TreasuryCap<SHASUI>,
-    // ): FixedPoint32 {
-    //     fixedU32::div(
-    //         fixedU32::from_u64(shasui::total_supply(treasury)),
-    //         fixedU32::from_u64(
-    //             stake_manager::amount_staked_sui(self) + stake_manager::amount_reward_sui(self)
-    //         ),
-    //     )
-    // }
 
     /// SUI -> shaSUI
     public(friend) fun stake_sui_to_mint_shasui(
@@ -56,7 +42,7 @@ module sharbet::sha_manager {
         ctx: &mut TxContext,
     ): UnstakeTicket {
         let amount_sui_to_withdraw = burn_shasui_into_amount_sui(stake_profile, coin_shasui, treasury_shasui, ctx);
-        let unstake_ticket = unstake_ticket::mint(treasury_unstsui, amount_sui_to_withdraw, MAX_U64(), ctx);
+        let unstake_ticket = unstsui::mint(treasury_unstsui, amount_sui_to_withdraw, MAX_U64(), ctx);
         unstake_ticket
     }
 
@@ -68,7 +54,7 @@ module sharbet::sha_manager {
         treasury_unstsui: &mut UnstSuiTreasuryCap,
         ctx: &mut TxContext,
     ): Coin<SUI> {
-        let amount_sui_to_unstake = unstake_ticket::burn(treasury_unstsui, unstsui);
+        let amount_sui_to_unstake = unstsui::burn(treasury_unstsui, unstsui);
         let coin_sui = stake_manager::unstake_sui(stake_profile, amount_sui_to_unstake, wrapper, ctx);
         coin_sui
     }
@@ -131,10 +117,5 @@ module sharbet::sha_manager {
 
         event_emit::vec(vector[r, x, y, delta_y]);
         r
-    }
-
-    #[test_only]
-    public fun init_for_testing(ctx: &mut TxContext) {
-        init(ctx);
     }
 }

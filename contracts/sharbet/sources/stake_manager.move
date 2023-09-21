@@ -15,7 +15,7 @@ module sharbet::stake_manager {
     use sharbet::constants;
 
     friend sharbet::sha_manager;
-    friend sharbet::unstake_ticket;
+    friend sharbet::unstsui;
 
     struct StakeProfile has key, store {
         id: UID,

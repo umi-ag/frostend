@@ -8,7 +8,7 @@ module sharbet::actions {
     use sharbet::shasui::{SHASUI};
     use sharbet::sha_manager::{Self};
     use sharbet::stake_manager::{StakeProfile};
-    use sharbet::unstake_ticket::{UnstakeTicket, UnstSuiTreasuryCap};
+    use sharbet::unstsui::{UnstakeTicket, UnstSuiTreasuryCap};
 
 
     /// SUI -> shaSUI
