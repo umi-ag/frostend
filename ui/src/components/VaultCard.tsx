@@ -15,7 +15,7 @@ const CardHeader: React.FC<{ vault: Vault }> = (props) => {
     <div className="flex gap-4 px-4 mb-4">
       <CoinIcon coin={coin} size={50} />
       <div className="text-left">
-        <p className="text-2xl font-bold">{coin.symbol}</p>
+        <p className="text-2xl font-bold">{coin.symbol}{props.vault.maturityCode}</p>
         <p className="text-sm text-gray-400">{coin.name}</p>
       </div>
     </div>
@@ -105,13 +105,13 @@ export const VaultCard: React.FC<{ vault: Vault }> = (props) => {
 
   const goSwap = () => {
     router.push('/swap');
-    const syCoinType = props.vault.underlyingCoin.coinType;
-    const ptCoinType = props.vault.ptCoin.coinType;
-    tradeStore.setSourceCoinType(syCoinType);
-    tradeStore.setTargetCoinType(ptCoinType);
+    const sourceCoinType = props.vault.underlyingCoin.coinType;
+    const targetCoinType = props.vault.ytCoin.coinType;
+    tradeStore.setSourceCoinType(sourceCoinType);
+    tradeStore.setTargetCoinType(targetCoinType);
 
-    const sourceCoinPrice = getPriceByCoinType(syCoinType)
-    const targetCoinPrice = getPriceByCoinType(ptCoinType)
+    const sourceCoinPrice = getPriceByCoinType(sourceCoinType)
+    const targetCoinPrice = getPriceByCoinType(targetCoinType)
     tradeStore.setSourceCoinAmount(BigInt(1e8))
     tradeStore.setTargetCoinAmount(
       BigInt(Math.round(1e8 / targetCoinPrice * sourceCoinPrice))
@@ -120,8 +120,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = (props) => {
 
   return (
     <button
-      // className="w-[300px] rounded-xl shadow-xl hover:shadow-2xl bg-white py-4 hover:-translate-x-2 hover:-translate-y-2 transition-all duration-300"
-      className="w-[300px] rounded-xl shadow-xl hover:shadow-2xl bg-white py-4"
+      className="w-[300px] rounded-xl shadow-xl hover:shadow-2xl bg-white py-4 hover:-translate-x-2 hover:-translate-y-2 transition-all duration-300"
       onClick={goSwap}
     >
       <CardHeader vault={props.vault} />
