@@ -30,6 +30,8 @@ export type VerifierInputs = {
 export type Vault = {
   protocol: string;
   syAssetType: string;
+  ptAssetType: string;
+  ytAssetType: string;
   principalAssetType: string;
   maturity: Date;
   maturityCode: string;

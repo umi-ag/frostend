@@ -110,7 +110,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = (props) => {
   const goSwap = () => {
     router.push('/swap');
     const sourceCoinType = props.vault.syAssetType;
-    const targetCoinType = props.vault.principalAssetType;
+    const targetCoinType = props.vault.ptAssetType;
     tradeStore.setSourceCoinType(sourceCoinType);
     tradeStore.setTargetCoinType(targetCoinType);
 
