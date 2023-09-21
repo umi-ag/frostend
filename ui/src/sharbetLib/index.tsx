@@ -124,17 +124,16 @@ export const moveCallCreateTransferPolicy = async (txb: TransactionBlock, args: 
   // );
 }
 
-export const moveCAllAttachProofPolicy = async (props: {
+export const moveCallAttachProofPolicy = async (props: {
   txb: TransactionBlock;
   type: string;
   policy_id: string;
   policy_cap_id: string;
 }) => {
-  const { txb } = props;
-  add(txb, SUI_TYPE_ARG, {
-    transferPolicy: props.policy_id,
-    transferPolicyCap: props.policy_cap_id,
-  })
+  // add(txb, SUI_TYPE_ARG, {
+  //   transferPolicy: props.policy_id,
+  //   transferPolicyCap: props.policy_cap_id,
+  // })
 };
 
 export const moveCallPlaceAndList = async (txb: TransactionBlock, args: {
@@ -167,10 +166,10 @@ export const moveCallConfirmPolicy = async (txb: TransactionBlock, args: {
   policy_id: string;
   transferRequest: TransactionArgument;
 }) => {
-  confirm(txb, SUI_TYPE_ARG, {
-    transferPolicy: args.policy_id,
-    transferRequest: args.transferRequest,
-  })
+  // confirm(txb, SUI_TYPE_ARG, {
+  //   transferPolicy: args.policy_id,
+  //   transferRequest: args.transferRequest,
+  // })
 }
 
 export const moveCallPurchase = async (txb: TransactionBlock, args: {
