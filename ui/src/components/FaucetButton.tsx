@@ -1,6 +1,6 @@
 import { ConnectModal, useWallet } from '@suiet/wallet-kit';
 import React, { useState } from 'react';
-import { TransactionBlock } from '@mysten/sui.js/transactions'
+import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { moveCallFaucet } from 'src/frostendLib';
 import { noticeTxnResultMessage } from './TransactionToast';
 
