@@ -1,5 +1,5 @@
 import Decimal from 'decimal.js';
-import { STSUI_SYCoinType, } from 'src/frostendLib';
+import { STSUI_PTCoinType, STSUI_SYCoinType, STSUI_YTCoinType, } from 'src/frostendLib';
 import { SUI } from 'src/moveCall/sui/sui/structs';
 import { Vault } from 'src/types';
 
@@ -10,8 +10,11 @@ export const vaults: Vault[] = [
   {
     protocol: 'Sharbet',
     syAssetType: STSUI_SYCoinType,
+    ptAssetType: STSUI_PTCoinType,
+    ytAssetType: STSUI_YTCoinType,
     principalAssetType: SUI.$typeName,
     maturity: _01Y,
+    maturityCode: '01Y',
     fixedAPY: new Decimal(0.06),
     longYieldAPY: new Decimal(0.24),
     impliedAPY: new Decimal(0.3),
@@ -23,8 +26,11 @@ export const vaults: Vault[] = [
   {
     protocol: 'Sharbet',
     syAssetType: STSUI_SYCoinType,
+    ptAssetType: STSUI_PTCoinType,
+    ytAssetType: STSUI_YTCoinType,
     principalAssetType: SUI.$typeName,
     maturity: _02Y,
+    maturityCode: '02Y',
     fixedAPY: new Decimal(0.06),
     longYieldAPY: new Decimal(0.24),
     impliedAPY: new Decimal(0.3),
