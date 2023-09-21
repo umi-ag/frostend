@@ -1,6 +1,6 @@
 import Decimal from 'decimal.js';
-import { getCoinProfileByCoinType } from 'src/coinList';
-import { STSUI_PTCoinType, STSUI_SYCoinType, STSUI_YTCoinType } from 'src/frostendLib';
+import { STSUI_SYCoinType, } from 'src/frostendLib';
+import { SUI } from 'src/moveCall/sui/sui/structs';
 import { Vault } from 'src/types';
 
 const _01Y = new Date('2023-12-26');
@@ -8,9 +8,9 @@ const _02Y = new Date('2024-12-26');
 
 export const vaults: Vault[] = [
   {
-    underlyingCoin: getCoinProfileByCoinType(STSUI_SYCoinType)!,
-    ptCoin: getCoinProfileByCoinType(STSUI_PTCoinType)!,
-    ytCoin: getCoinProfileByCoinType(STSUI_YTCoinType)!,
+    protocol: 'Sharbet',
+    syAssetType: STSUI_SYCoinType,
+    principalAssetType: SUI.$typeName,
     maturity: _01Y,
     maturityCode: '01Y',
     fixedAPY: new Decimal(0.06),
@@ -22,9 +22,9 @@ export const vaults: Vault[] = [
     underlyingAssetPrice: new Decimal(1),
   },
   {
-    underlyingCoin: getCoinProfileByCoinType(STSUI_SYCoinType)!,
-    ptCoin: getCoinProfileByCoinType(STSUI_PTCoinType)!,
-    ytCoin: getCoinProfileByCoinType(STSUI_YTCoinType)!,
+    protocol: 'Sharbet',
+    syAssetType: STSUI_SYCoinType,
+    principalAssetType: SUI.$typeName,
     maturity: _02Y,
     maturityCode: '02Y',
     fixedAPY: new Decimal(0.06),
