@@ -23,25 +23,27 @@ const ToggleToken = () => {
     .with(['unstsui', 'shasui'], () => true)
     .otherwise(() => false)
 
+  const baseClass = 'text-lg font-bold'
   const normal = 'w-full h-full rounded-xl bg-gray-50 text-gray-700';
   const stakeClassName = isPTPair
     ? 'w-full h-full rounded-xl border-2 border-green-800 bg-green-100 text-green-800'
     : normal;
   const unstakeClassName = isYTPair
-    ? 'w-full h-full rounded-xl border-2 border-blue-800 bg-blue-100 text-blue-900'
+    ? 'h-full rounded-xl border-2 border-blue-800 bg-blue-100 text-blue-900'
     : normal;
 
   return (
     <div className='grid grid-cols-2 min-h-[4em] rounded-xl text-black bg-gray-50 transition-all duration-200 shadow-xl'>
-      <button className={stakeClassName} onClick={() => setSwapPair(SUI.$typeName, SHASUI.$typeName)}>
+      <button className={`${baseClass} ${stakeClassName}`} onClick={() => setSwapPair(SUI.$typeName, SHASUI.$typeName)}>
         <p>Stake</p>
       </button>
-      <button className={unstakeClassName} onClick={async () => setSwapPair(SHASUI.$typeName, UNSTSUI.$typeName)}>
+      <button className={`${baseClass} ${unstakeClassName}`} onClick={async () => setSwapPair(SHASUI.$typeName, UNSTSUI.$typeName)}>
         <p>Unstake</p>
       </button>
     </div>
   )
 }
+
 
 const StatsCard = () => {
   const { sourceCoinType, targetCoinType } = useTradeStore()
@@ -62,16 +64,16 @@ const StatsCard = () => {
       .otherwise(() => { throw new Error('invalid coinType') })
   }
 
-
   return (
     <div className='flex justify-around w-full rounded-xl bg-gray-50 text-gray-700 p-4 shadow-xl'>
-      <StatsRow title="Liquidity" value="$123,456,789" />
-      <StatsRow title="24h volume" value="$123,456,789" />
-      <StatsRow title="Underlying APY" value="10%" />
+      <StatsRow title="Liquidity" value="$193" />
+      {/* <StatsRow title="24h volume" value="$123,456,789" /> */}
+      <StatsRow title="Long Yield APY" value="4.41%" />
       {/* <StatsRow title={displayAPYTitle()} value="10%" /> */}
     </div>
   )
 }
+
 
 const Page = () => {
   const wallet = useWallet();
