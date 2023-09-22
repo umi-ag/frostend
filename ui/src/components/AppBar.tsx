@@ -3,9 +3,9 @@ import { ConnectButton } from '@suiet/wallet-kit';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTradeStore } from 'src/store/trade';
-import { SHASUI } from 'src/app/libs/moveCall/sharbet/shasui/structs';
-import { SUI } from 'src/app/libs/moveCall/sui/sui/structs';
-import { STSUI_SYCoinType, STSUI_YTCoinType } from 'src/app/libs/frostendLib';
+import { SHASUI } from 'src/libs/moveCall/sharbet/shasui/structs';
+import { SUI } from 'src/libs/moveCall/sui/sui/structs';
+import { STSUI_SYCoinType, STSUI_YTCoinType } from 'src/libs/frostendLib';
 
 
 const NavLink: React.FC<{
@@ -73,6 +73,7 @@ export const AppBar: React.FC = () => {
           >
             swap
           </NavLink>
+          <NavLink href="/validators">validators</NavLink>
           <NavLink href="/admin">admin</NavLink>
         </div>
       </div>

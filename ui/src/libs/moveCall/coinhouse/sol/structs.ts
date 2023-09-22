@@ -4,16 +4,16 @@ import {Encoding} from "@mysten/bcs";
 
 /* ============================== EventMint =============================== */
 
-bcs.registerStructType( "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::EventMint", {
+bcs.registerStructType( "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::sol::EventMint", {
 amount: `u64`,
 user: `address`,
 } )
 
-export function isEventMint(type: Type): boolean { return type === "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::EventMint"; }
+export function isEventMint(type: Type): boolean { return type === "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::sol::EventMint"; }
 
 export interface EventMintFields { amount: bigint; user: string }
 
-export class EventMint { static readonly $typeName = "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::EventMint"; static readonly $numTypeParams = 0;
+export class EventMint { static readonly $typeName = "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::sol::EventMint"; static readonly $numTypeParams = 0;
 
   readonly amount: bigint; readonly user: string
 
@@ -31,16 +31,16 @@ export class EventMint { static readonly $typeName = "0x883e6ba8d9c14186f703e264
 
 /* ============================== EventBurn =============================== */
 
-bcs.registerStructType( "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::EventBurn", {
+bcs.registerStructType( "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::sol::EventBurn", {
 amount: `u64`,
 user: `address`,
 } )
 
-export function isEventBurn(type: Type): boolean { return type === "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::EventBurn"; }
+export function isEventBurn(type: Type): boolean { return type === "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::sol::EventBurn"; }
 
 export interface EventBurnFields { amount: bigint; user: string }
 
-export class EventBurn { static readonly $typeName = "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::EventBurn"; static readonly $numTypeParams = 0;
+export class EventBurn { static readonly $typeName = "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::sol::EventBurn"; static readonly $numTypeParams = 0;
 
   readonly amount: bigint; readonly user: string
 
@@ -56,28 +56,28 @@ export class EventBurn { static readonly $typeName = "0x883e6ba8d9c14186f703e264
 
  }
 
-/* ============================== SHASUI =============================== */
+/* ============================== SOL =============================== */
 
-bcs.registerStructType( "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::SHASUI", {
+bcs.registerStructType( "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::sol::SOL", {
 dummy_field: `bool`,
 } )
 
-export function isSHASUI(type: Type): boolean { return type === "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::SHASUI"; }
+export function isSOL(type: Type): boolean { return type === "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::sol::SOL"; }
 
-export interface SHASUIFields { dummyField: boolean }
+export interface SOLFields { dummyField: boolean }
 
-export class SHASUI { static readonly $typeName = "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::SHASUI"; static readonly $numTypeParams = 0;
+export class SOL { static readonly $typeName = "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::sol::SOL"; static readonly $numTypeParams = 0;
 
   readonly dummyField: boolean
 
  constructor( dummyField: boolean, ) { this.dummyField = dummyField; }
 
- static fromFields( fields: Record<string, any> ): SHASUI { return new SHASUI( fields.dummy_field ) }
+ static fromFields( fields: Record<string, any> ): SOL { return new SOL( fields.dummy_field ) }
 
- static fromFieldsWithTypes(item: FieldsWithTypes): SHASUI { if (!isSHASUI(item.type)) { throw new Error("not a SHASUI type");
+ static fromFieldsWithTypes(item: FieldsWithTypes): SOL { if (!isSOL(item.type)) { throw new Error("not a SOL type");
 
- } return new SHASUI( item.fields.dummy_field ) }
+ } return new SOL( item.fields.dummy_field ) }
 
- static fromBcs( data: Uint8Array | string, encoding?: Encoding ): SHASUI { return SHASUI.fromFields( bcs.de([SHASUI.$typeName, ], data, encoding) ) }
+ static fromBcs( data: Uint8Array | string, encoding?: Encoding ): SOL { return SOL.fromFields( bcs.de([SOL.$typeName, ], data, encoding) ) }
 
  }

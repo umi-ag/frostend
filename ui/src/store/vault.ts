@@ -3,8 +3,8 @@ import {
   STSUI_PTCoinType,
   STSUI_SYCoinType,
   STSUI_YTCoinType,
-} from "src/app/libs/frostendLib";
-import { SUI } from "src/app/libs/moveCall/sui/sui/structs";
+} from "src/libs/frostendLib";
+import { SUI } from "src/libs/moveCall/sui/sui/structs";
 import { Vault } from "src/types";
 import { create } from "zustand";
 
