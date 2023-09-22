@@ -86,7 +86,6 @@ const SuiSystemStateView: React.FC<{
 }
 
 
-
 const Page = () => {
   const { fetch, suiSystemState } = useSuiSystemState()
 
