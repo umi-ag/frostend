@@ -2,32 +2,6 @@ import {bcsOnchain as bcs} from "../../_framework/bcs";
 import {FieldsWithTypes, Type} from "../../_framework/util";
 import {Encoding} from "@mysten/bcs";
 
-/* ============================== SHASUI =============================== */
-
-bcs.registerStructType( "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::SHASUI", {
-dummy_field: `bool`,
-} )
-
-export function isSHASUI(type: Type): boolean { return type === "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::SHASUI"; }
-
-export interface SHASUIFields { dummyField: boolean }
-
-export class SHASUI { static readonly $typeName = "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::SHASUI"; static readonly $numTypeParams = 0;
-
-  readonly dummyField: boolean
-
- constructor( dummyField: boolean, ) { this.dummyField = dummyField; }
-
- static fromFields( fields: Record<string, any> ): SHASUI { return new SHASUI( fields.dummy_field ) }
-
- static fromFieldsWithTypes(item: FieldsWithTypes): SHASUI { if (!isSHASUI(item.type)) { throw new Error("not a SHASUI type");
-
- } return new SHASUI( item.fields.dummy_field ) }
-
- static fromBcs( data: Uint8Array | string, encoding?: Encoding ): SHASUI { return SHASUI.fromFields( bcs.de([SHASUI.$typeName, ], data, encoding) ) }
-
- }
-
 /* ============================== EventMint =============================== */
 
 bcs.registerStructType( "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::EventMint", {
@@ -79,5 +53,31 @@ export class EventBurn { static readonly $typeName = "0x883e6ba8d9c14186f703e264
  } return new EventBurn( { amount: BigInt(item.fields.amount), user: `0x${item.fields.user}` } ) }
 
  static fromBcs( data: Uint8Array | string, encoding?: Encoding ): EventBurn { return EventBurn.fromFields( bcs.de([EventBurn.$typeName, ], data, encoding) ) }
+
+ }
+
+/* ============================== SHASUI =============================== */
+
+bcs.registerStructType( "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::SHASUI", {
+dummy_field: `bool`,
+} )
+
+export function isSHASUI(type: Type): boolean { return type === "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::SHASUI"; }
+
+export interface SHASUIFields { dummyField: boolean }
+
+export class SHASUI { static readonly $typeName = "0x883e6ba8d9c14186f703e264455bbeae9cd2d4d56a86fde34386602e00e0df8f::shasui::SHASUI"; static readonly $numTypeParams = 0;
+
+  readonly dummyField: boolean
+
+ constructor( dummyField: boolean, ) { this.dummyField = dummyField; }
+
+ static fromFields( fields: Record<string, any> ): SHASUI { return new SHASUI( fields.dummy_field ) }
+
+ static fromFieldsWithTypes(item: FieldsWithTypes): SHASUI { if (!isSHASUI(item.type)) { throw new Error("not a SHASUI type");
+
+ } return new SHASUI( item.fields.dummy_field ) }
+
+ static fromBcs( data: Uint8Array | string, encoding?: Encoding ): SHASUI { return SHASUI.fromFields( bcs.de([SHASUI.$typeName, ], data, encoding) ) }
 
  }
