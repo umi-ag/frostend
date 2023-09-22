@@ -1,13 +1,13 @@
 import React from 'react';
 import { AiOutlineArrowDown } from 'react-icons/ai';
 import { useWallet } from '@suiet/wallet-kit';
-import { getCoinProfileByCoinType } from 'src/coinList';
+import { getCoinProfileByCoinType } from 'src/app/libs/coinList';
 import { FaChevronDown } from "react-icons/fa6";
 import SwapTransactionButton from './SwapTransactionButton';
 import { useTradeStore } from 'src/store/trade';
 import { Decimal } from 'decimal.js';
 import { NumericFormat, OnValueChange } from 'react-number-format';
-import { getPriceByCoinType } from 'src/frostendLib/priceList';
+import { getPriceByCoinType } from 'src/app/libs/frostendLib/priceList';
 import { CoinIcon } from '../CoinIcon';
 
 

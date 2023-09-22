@@ -59,7 +59,6 @@ cargo install --locked --git https://github.com/kunalabs-io/sui-client-gen.git
 [tasks."gen:sui"]
 script = '''
 cd ui/
-rm -rf src/moveCall
-sui-client-gen -m sui-client-gen.toml -o src/moveCall
+bun run gen:sui
 bun run lint
 '''

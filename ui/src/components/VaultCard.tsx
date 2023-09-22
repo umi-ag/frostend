@@ -5,7 +5,7 @@ import { match } from 'ts-pattern';
 import { CoinIcon } from './CoinIcon';
 import { useRouter } from 'next/navigation';
 import { useTradeStore } from 'src/store/trade';
-import { getCoinProfileByCoinType } from 'src/coinList';
+import { getCoinProfileByCoinType } from 'src/app/libs/coinList';
 
 const percent = (d: Decimal) => d.mul(100).toNumber();
 
