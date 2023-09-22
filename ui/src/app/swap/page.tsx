@@ -2,27 +2,31 @@
 
 import { AppBar } from 'src/components/AppBar';
 import { SwapComponent } from 'src/components/SwapComponent';
-import { STSUI_PTCoinType, STSUI_SYCoinType, STSUI_YTCoinType, whichCoinTypeIsSyPtYt } from 'src/frostendLib';
-import { isSHASUI } from 'src/moveCall/sharbet/shasui/structs';
-import { isSUI } from 'src/moveCall/sui/sui/structs';
+import { STSUI_PTCoinType, STSUI_SYCoinType, STSUI_YTCoinType } from 'src/frostendLib';
 import { useTradeStore } from 'src/store/trade';
 import { match } from 'ts-pattern';
+import { whichCoinType } from '../libs';
 
-const whichCoinType = (coinType: string) => {
-  if (isSUI(coinType)) return 'sui';
-  if (isSHASUI(coinType)) return 'shasui';
-  return whichCoinTypeIsSyPtYt(coinType);
-}
 
 const ToggleToken = () => {
-  const { targetCoinType, setSwapPair } = useTradeStore()
+  const { sourceCoinType, targetCoinType, setSwapPair } = useTradeStore()
+
+  const isPTPair = match([whichCoinType(sourceCoinType), whichCoinType(targetCoinType)])
+    .with(['sy', 'pt'], () => true)
+    .with(['pt', 'sy'], () => true)
+    .otherwise(() => false)
+  const isYTPair = match([whichCoinType(sourceCoinType), whichCoinType(targetCoinType)])
+    .with(['sy', 'yt'], () => true)
+    .with(['yt', 'sy'], () => true)
+    .otherwise(() => false)
 
   const normal = 'w-full h-full rounded-xl bg-gray-50 text-gray-700';
-  const ytClassName = targetCoinType === STSUI_YTCoinType
-    ? 'w-full h-full rounded-xl border-2 border-blue-800 bg-blue-100 text-blue-900'
-    : normal;
-  const ptClassName = targetCoinType === STSUI_PTCoinType
+  const ptClassName = isPTPair
     ? 'w-full h-full rounded-xl border-2 border-green-800 bg-green-100 text-green-800'
+    : normal;
+
+  const ytClassName = isYTPair
+    ? 'w-full h-full rounded-xl border-2 border-blue-800 bg-blue-100 text-blue-900'
     : normal;
 
   return (
@@ -64,7 +68,7 @@ const StatsCard = () => {
       <StatsRow title="Liquidity" value="$123,456,789" />
       <StatsRow title="24h volume" value="$123,456,789" />
       <StatsRow title="Underlying APY" value="10%" />
-      <StatsRow title={displayAPYTitle()} value="10%" />
+      {/* <StatsRow title={displayAPYTitle()} value="10%" /> */}
     </div>
   )
 }
