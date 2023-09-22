@@ -73,6 +73,7 @@ export const AppBar: React.FC = () => {
           >
             swap
           </NavLink>
+          <NavLink href="/validators">validators</NavLink>
           <NavLink href="/admin">admin</NavLink>
         </div>
       </div>
