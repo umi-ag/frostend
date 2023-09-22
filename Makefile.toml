@@ -45,6 +45,12 @@ cd contracts/frostend
 sui client publish --gas-budget 123456789 --skip-dependency-verification
 '''
 
+[tasks."deploy:coinhouse"]
+script = '''
+cd contracts/coin-house
+sui client publish --gas-budget 123456789 --skip-dependency-verification
+'''
+
 [tasks."deploy:frostend0"]
 script = '''
 cd contracts/frostend_0
