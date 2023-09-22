@@ -2,8 +2,17 @@
 
 import { AppBar } from 'src/components/AppBar';
 import { SwapComponent } from 'src/components/SwapComponent';
-import { STSUI_PTCoinType, STSUI_SYCoinType, STSUI_YTCoinType } from 'src/frostendLib';
+import { STSUI_PTCoinType, STSUI_SYCoinType, STSUI_YTCoinType, whichCoinTypeIsSyPtYt } from 'src/frostendLib';
+import { isSHASUI } from 'src/moveCall/sharbet/shasui/structs';
+import { isSUI } from 'src/moveCall/sui/sui/structs';
 import { useTradeStore } from 'src/store/trade';
+import { match } from 'ts-pattern';
+
+const whichCoinType = (coinType: string) => {
+  if (isSUI(coinType)) return 'sui';
+  if (isSHASUI(coinType)) return 'shasui';
+  return whichCoinTypeIsSyPtYt(coinType);
+}
 
 const ToggleToken = () => {
   const { targetCoinType, setSwapPair } = useTradeStore()
@@ -31,6 +40,8 @@ const ToggleToken = () => {
 }
 
 const StatsCard = () => {
+  const { sourceCoinType, targetCoinType } = useTradeStore()
+
   const StatsRow = ({ title, value }: { title: string, value: string }) => (
     <div className='text-center'>
       <p className='text-gray-500 mb-2'>{title}</p>
@@ -38,12 +49,22 @@ const StatsCard = () => {
     </div>
   );
 
+  const displayAPYTitle = () => {
+    return match([whichCoinType(sourceCoinType), whichCoinType(targetCoinType)])
+      .with(['sy', 'pt'], () => "Fixed APY")
+      .with(['pt', 'sy'], () => "Fixed APY")
+      .with(['sy', 'yt'], () => "Long Yield APY")
+      .with(['yt', 'sy'], () => "Long Yield APY")
+      .otherwise(() => { throw new Error('invalid coinType') })
+  }
+
+
   return (
     <div className='flex justify-around w-full rounded-xl bg-gray-50 text-gray-700 p-4 shadow-xl'>
       <StatsRow title="Liquidity" value="$123,456,789" />
       <StatsRow title="24h volume" value="$123,456,789" />
       <StatsRow title="Underlying APY" value="10%" />
-      <StatsRow title="Fixed APY" value="10%" />
+      <StatsRow title={displayAPYTitle()} value="10%" />
     </div>
   )
 }
