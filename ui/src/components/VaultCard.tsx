@@ -18,8 +18,13 @@ const CardHeader: React.FC<{ vault: Vault }> = (props) => {
     <div className="flex gap-4 px-4 mb-4">
       <CoinIcon coin={syCoinProfile} size={50} />
       <div className="">
-        <p className="text-2xl font-bold">{syCoinProfile.symbol}</p>
-        <p className="text-sm text-gray-400">{displayName()}</p>
+        <p className="text-left text-2xl font-bold">{syCoinProfile.symbol}</p>
+        <p className="flex items-center gap-1">
+          <CoinIcon coin={principalCoinProfile} size={14} />
+          <span className="text-sm text-gray-400">
+            {displayName()}
+          </span>
+        </p>
       </div>
     </div>
   );

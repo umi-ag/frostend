@@ -8,6 +8,7 @@ import { SUI } from 'src/app/libs/moveCall/sui/sui/structs';
 import { useTradeStore } from 'src/store/trade';
 import { match } from 'ts-pattern';
 import { whichCoinType } from '../libs';
+import { useWallet } from '@suiet/wallet-kit';
 
 
 const ToggleToken = () => {
@@ -73,6 +74,8 @@ const StatsCard = () => {
 }
 
 const Page = () => {
+  const wallet = useWallet();
+
   return (
     <div className="h-screen bg-blue-500">
       <AppBar />

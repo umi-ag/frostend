@@ -76,6 +76,16 @@ const Page = () => {
               })
             }}
           />
+          <MoveCallCard
+            title="Unstake SUI"
+            buttonText="withdraw"
+            moveCall={async (txb) => {
+              await sharbetMoveCall.burnShasuiToMintUnstsui(txb, {
+                address: wallet.address!,
+                amount: BigInt(100),
+              })
+            }}
+          />
         </div>
       </main>
     </div>
