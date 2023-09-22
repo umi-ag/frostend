@@ -28,21 +28,28 @@ const WalletConnectButton: React.FC = () => {
   return <ConnectButton>Connect Wallet</ConnectButton>;
 };
 
+const Logo = () => {
+  const size = 48
+  return (
+    <Image
+      src="/logo.png" width={size} height={size}
+      alt="Frostend Logo"
+    // className='drop-shadow-3xl border-blue-600 border-2 rounded-full bg-gray-800'
+    />
+  )
+}
+
 export const AppBar: React.FC = () => {
   return (
     <div className="flex items-center justify-between px-6 py-2 bg-sky-800 z-50">
-      <div className="flex items-center gap-3 drop-shadow-3xl">
-        <Image
-          src="/logo.png"
-          width={32}
-          height={32}
-          alt="Frostend Logo"
-          className='drop-shadow-3xl border-blue-600 border-2 rounded-full bg-gray-800'
-        />
-        <span className="text-white font-black text-4xl font-genos">
-          FrostEnd
-        </span>
-        <div className='flex items-center gap-5'>
+      <div className="flex items-center gap-8 drop-shadow-3xl">
+        <div className="flex items-center gap-1">
+          <Logo />
+          <span className="text-white font-black mb-1 text-4xl font-genos">
+            FrostEnd
+          </span>
+        </div>
+        <div className='flex items-center gap-6'>
           <NavLink href="/stake">stake</NavLink>
           <NavLink href="/vaults">vaults</NavLink>
           <NavLink href="/swap">swap</NavLink>
