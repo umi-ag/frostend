@@ -1,0 +1,10 @@
+
+// https://suiexplorer.com/txblock/FhNZKe4tsQv2pZ6ikjFprAy2ufZcApX83Hq7Q99boXH6?network=testnet
+
+export const TREASURY_USDC = "0xc007a135b01eb943eeab2832f2592762e79a51b0a3313f6a3faaea9523168bc0"
+export const TREASURY_ETH = "0xa83232e71deafe32582d0cdb96b6e269388cb6dd62a98959d92a36084416beda"
+export const TREASURY_SOL = "0x5e21013e034b0b6443e4a322d708248acfe5c1b9fe73e0c4db134337cd29c83d"
+
+export const METADATA_USDC = "0x824813411d1805616e11746a1eff2a51e62fb489937f4e71246fba6ac2dd77af"
+export const METADATA_ETH = "0x3c0b27abcf14c756db06ffe41b4eefba3da120e4f4ebe27df6e8a06b394adc5e"
+export const METADATA_SOL = "0x464ce2851b960743f602047e4e601697e1261fc15c6d10a5ed964aafb1cb8452"
