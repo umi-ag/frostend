@@ -7,26 +7,19 @@ import {
 } from "src/app/libs/moveCall/frostend/swap/functions";
 import { STSUI_COIN } from "src/app/libs/moveCall/frostend/stsui-coin/structs";
 import { BANK, TRESURY_CAP, VAULT } from "src/config/frostend";
-import { PUBLISHED_AT } from "src/app/libs/moveCall/frostend";
 import { mintTo } from "src/app/libs/moveCall/frostend/stsui-coin/functions";
 import { moveCallTakeCoin } from "src/app/libs/sharbetLib";
+import { YTCoin, isPTCoin, isYTCoin } from "src/libs/moveCall/frostend/vault/structs";
+import { PTCoin } from "../moveCall/frostend/vault/structs";
+
 
 export const STSUI_SYCoinType = STSUI_COIN.$typeName;
-export const STSUI_PTCoinType =
-  `${PUBLISHED_AT}::vault::PTCoin<${STSUI_SYCoinType}>`;
-export const STSUI_YTCoinType =
-  `${PUBLISHED_AT}::vault::YTCoin<${STSUI_SYCoinType}>`;
+export const STSUI_PTCoinType = `${PTCoin.$typeName}<${STSUI_SYCoinType}>`;
+export const STSUI_YTCoinType = `${YTCoin.$typeName}<${STSUI_SYCoinType}>`;
 
-export const isPTCoinType = (coinType: string) => {
-  return coinType.startsWith(`${PUBLISHED_AT}::vault::PTCoin<`);
-};
-
-export const isYTcoinType = (coinType: string) => {
-  return coinType.startsWith(`${PUBLISHED_AT}::vault::YTCoin<`);
-};
 
 export const whichCoinTypeIsSyPtYt = (coinType: string): "sy" | "pt" | "yt" => {
-  return isPTCoinType(coinType) ? "pt" : isYTcoinType(coinType) ? "yt" : "sy";
+  return isPTCoin(coinType) ? "pt" : isYTCoin(coinType) ? "yt" : "sy";
 };
 
 export const moveCallFaucet = async (
