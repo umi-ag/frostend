@@ -14,8 +14,6 @@ export type CoinProfile = {
   id: string;
 };
 
-
-
 const coinList: CoinProfile[] = [
   {
     id: "",
@@ -78,6 +76,24 @@ const coinList: CoinProfile[] = [
     description: "Yield Token of Sharbet Staked SUI",
     iconUrl: "/img/coins/yt-shasui.png",
     coinType: STSUI_YTCoinType,
+    decimals: 8,
+  },
+  {
+    id: "",
+    name: "Haedal Staked SUI",
+    symbol: "haSUI",
+    description: "Sharbet Staked SUI",
+    iconUrl: "/img/coins/hasui.png",
+    coinType: "0xhasui::hasui::HASUI",
+    decimals: 8,
+  },
+  {
+    id: "",
+    name: "Haedal Staked Volo",
+    symbol: "voloSUI",
+    description: "Sharbet Staked SUI",
+    iconUrl: "/img/coins/volosui.png",
+    coinType: "0xvolo::volo::VOLO",
     decimals: 8,
   },
 ];

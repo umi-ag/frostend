@@ -112,15 +112,34 @@ export const VaultCard: React.FC<{ vault: Vault }> = (props) => {
   const router = useRouter();
 
   const goSwap = () => {
-    tradeStore.setSwapPair(props.vault.syAssetType, props.vault.ptAssetType);
-    router.push('/swap');
+    if (props.vault.status == 'live') {
+      tradeStore.setSwapPair(props.vault.syAssetType, props.vault.ptAssetType);
+      router.push('/swap');
+    }
   }
+
+  const liveClass = "py-4 w-[300px] rounded-xl shadow-xl hover:shadow-2xl bg-white hover:-translate-x-2 hover:-translate-y-2 transition-all duration-300"
+  const notLiveClass = "w-[300px] rounded-xl shadow-xl bg-white opacity-80"
 
   return (
     <button
-      className="w-[300px] rounded-xl shadow-xl hover:shadow-2xl bg-white py-4 hover:-translate-x-2 hover:-translate-y-2 transition-all duration-300"
+      className={
+        props.vault.status == 'live'
+          ? liveClass
+          : notLiveClass
+      }
       onClick={goSwap}
     >
+      {
+        props.vault.status === 'upcoming'
+          ? (
+            <div className="h-7 mb-3 font-bold bg-green-400 text-white text-center py-0.5 rounded-t-xl">
+              Upcoming
+            </div>
+          ) : (
+            <></>
+          )
+      }
       <CardHeader vault={props.vault} />
       <Maturity vault={props.vault} />
       <YtAPY vault={props.vault} />
