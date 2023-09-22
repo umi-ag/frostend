@@ -1,10 +1,10 @@
 import { TransactionBlock } from "@mysten/sui.js/transactions";
-import { frostendMoveCall, whichCoinTypeIsSyPtYt } from "src/frostendLib";
+import { frostendMoveCall, whichCoinTypeIsSyPtYt } from "src/app/libs/frostendLib";
 import { match } from "ts-pattern";
-import { isSHASUI } from "src/moveCall/sharbet/shasui/structs";
-import { isSUI } from "src/moveCall/sui/sui/structs";
-import { sharbetMoveCall } from "src/sharbetLib";
-import { isUNSTSUI } from "src/moveCall/sharbet/unstsui/structs";
+import { isSHASUI } from "src/app/libs/moveCall/sharbet/shasui/structs";
+import { isSUI } from "src/app/libs/moveCall/sui/sui/structs";
+import { sharbetMoveCall } from "src/app/libs/sharbetLib";
+import { isUNSTSUI } from "src/app/libs/moveCall/sharbet/unstsui/structs";
 
 export const whichCoinType = (
   coinType: string,

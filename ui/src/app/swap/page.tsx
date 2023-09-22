@@ -2,7 +2,7 @@
 
 import { AppBar } from 'src/components/AppBar';
 import { SwapComponent } from 'src/components/SwapComponent';
-import { STSUI_PTCoinType, STSUI_SYCoinType, STSUI_YTCoinType } from 'src/frostendLib';
+import { STSUI_PTCoinType, STSUI_SYCoinType, STSUI_YTCoinType } from 'src/app/libs/frostendLib';
 import { useTradeStore } from 'src/store/trade';
 import { match } from 'ts-pattern';
 import { whichCoinType } from '../libs';

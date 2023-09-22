@@ -2,9 +2,9 @@
 
 import { AppBar } from 'src/components/AppBar';
 import { SwapComponent } from 'src/components/SwapComponent';
-import { SHASUI, isSHASUI } from 'src/moveCall/sharbet/shasui/structs';
-import { UNSTSUI } from 'src/moveCall/sharbet/unstsui/structs';
-import { SUI, isSUI } from 'src/moveCall/sui/sui/structs';
+import { SHASUI } from 'src/app/libs/moveCall/sharbet/shasui/structs';
+import { UNSTSUI } from 'src/app/libs/moveCall/sharbet/unstsui/structs';
+import { SUI } from 'src/app/libs/moveCall/sui/sui/structs';
 import { useTradeStore } from 'src/store/trade';
 import { match } from 'ts-pattern';
 import { whichCoinType } from '../libs';

@@ -1,14 +1,13 @@
 import React from 'react';
 import { ConnectButton } from '@suiet/wallet-kit';
-import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { FaucetButton } from './FaucetButton';
 import { useTradeStore } from 'src/store/trade';
-import { SHASUI } from 'src/moveCall/sharbet/shasui/structs';
-import { SUI } from 'src/moveCall/sui/sui/structs';
-import { STSUI_COIN } from 'src/moveCall/frostend/stsui-coin/structs';
-import { STSUI_YTCoinType } from 'src/frostendLib';
+import { SHASUI } from 'src/app/libs/moveCall/sharbet/shasui/structs';
+import { SUI } from 'src/app/libs/moveCall/sui/sui/structs';
+import { STSUI_COIN } from 'src/app/libs/moveCall/frostend/stsui-coin/structs';
+import { STSUI_YTCoinType } from 'src/app/libs/frostendLib';
 
 
 const NavLink: React.FC<{
