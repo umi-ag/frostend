@@ -4,7 +4,7 @@ import { TransactionBlock } from '@mysten/sui.js/transactions'
 import { useTradeStore } from 'src/store/trade';
 import { match } from 'ts-pattern'
 import { noticeTxnResultMessage } from '../TransactionToast';
-import { moveCallSwap, whichCoinType } from 'src/app/libs';
+import { moveCallSwap, whichCoinType } from 'src/libs';
 
 
 const getTransactionMessage = (sourceCoinType: string, targetCoinType: string) => {

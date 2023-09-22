@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { CoinProfile } from 'src/app/libs/coinList';
+import { CoinProfile } from 'src/libs/coinList';
 
 
 export const CoinIcon: React.FC<{
