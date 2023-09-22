@@ -1,3 +1,3 @@
 export const isProduction = () => {
-  return window.location.hostname === 'frostend.com'
+  return process.env.NEXT_PUBLIC_ENVIRONMENT === 'production';
 }
