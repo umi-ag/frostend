@@ -2,7 +2,6 @@
 
 import { AppBar } from 'src/components/AppBar';
 import { SuiSystemStateSummary, SuiValidatorSummary } from "@mysten/sui.js/client";
-import { useEffect } from 'react';
 import { useSuiSystemState } from 'src/store/validators';
 import Link from 'next/link';
 // import { numeral } from 'numeral'
@@ -85,14 +84,8 @@ const SuiSystemStateView: React.FC<{
   )
 }
 
-
-
 const Page = () => {
-  const { fetch, suiSystemState } = useSuiSystemState()
-
-  useEffect(() => {
-    fetch()
-  }, []);
+  const { data: suiSystemState } = useSuiSystemState()
 
   return (
     <div className="h-screen bg-blue-500">
