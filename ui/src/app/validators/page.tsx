@@ -42,16 +42,16 @@ const SuiValidatorStateView: React.FC<{
 
   return (
     <div
-      className="bg-white rounded-full flex items-center justify-between gap-2 px-2 py-1"
+      className="bg-white rounded-xl flex items-center justify-between gap-2 px-2 py-1"
     >
-      {/* {
-        <Image
-          src={props.validator.imageUrl ?? ""} alt={""}
+      {
+        <img
+          src={props.validator.imageUrl ?? ""}
+          alt={""}
           width={size} height={size}
-          layout="fixed"
           className='rounded-full'
         />
-      } */}
+      }
       <div className='w-30' > {props.validator.name} </div>
       <div className='w-30' > Staked: {display.stakedSui()} SUI</div>
       <div className='w-30' > voting power: {props.validator.votingPower} </div>
@@ -106,7 +106,6 @@ const Page = () => {
           {suiSystemState && (
             <SuiSystemStateView suiSystemState={suiSystemState} />
           )}
-          <StatsCard />
         </div>
       </main>
     </div>
