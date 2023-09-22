@@ -5,7 +5,6 @@ import { match } from 'ts-pattern';
 import { CoinIcon } from './CoinIcon';
 import { useRouter } from 'next/navigation';
 import { useTradeStore } from 'src/store/trade';
-import { getPriceByCoinType } from 'src/frostendLib/priceList';
 import { getCoinProfileByCoinType } from 'src/coinList';
 
 const percent = (d: Decimal) => d.mul(100).toNumber();
@@ -104,22 +103,12 @@ const ImpliedAPY: React.FC<{ vault: Vault }> = (props) => {
 };
 
 export const VaultCard: React.FC<{ vault: Vault }> = (props) => {
-  const router = useRouter();
   const tradeStore = useTradeStore();
+  const router = useRouter();
 
   const goSwap = () => {
+    tradeStore.setSwapPair(props.vault.syAssetType, props.vault.ptAssetType);
     router.push('/swap');
-    const sourceCoinType = props.vault.syAssetType;
-    const targetCoinType = props.vault.ptAssetType;
-    tradeStore.setSourceCoinType(sourceCoinType);
-    tradeStore.setTargetCoinType(targetCoinType);
-
-    const sourceCoinPrice = getPriceByCoinType(sourceCoinType)
-    const targetCoinPrice = getPriceByCoinType(targetCoinType)
-    tradeStore.setSourceCoinAmount(BigInt(1e8))
-    tradeStore.setTargetCoinAmount(
-      BigInt(Math.round(1e8 / targetCoinPrice * sourceCoinPrice))
-    );
   }
 
   return (
