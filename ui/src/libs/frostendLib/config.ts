@@ -1,6 +1,4 @@
 
-// export const TRESURY_CAP = '0xa175f7845f11f3c497622556b1622dcf88fe08f96bf01a01a3feb0bf8f7eff12'
-// export const ROOT = '0xb8787d148fd59043e24fe326b4dea8b803e80d509ac79f87389dbc9fc5567151'
 export const TRESURY_CAP = '0x32955bfa2aec3a4dc53d9330e8c625d3627898e41fa681972db2ff07960f0e2d'
 export const ROOT = '0x7afc4276bb46cd7778e0f4103298844e8e55d5d909e74512e14d2efeace92c3e'
 

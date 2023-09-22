@@ -6,11 +6,13 @@ import {
   swapYtToSy,
 } from "src/libs/moveCall/frostend/swap/functions";
 import { STSUI_COIN } from "src/libs/moveCall/frostend/stsui-coin/structs";
-import { BANK, TRESURY_CAP, VAULT } from "src/config/frostend";
 import { mintTo } from "src/libs/moveCall/frostend/stsui-coin/functions";
 import { moveCallTakeCoin } from "src/libs/sharbetLib";
 import { YTCoin, isPTCoin, isYTCoin } from "src/libs/moveCall/frostend/vault/structs";
 import { PTCoin } from "../moveCall/frostend/vault/structs";
+import { BANK, TRESURY_CAP, VAULT } from "./config";
+
+
 
 
 export const STSUI_SYCoinType = STSUI_COIN.$typeName;

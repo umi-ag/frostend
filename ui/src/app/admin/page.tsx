@@ -4,12 +4,12 @@ import { useWallet } from '@suiet/wallet-kit';
 import { AppBar } from 'src/components/AppBar';
 import { STSUI_COIN } from 'src/libs/moveCall/frostend/stsui-coin/structs';
 import { createBank, createVault } from 'src/libs/moveCall/frostend/root/functions';
-import { BANK, ROOT, VAULT } from 'src/config/frostend';
 import { moveCallFaucet } from 'src/libs/frostendLib';
 import { sharbetMoveCall } from 'src/libs/sharbetLib';
 import { MoveCallCard, TransactionButtonCard } from 'src/components/MoveCallCard';
 import { useRouter } from 'next/navigation';
 import { suiClient } from 'src/config/sui';
+import { BANK, ROOT, VAULT } from 'src/libs/frostendLib/config';
 
 const ViewObject = (props: {
   objectId: string,
