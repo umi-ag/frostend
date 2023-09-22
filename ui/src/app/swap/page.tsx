@@ -6,6 +6,7 @@ import { STSUI_PTCoinType, STSUI_SYCoinType, STSUI_YTCoinType } from 'src/app/li
 import { useTradeStore } from 'src/store/trade';
 import { match } from 'ts-pattern';
 import { whichCoinType } from '../libs';
+import { FaucetButton } from 'src/components/FaucetButton';
 
 
 const ToggleToken = () => {
@@ -62,7 +63,6 @@ const StatsCard = () => {
       .otherwise(() => { throw new Error('invalid coinType') })
   }
 
-
   return (
     <div className='flex justify-around w-full rounded-xl bg-gray-50 text-gray-700 p-4 shadow-xl'>
       <StatsRow title="Liquidity" value="$123,456,789" />
@@ -81,6 +81,10 @@ const Page = () => {
         <div>
           <div className="text-white mb-8">
             <ToggleToken />
+          </div>
+          <div className="text-white mb-8 text-md flex items-center gap-3 justify-end">
+            <span> If you need shaSUI, </span>
+            <FaucetButton />
           </div>
           <div className='mb-8'>
             <SwapComponent />

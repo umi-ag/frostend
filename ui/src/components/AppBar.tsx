@@ -2,12 +2,10 @@ import React from 'react';
 import { ConnectButton } from '@suiet/wallet-kit';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { FaucetButton } from './FaucetButton';
 import { useTradeStore } from 'src/store/trade';
 import { SHASUI } from 'src/app/libs/moveCall/sharbet/shasui/structs';
 import { SUI } from 'src/app/libs/moveCall/sui/sui/structs';
-import { STSUI_COIN } from 'src/app/libs/moveCall/frostend/stsui-coin/structs';
-import { STSUI_YTCoinType } from 'src/app/libs/frostendLib';
+import { STSUI_SYCoinType, STSUI_YTCoinType } from 'src/app/libs/frostendLib';
 
 
 const NavLink: React.FC<{
@@ -71,7 +69,7 @@ export const AppBar: React.FC = () => {
           <NavLink href="/vaults">vault</NavLink>
           <NavLink
             href="/swap"
-            callback={() => { setSwapPair(STSUI_COIN.$typeName, STSUI_YTCoinType) }}
+            callback={() => { setSwapPair(STSUI_SYCoinType, STSUI_YTCoinType) }}
           >
             swap
           </NavLink>
@@ -81,7 +79,6 @@ export const AppBar: React.FC = () => {
       <div className="snowflake-neon"></div>
       <div className="flex items-center gap-6">
         <span className="bg-red-500 text-white text-md font-semibold px-3 py-1 rounded-lg">Sui Testnet</span>
-        <FaucetButton />
         <div className="font-bold text-lg">
           <WalletConnectButton />
         </div>
