@@ -22,13 +22,12 @@ const getTransactionMessage = (sourceCoinType: string, targetCoinType: string) =
 const SwapTransactionButton = () => {
   const wallet = useWallet()
   const [showModal, setShowModal] = useState(false)
-
   const { sourceCoinType, targetCoinType } = useTradeStore()
 
   const executeTransaction = async () => {
     if (!wallet.address) return;
     const txb = new TransactionBlock()
-    moveCallSwap(txb, { sourceCoinType, targetCoinType, address: wallet.address })
+    await moveCallSwap(txb, { sourceCoinType, targetCoinType, address: wallet.address })
     const r = await wallet.signAndExecuteTransactionBlock({
       // @ts-ignore
       transactionBlock: txb
