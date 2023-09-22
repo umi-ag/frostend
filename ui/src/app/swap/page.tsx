@@ -3,74 +3,64 @@
 import { AppBar } from 'src/components/AppBar';
 import { SwapComponent } from 'src/components/SwapComponent';
 import { STSUI_PTCoinType, STSUI_SYCoinType, STSUI_YTCoinType } from 'src/frostendLib';
-import { getPriceByCoinType } from 'src/frostendLib/priceList';
 import { useTradeStore } from 'src/store/trade';
 
+const ToggleToken = () => {
+  const { targetCoinType, setSwapPair } = useTradeStore()
 
-const FaucetCard = () => {
-  const {
-    setSourceCoinType, setTargetCoinType,
-    setSourceCoinAmount, setTargetCoinAmount,
-  } = useTradeStore()
+  const normal = 'w-full h-full rounded-xl bg-gray-50 text-gray-700';
+  const ytClassName = targetCoinType === STSUI_YTCoinType
+    ? 'w-full h-full rounded-xl border-2 border-blue-800 bg-blue-100 text-blue-900'
+    : normal;
+  const ptClassName = targetCoinType === STSUI_PTCoinType
+    ? 'w-full h-full rounded-xl border-2 border-green-800 bg-green-100 text-green-800'
+    : normal;
 
   return (
-    <div className='bg-gray-100 px-4 py-5 rounded-lg flex items-center justify-center'>
-      <div className='flex flex-col items-center gap-3'>
-        <div className='text-black text-lg font-bold'>
-          stSUI 100
-        </div>
-        <div className='flex gap-3'>
-          <button
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-[200px]"
-            onClick={async () => {
-              setSourceCoinType(STSUI_SYCoinType)
-              setTargetCoinType(STSUI_YTCoinType)
-
-              const sourceCoinPrice = getPriceByCoinType(STSUI_SYCoinType)
-              const targetCoinPrice = getPriceByCoinType(STSUI_YTCoinType)
-              setSourceCoinAmount(BigInt(1e8))
-              setTargetCoinAmount(
-                BigInt(Math.round(1e8 / targetCoinPrice * sourceCoinPrice))
-              )
-            }}
-          >
-            YT: Long Yield APY
-          </button>
-          <button
-            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg w-[200px]"
-            onClick={async () => {
-              setSourceCoinType(STSUI_SYCoinType)
-              setTargetCoinType(STSUI_PTCoinType)
-
-              const sourceCoinPrice = getPriceByCoinType(STSUI_SYCoinType)
-              const targetCoinPrice = getPriceByCoinType(STSUI_PTCoinType)
-              setSourceCoinAmount(BigInt(1e8))
-              setTargetCoinAmount(
-                BigInt(Math.round(1e8 / targetCoinPrice * sourceCoinPrice))
-              )
-            }}
-          >
-            PT: Fixed APY
-          </button>
-        </div>
-      </div>
+    <div className='grid grid-cols-2 min-h-[4em] rounded-xl text-black bg-gray-50 transition-all duration-200 shadow-xl'>
+      <button className={ytClassName} onClick={() => setSwapPair(STSUI_SYCoinType, STSUI_YTCoinType)}>
+        <p>YT: Long Yield APY</p>
+        <p>50%</p>
+      </button>
+      <button className={ptClassName} onClick={async () => setSwapPair(STSUI_SYCoinType, STSUI_PTCoinType)}>
+        <p>PT: Fixed APY</p>
+        <p>50%</p>
+      </button>
     </div>
   )
 }
 
+const StatsCard = () => {
+  const StatsRow = ({ title, value }: { title: string, value: string }) => (
+    <div className='text-center'>
+      <p className='text-gray-500 mb-2'>{title}</p>
+      <p className='font-semibold'>{value}</p>
+    </div>
+  );
+
+  return (
+    <div className='flex justify-around w-full rounded-xl bg-gray-50 text-gray-700 p-4 shadow-xl'>
+      <StatsRow title="Liquidity" value="$123,456,789" />
+      <StatsRow title="24h volume" value="$123,456,789" />
+      <StatsRow title="Underlying APY" value="10%" />
+      <StatsRow title="Fixed APY" value="10%" />
+    </div>
+  )
+}
 
 const Page = () => {
   return (
     <div className="h-screen bg-blue-500">
       <AppBar />
-      <main className="flex justify-center mt-[120px] flex-wrap">
+      <main className="flex justify-center mt-[120px] gap-8">
         <div>
-          <div className="text-white flex flex-col gap-[40px]">
-            <FaucetCard />
+          <div className="text-white mb-8">
+            <ToggleToken />
           </div>
-          <div className='mt-10'>
+          <div className='mb-8'>
             <SwapComponent />
           </div>
+          <StatsCard />
         </div>
       </main>
     </div>
