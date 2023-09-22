@@ -29,7 +29,6 @@ const ViewObject = (props: {
 
 const Page = () => {
   const wallet = useWallet();
-  const router = useRouter()
 
   return (
     <div className="h-screen bg-blue-500">
