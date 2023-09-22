@@ -1,11 +1,13 @@
 import Decimal from 'decimal.js';
-import { STSUI_PTCoinType, STSUI_SYCoinType, STSUI_YTCoinType, } from 'src/frostendLib';
+import { STSUI_PTCoinType, STSUI_SYCoinType, STSUI_YTCoinType } from 'src/frostendLib';
 import { SUI } from 'src/moveCall/sui/sui/structs';
 import { Vault } from 'src/types';
+import { create } from 'zustand';
 
 const _01Y = new Date('2023-12-26');
 const _02Y = new Date('2024-12-26');
 
+// TODO: rm
 export const vaults: Vault[] = [
   {
     protocol: 'Sharbet',
@@ -41,3 +43,10 @@ export const vaults: Vault[] = [
   }
 ]
 
+export const useVaultStore = create<{
+  vaults: Vault[];
+  setVaults: (vaults: Vault[]) => void;
+}>((set) => ({
+  vaults,
+  setVaults: (vaults: Vault[]) => set({ vaults }),
+}));

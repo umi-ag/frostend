@@ -1,4 +1,5 @@
 import { STSUI_SYCoinType, STSUI_YTCoinType } from "src/frostendLib";
+import { getPriceByCoinType } from 'src/frostendLib/priceList';
 import { create } from "zustand";
 
 export const useTradeStore = create<{
@@ -6,11 +7,12 @@ export const useTradeStore = create<{
   targetCoinType: string,
   sourceCoinAmount: BigInt,
   targetCoinAmount: BigInt,
-  setSourceCoinType: (sourceCoinType: string)=> void,
-  setTargetCoinType: (targetCoinType: string)=> void,
-  setSourceCoinAmount: (sourceCoinAmount: BigInt)=> void,
-  setTargetCoinAmount: (targetCoinAmount: BigInt)=> void,
-  reverse: ()=>  void;
+  setSourceCoinType: (sourceCoinType: string) => void,
+  setTargetCoinType: (targetCoinType: string) => void,
+  setSourceCoinAmount: (sourceCoinAmount: BigInt) => void,
+  setTargetCoinAmount: (targetCoinAmount: BigInt) => void,
+  setSwapPair: (sourceCoinType: string, targetCoinType: string) => void,
+  reverse: () => void;
 }>((set) => ({
   sourceCoinType: STSUI_SYCoinType,
   targetCoinType: STSUI_YTCoinType,
@@ -20,7 +22,17 @@ export const useTradeStore = create<{
   setTargetCoinType: (targetCoinType: string) => set({ targetCoinType }),
   setSourceCoinAmount: (sourceCoinAmount: BigInt) => set({ sourceCoinAmount }),
   setTargetCoinAmount: (targetCoinAmount: BigInt) => set({ targetCoinAmount }),
-  reverse: () => set((prev)=> ({
+  setSwapPair: (sourceCoinType: string, targetCoinType: string) => {
+    const sourceCoinPrice = getPriceByCoinType(sourceCoinType);
+    const targetCoinPrice = getPriceByCoinType(targetCoinType);
+    set({
+      sourceCoinType,
+      targetCoinType,
+      sourceCoinAmount: BigInt(1e8),
+      targetCoinAmount: BigInt(Math.round(1e8 / sourceCoinPrice * targetCoinPrice))
+    });
+  },
+  reverse: () => set((prev) => ({
     sourceCoinType: prev.targetCoinType,
     targetCoinType: prev.sourceCoinType,
     sourceCoinAmount: prev.targetCoinAmount,
