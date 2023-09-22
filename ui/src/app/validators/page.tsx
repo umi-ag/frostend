@@ -2,29 +2,9 @@
 
 import { AppBar } from 'src/components/AppBar';
 import { SuiSystemStateSummary, SuiValidatorSummary } from "@mysten/sui.js/client";
-import { useEffect } from 'react';
 import { useSuiSystemState } from 'src/store/validators';
 import Link from 'next/link';
-// import { numeral } from 'numeral'
 import numeral from 'numeral'
-
-
-const StatsCard = () => {
-  const StatsRow = ({ title, value }: { title: string, value: string }) => (
-    <div className='text-center'>
-      <p className='text-gray-500 mb-2'>{title}</p>
-      <p className='font-semibold'>{value}</p>
-    </div>
-  );
-
-  return (
-    <div className='flex justify-around w-full rounded-xl bg-gray-50 text-gray-700 p-4 shadow-xl'>
-      <StatsRow title="Liquidity" value="$123,456,789" />
-      <StatsRow title="24h volume" value="$123,456,789" />
-      <StatsRow title="Underlying APY" value="10%" />
-    </div>
-  )
-}
 
 const SuiValidatorStateView: React.FC<{
   validator: SuiValidatorSummary
@@ -85,13 +65,8 @@ const SuiSystemStateView: React.FC<{
   )
 }
 
-
 const Page = () => {
-  const { fetch, suiSystemState } = useSuiSystemState()
-
-  useEffect(() => {
-    fetch()
-  }, []);
+  const { data: suiSystemState } = useSuiSystemState()
 
   return (
     <div className="h-screen bg-blue-500">
