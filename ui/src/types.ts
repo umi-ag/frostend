@@ -1,3 +1,5 @@
+import Decimal from "decimal.js";
+
 type Eyecatch = {
   url: string;
   height: number;
@@ -22,4 +24,22 @@ export type VerifierInputs = {
   vk: string;
   public_inputs: string;
   proof_points: string;
-}
+};
+
+export type Vault = {
+  protocol: "Sharbet" | "Haedal" | "Volo";
+  syAssetType: string;
+  ptAssetType: string;
+  ytAssetType: string;
+  principalAssetType: string;
+  maturity: Date;
+  maturityCode: "01Y" | "02Y";
+  longYieldAPY: Decimal;
+  ytPrice: Decimal;
+  fixedAPY: Decimal;
+  ptPrice: Decimal;
+  underlyingAPY: Decimal;
+  underlyingAssetPrice: Decimal;
+  impliedAPY: Decimal;
+  status: 'upcoming' | 'live' | 'matured'
+};

@@ -3,7 +3,7 @@ const nextConfig = {
   runtime: 'edge',
   images: {
     domains: [
-      'storage.googleapis.com',
+      // 'storage.googleapis.com',
       'user-images.githubusercontent.com',
     ],
   },
