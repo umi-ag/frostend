@@ -7,10 +7,15 @@ import { useTradeStore } from 'src/store/trade';
 import { match } from 'ts-pattern';
 import { whichCoinType } from '../../libs';
 import { FaucetButton } from 'src/components/FaucetButton';
+import { vaults } from 'src/store/vault';
+import Decimal from 'decimal.js';
+import numeral from 'numeral';
 
 
 const ToggleToken = () => {
   const { sourceCoinType, targetCoinType, setSwapPair } = useTradeStore()
+
+  const currentVault = () => vaults[0]
 
   const isPTPair = match([whichCoinType(sourceCoinType), whichCoinType(targetCoinType)])
     .with(['sy', 'pt'], () => true)
@@ -34,11 +39,11 @@ const ToggleToken = () => {
     <div className='grid grid-cols-2 min-h-[4em] rounded-xl text-black bg-gray-50 transition-all duration-200 shadow-xl'>
       <button className={ytClassName} onClick={() => setSwapPair(STSUI_SYCoinType, STSUI_YTCoinType)}>
         <p>YT: Long Yield APY</p>
-        <p>50%</p>
+        <p> {numeral(currentVault().longYieldAPY).format('0.0%')} </p>
       </button>
       <button className={ptClassName} onClick={async () => setSwapPair(STSUI_SYCoinType, STSUI_PTCoinType)}>
         <p>PT: Fixed APY</p>
-        <p>50%</p>
+        <p> {numeral(currentVault().fixedAPY).format('0.0%')} </p>
       </button>
     </div>
   )
@@ -63,11 +68,22 @@ const StatsCard = () => {
       .otherwise(() => { throw new Error('invalid coinType') })
   }
 
+  const currentVault = () => vaults[0]
+
+  const liquidityMktValue = () => {
+    return new Decimal(currentVault().reserveSYAsset.toString()).div(1e8)
+  }
+
+
   return (
     <div className='flex justify-around w-full rounded-xl bg-gray-50 text-gray-700 p-4 shadow-xl'>
-      <StatsRow title="Liquidity" value="$123,456,789" />
-      <StatsRow title="24h volume" value="$123,456,789" />
-      <StatsRow title="Underlying APY" value="10%" />
+      <StatsRow title="Liquidity" value={
+        numeral(liquidityMktValue()).format('0,0')
+      } />
+      {/* <StatsRow title="24h volume" value="$123,456,789" /> */}
+      <StatsRow title="Underlying APY" value={
+        numeral(currentVault().impliedAPY).format('0.0%')
+      } />
       {/* <StatsRow title={displayAPYTitle()} value="10%" /> */}
     </div>
   )
