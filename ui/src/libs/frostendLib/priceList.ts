@@ -1,4 +1,4 @@
-import { isPTCoinType, isYTcoinType } from ".";
+import { isPTCoin, isYTCoin } from "src/libs/moveCall/frostend/vault/structs";
 
 export const getPTPrice = (coinType: string) => {
   return 0.96;
@@ -9,9 +9,7 @@ export const getYTPrice = (coinType: string) => {
 };
 
 export const getPriceByCoinType = (coinType: string) => {
-  return isPTCoinType(coinType)
-    ? getPTPrice(coinType)
-    : isYTcoinType(coinType)
-    ? getYTPrice(coinType)
-    : 1;
+  if(isPTCoin(coinType)) return getPTPrice(coinType);
+  if (isYTCoin(coinType)) return getYTPrice(coinType);
+  return 1
 };

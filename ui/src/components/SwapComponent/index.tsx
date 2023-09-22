@@ -1,13 +1,13 @@
 import React from 'react';
 import { AiOutlineArrowDown } from 'react-icons/ai';
 import { useWallet } from '@suiet/wallet-kit';
-import { getCoinProfileByCoinType } from 'src/coinList';
+import { getCoinProfileByCoinType } from 'src/libs/coinList';
 import { FaChevronDown } from "react-icons/fa6";
 import SwapTransactionButton from './SwapTransactionButton';
 import { useTradeStore } from 'src/store/trade';
 import { Decimal } from 'decimal.js';
 import { NumericFormat, OnValueChange } from 'react-number-format';
-import { getPriceByCoinType } from 'src/frostendLib/priceList';
+import { getPriceByCoinType } from 'src/libs/frostendLib/priceList';
 import { CoinIcon } from '../CoinIcon';
 
 
@@ -21,13 +21,15 @@ export const InputBase: React.FC = (props) => {
   );
 };
 
-const ReverseSourceTargetButton: React.FC = () => {
+const ReverseSourceTargetButton: React.FC<{
+  reserveDisabled?: boolean;
+}> = (props) => {
   const { reverse } = useTradeStore()
   return (
     <div className='my-1 w-full h-0 flex items-center justify-center gap-10 bg-slate-200 dark:bg-sea-500'>
       <button
         className="rounded-full w-10 h-10 grid place-items-center bg-white hover:bg-gray-100 dark:bg-gray-800 hover:dark:bg-sea-900 dark:text-gray-100 border border-gray-100 dark:border-gray-800 shadow-md"
-        onClick={reverse}
+        onClick={() => !(props.reserveDisabled) && reverse()}
       >
         <AiOutlineArrowDown size={28} />
       </button>
@@ -35,8 +37,9 @@ const ReverseSourceTargetButton: React.FC = () => {
   );
 };
 
-export const SwapComponent = () => {
-
+export const SwapComponent: React.FC<{
+  reserveDisabled?: boolean;
+}> = (props) => {
   const { address } = useWallet()
 
   const SourceHeader = () => {
@@ -83,7 +86,7 @@ export const SwapComponent = () => {
       <div className='flex justify-between items-center pl-1 pr-3'>
         <button className='w-[300px] flex items-center justify-between px-3 py-1 gap-2 hover:bg-slate-200 rounded-full'>
           <div className='flex items-center gap-2'>
-            <CoinIcon coin={coinProfile()} size={32}/>
+            <CoinIcon coin={coinProfile()} size={32} />
             <span className='text-xl text-black font-medium'>
               {coinProfile().symbol}
             </span>
@@ -138,7 +141,7 @@ export const SwapComponent = () => {
       <div className='flex justify-between items-center pl-1 pr-3'>
         <button className='w-[300px] flex items-center justify-between px-3 py-1 gap-2 hover:bg-slate-200 rounded-full'>
           <div className='flex items-center gap-2'>
-            <CoinIcon coin={coinProfile()} size={32}/>
+            <CoinIcon coin={coinProfile()} size={32} />
             <span className='text-xl text-black font-medium'>
               {coinProfile().symbol}
             </span>
@@ -164,7 +167,7 @@ export const SwapComponent = () => {
   };
 
   return (
-    <div className="bg-white dark:bg-sea-700 border border-gray-200 dark:border-sea-500 rounded-3xl p-3 sm:p-4 md:w-112 shadow-lg">
+    <div className="bg-white dark:bg-sea-700 border border-gray-200 dark:border-sea-500 rounded-3xl p-3 sm:p-4 md:w-[540px] shadow-lg">
       <div className="flex justify-between items-center mb-1">
         <div className="text-md font-semibold text-white-600">Swap</div>
         <span className="flex items-center gap-1">
@@ -177,7 +180,7 @@ export const SwapComponent = () => {
         <SourceBody />
         {/* <SourceFooter /> */}
       </div>
-      <ReverseSourceTargetButton />
+      <ReverseSourceTargetButton reserveDisabled={props.reserveDisabled} />
 
       <div className="flex flex-col gap-2 border-1 border-gray-300 dark:border-gray-600 py-2 rounded-2xl">
         <TargetHeader />

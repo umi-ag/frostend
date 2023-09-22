@@ -1,5 +1,5 @@
-import { STSUI_SYCoinType, STSUI_YTCoinType } from "src/frostendLib";
-import { getPriceByCoinType } from 'src/frostendLib/priceList';
+import { STSUI_SYCoinType, STSUI_YTCoinType } from "src/libs/frostendLib";
+import { getPriceByCoinType } from 'src/libs/frostendLib/priceList';
 import { create } from "zustand";
 
 export const useTradeStore = create<{

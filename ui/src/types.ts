@@ -18,7 +18,6 @@ export type NewsItem = {
   category: null;
 };
 
-
 export type NewsItemList = NewsItem[];
 
 export type VerifierInputs = {
@@ -28,13 +27,13 @@ export type VerifierInputs = {
 };
 
 export type Vault = {
-  protocol: string;
+  protocol: "Sharbet" | "Haedal" | "Volo";
   syAssetType: string;
   ptAssetType: string;
   ytAssetType: string;
   principalAssetType: string;
   maturity: Date;
-  maturityCode: string;
+  maturityCode: "01Y" | "02Y";
   longYieldAPY: Decimal;
   ytPrice: Decimal;
   fixedAPY: Decimal;
@@ -42,4 +41,5 @@ export type Vault = {
   underlyingAPY: Decimal;
   underlyingAssetPrice: Decimal;
   impliedAPY: Decimal;
+  status: 'upcoming' | 'live' | 'matured'
 };
