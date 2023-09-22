@@ -2,40 +2,34 @@
 
 import { useWallet } from '@suiet/wallet-kit';
 import { AppBar } from 'src/components/AppBar';
-import { STSUI_COIN } from 'src/app/libs/moveCall/frostend/stsui-coin/structs';
-import { createBank, createVault } from 'src/app/libs/moveCall/frostend/root/functions';
+import { STSUI_COIN } from 'src/libs/moveCall/frostend/stsui-coin/structs';
+import { createBank, createVault } from 'src/libs/moveCall/frostend/root/functions';
 import { BANK, ROOT, VAULT } from 'src/config/frostend';
-import Link from 'next/link';
-import { moveCallFaucet } from 'src/app/libs/frostendLib';
-import { sharbetMoveCall } from 'src/app/libs/sharbetLib';
-import { MoveCallCard } from 'src/components/MoveCallCard';
+import { moveCallFaucet } from 'src/libs/frostendLib';
+import { sharbetMoveCall } from 'src/libs/sharbetLib';
+import { MoveCallCard, TransactionButtonCard } from 'src/components/MoveCallCard';
+import { useRouter } from 'next/navigation';
+import { suiClient } from 'src/config/sui';
 
 const ViewObject = (props: {
   objectId: string,
-  display: string,
+  title: string,
 }) => {
-  const url = () => {
-    return `https://suiexplorer.com/object/${props.objectId}?network=testnet`
-  }
+  const router = useRouter()
+  const url = () => { return `https://suiexplorer.com/object/${props.objectId}?network=testnet` }
 
   return (
-    <div className='bg-gray-100 px-3 py-2 rounded-lg w-[200px] h-[200px] flex items-center justify-center'>
-      <div className='flex flex-col items-center gap-3'>
-        <div className='text-black text-lg font-bold'>
-          {props.display}
-        </div>
-        <Link href={url()} target='_blank'>
-          <button className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full">
-            explorer
-          </button>
-        </Link>
-      </div>
-    </div>
-  );
+    <TransactionButtonCard
+      title={props.title}
+      buttonText="explorer"
+      onClick={() => { router.push(url()) }}
+    />
+  )
 };
 
 const Page = () => {
   const wallet = useWallet();
+  const router = useRouter()
 
   return (
     <div className="h-screen bg-blue-500">
@@ -64,8 +58,8 @@ const Page = () => {
               await createVault(txb, STSUI_COIN.$typeName, ROOT);
             }}
           />
-          <ViewObject objectId={BANK} display='View BANK for stSUI' />
-          <ViewObject objectId={VAULT} display='View VAULT for stSUI' />
+          <ViewObject objectId={BANK} title='View BANK for stSUI' />
+          <ViewObject objectId={VAULT} title='View VAULT for stSUI' />
           <MoveCallCard
             title="Satke SUI"
             buttonText="deposit"
@@ -84,6 +78,15 @@ const Page = () => {
                 address: wallet.address!,
                 amount: BigInt(100),
               })
+            }}
+          />
+          <TransactionButtonCard
+            title="Active Validator"
+            buttonText="view"
+            onClick={async () => {
+              const suiSystemState = await suiClient().getLatestSuiSystemState()
+              const vals = suiSystemState.activeValidators
+              console.log(vals)
             }}
           />
         </div>
