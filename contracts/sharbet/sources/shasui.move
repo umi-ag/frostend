@@ -74,13 +74,4 @@ module sharbet::shasui {
     public fun init_for_testing(ctx: &mut TxContext) {
         init(SHASUI {}, ctx);
     }
-
-    #[test_only]
-    public fun mint_for_testing(
-        treasury_cap: &mut TreasuryCap<SHASUI>,
-        amount: u64,
-        ctx: &mut TxContext,
-    ): Coin<SHASUI> {
-        mint(treasury_cap, amount, ctx)
-    }
 }
