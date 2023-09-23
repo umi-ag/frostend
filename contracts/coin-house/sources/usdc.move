@@ -44,7 +44,7 @@ module coinhouse::usdc {
         coin::total_supply(treasury_cap)
     }
 
-    public(friend) fun mint(
+    public fun mint(
         treasury_cap: &mut TreasuryCap<USDC>,
         amount: u64,
         ctx: &mut TxContext
@@ -53,7 +53,7 @@ module coinhouse::usdc {
         coin::mint(treasury_cap, amount, ctx)
     }
 
-    public(friend) fun burn(
+    public fun burn(
         treasury_cap: &mut TreasuryCap<USDC>,
         coin: Coin<USDC>,
         ctx: &mut TxContext
@@ -69,14 +69,5 @@ module coinhouse::usdc {
     #[test_only]
     public fun init_for_testing(ctx: &mut TxContext) {
         init(USDC {}, ctx);
-    }
-
-    #[test_only]
-    public fun mint_for_testing(
-        treasury_cap: &mut TreasuryCap<USDC>,
-        amount: u64,
-        ctx: &mut TxContext,
-    ): Coin<USDC> {
-        mint(treasury_cap, amount, ctx)
     }
 }
