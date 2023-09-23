@@ -1,36 +1,19 @@
-// @ts-check
-// Note: type annotations allow type checking and IDEs autocompletion
+const math = require('remark-math');
+const katex = require('rehype-katex');
 
-const lightCodeTheme = require('prism-react-renderer/themes/github');
-const darkCodeTheme = require('prism-react-renderer/themes/dracula');
-
-/** @type {import('@docusaurus/types').Config} */
+/** @type {import('@docusaurus/types').DocusaurusConfig} */
 const config = {
-  title: 'FrostEnd',
-  tagline: 'Dinosaurs are cool',
-  favicon: 'img/favicon.ico',
-
-  // Set the production url of your site here
-  url: 'https://your-docusaurus-test-site.com',
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
+  title: 'FrostEnd Documentation',
+  tagline: 'FrostEnd is a protocol that liberates future yield. It enables the tokenization and trading of future yield on a novel AMM designed to support assets with time decay.',
+  url: 'https://frostend.com/',
   baseUrl: '/',
-
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
-
-  onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
-
-  // Even if you don't use internalization, you can use this field to set useful
-  // metadata like html lang. For example, if your site is Chinese, you may want
-  // to replace "en" with "zh-Hans".
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
-  },
+  trailingSlash: false,
+  onBrokenLinks: 'warn',
+  onBrokenMarkdownLinks: 'ignore',
+  favicon: 'img/favicon.ico',
+  organizationName: 'umi-labs', // Usually your GitHub org/user name.
+  projectName: 'documentation', // Usually your repo name.
+  deploymentBranch: 'gh-pages',
 
   presets: [
     [
@@ -38,18 +21,15 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          breadcrumbs: false,
+          routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          remarkPlugins: [math],
+          rehypePlugins: [katex],
         },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+        gtag: {
+          trackingID: 'G-6ZBS49V0YS',
+          anonymizeIP: true,
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -58,82 +38,98 @@ const config = {
     ],
   ],
 
+  stylesheets: [
+    {
+      href: "https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css",
+      integrity: "sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc",
+      crossorigin: "anonymous",
+    },
+  ],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      // Replace with your project's social card
-      image: 'img/docusaurus-social-card.jpg',
+      algolia: {
+        appId: "GFVY0GOMCR",
+        apiKey: "1e9c713dfca40c64b56217bb24d5c4cd",
+        indexName: "frostend",
+      },
+      colorMode: {
+        defaultMode: 'light',
+        disableSwitch: true,
+      },
+      docs: {
+        sidebar: {
+          hideable: false
+        }
+      },
       navbar: {
-        title: 'FrostEnd',
-        logo: {
-          alt: 'FrostEnd Logo',
-          src: "https://frostend.com/logo.png"
-        },
         items: [
           {
-            type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
-            position: 'left',
-            label: 'Tutorial',
-          },
-          {to: '/blog', label: 'Blog', position: 'left'},
-          {
-            href: 'https://github.com/umi-ag/fronstend',
-            label: 'GitHub',
+            type: 'localeDropdown',
             position: 'right',
-          },
+          }
         ],
       },
       footer: {
-        style: 'dark',
+        style: 'light',
         links: [
           {
-            title: 'Docs',
+            title: 'Pages',
             items: [
               {
-                label: 'Tutorial',
-                to: '/docs/intro',
+                label: 'Website',
+                href: 'https://frostend.com',
+              },
+              {
+                label: 'App',
+                href: 'https://app.frostend.com',
               },
             ],
           },
           {
-            title: 'Community',
+            title: 'Socials',
             items: [
-              // {
-              //   label: 'Stack Overflow',
-              //   href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-              // },
-              // {
-              //   label: 'Discord',
-              //   href: 'https://discordapp.com/invite/docusaurus',
-              // },
-              // {
-              //   label: 'Twitter',
-              //   href: 'https://twitter.com/docusaurus',
-              // },
             ],
           },
           {
-            title: 'More',
+            title: 'About Us',
             items: [
-              {
-                label: 'Blog',
-                to: '/blog',
-              },
-              {
-                label: 'GitHub',
-                href: 'https://github.com/umi-ag/frostend',
-              },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        logo: {
+          alt: 'FrostEnd Logo',
+          src: 'img/logo.svg',
+          href: 'https://frostend.com',
+        },
+        copyright: `Copyright © ${new Date().getFullYear()} FrostEnd`,
       },
       prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
+        additionalLanguages: ["solidity"],
       },
     }),
+
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'cn'],
+    localeConfigs: {
+      en: {
+        label: 'English',
+        direction: 'ltr',
+        htmlLang: 'en-US',
+        calendar: 'gregory',
+        path: 'en',
+      },
+      cn: {
+        label: '中文（中国)',
+        direction: 'ltr',
+        htmlLang: 'zh-Hans',
+        calendar: 'gregory',
+        path: 'cn',
+      },
+    },
+  },
 };
 
 module.exports = config;
