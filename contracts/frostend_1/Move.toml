@@ -1,0 +1,10 @@
+[package]
+name = "Frostend"
+version = "0.0.1"
+
+[dependencies]
+Math = {local = "../math"}
+Sui = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/mainnet"}
+
+[addresses]
+frostend = "0x0"

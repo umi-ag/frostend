@@ -1,6 +1,6 @@
 #[allow(unused_field)]
 module sharbet::unstsui {
-    use std::string::{utf8, String};
+    use std::string::{utf8};
 
     use sui::balance::{Self, Balance, Supply};
     use sui::display;
