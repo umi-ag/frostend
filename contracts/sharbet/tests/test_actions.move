@@ -16,10 +16,11 @@ module sharbet::test_actions {
     };
     use sui::test_scenario::{Self as test, ctx};
 
+    use toolkit::test_utils::{mint};
+
     use sharbet::actions;
     use sharbet::shasui::{Self, SHASUI};
     use sharbet::stake_manager::{Self, StakeProfile};
-    use sharbet::test_utils::{mint};
     use sharbet::unstsui::{Self, UnstakeTicket, UnstSuiTreasuryCap};
 
     const ALICE: address = @0xA11CE;
