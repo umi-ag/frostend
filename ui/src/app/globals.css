@@ -4,6 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply bg-blue-500;
+  min-height: 100vh;
+}
+
 .text-frostend {
   background: linear-gradient(
     to bottom,
