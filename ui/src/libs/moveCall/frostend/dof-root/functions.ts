@@ -8,11 +8,11 @@ export function new_( txb: TransactionBlock, ) { return txb.moveCall({ target: `
 
 export function bankExists( txb: TransactionBlock, typeArg: Type, root: ObjectArg ) { return txb.moveCall({ target: `${PUBLISHED_AT}::dof_root::bank_exists`, typeArguments: [typeArg], arguments: [ obj(txb, root) ], }) }
 
+export function vaultExists( txb: TransactionBlock, typeArg: Type, root: ObjectArg ) { return txb.moveCall({ target: `${PUBLISHED_AT}::dof_root::vault_exists`, typeArguments: [typeArg], arguments: [ obj(txb, root) ], }) }
+
 export function createBank( txb: TransactionBlock, typeArg: Type, root: ObjectArg ) { return txb.moveCall({ target: `${PUBLISHED_AT}::dof_root::create_bank`, typeArguments: [typeArg], arguments: [ obj(txb, root) ], }) }
 
 export function createVault( txb: TransactionBlock, typeArg: Type, root: ObjectArg ) { return txb.moveCall({ target: `${PUBLISHED_AT}::dof_root::create_vault`, typeArguments: [typeArg], arguments: [ obj(txb, root) ], }) }
-
-export function vaultExists( txb: TransactionBlock, typeArg: Type, root: ObjectArg ) { return txb.moveCall({ target: `${PUBLISHED_AT}::dof_root::vault_exists`, typeArguments: [typeArg], arguments: [ obj(txb, root) ], }) }
 
 export function borrowMutBank( txb: TransactionBlock, typeArg: Type, root: ObjectArg ) { return txb.moveCall({ target: `${PUBLISHED_AT}::dof_root::borrow_mut_bank`, typeArguments: [typeArg], arguments: [ obj(txb, root) ], }) }
 

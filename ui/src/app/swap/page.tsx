@@ -2,6 +2,8 @@
 
 import { AppBar } from 'src/components/AppBar';
 import { SwapComponent } from 'src/components/SwapComponent';
+import { PTCoinType, YTCoinType } from 'src/libs/frostendLib';
+import { STSUI_COIN } from 'src/libs/moveCall/frostend/stsui-coin/structs';
 import { useTradeStore } from 'src/store/trade';
 import { match } from 'ts-pattern';
 import { whichCoinType } from '../../libs';
@@ -9,8 +11,6 @@ import { FaucetButton } from 'src/components/FaucetButton';
 import { vaults } from 'src/store/vault';
 import Decimal from 'decimal.js';
 import numeral from 'numeral';
-import { PTCoinType, YTCoinType } from 'src/libs/frostendLib';
-import { STSUI_COIN } from 'src/libs/moveCall/frostend/stsui-coin/structs';
 
 
 const ToggleToken = () => {

@@ -12,10 +12,6 @@ export interface DepositSyArgs { balance: ObjectArg; vault: ObjectArg }
 
 export function depositSy( txb: TransactionBlock, typeArg: Type, args: DepositSyArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::vault::deposit_sy`, typeArguments: [typeArg], arguments: [ obj(txb, args.balance), obj(txb, args.vault) ], }) }
 
-export interface WithdrawSyArgs { u64: bigint | TransactionArgument; vault: ObjectArg }
-
-export function withdrawSy( txb: TransactionBlock, typeArg: Type, args: WithdrawSyArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::vault::withdraw_sy`, typeArguments: [typeArg], arguments: [ pure(txb, args.u64, `u64`), obj(txb, args.vault) ], }) }
-
 export interface DepositPtArgs { balance: ObjectArg; vault: ObjectArg }
 
 export function depositPt( txb: TransactionBlock, typeArg: Type, args: DepositPtArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::vault::deposit_pt`, typeArguments: [typeArg], arguments: [ obj(txb, args.balance), obj(txb, args.vault) ], }) }
@@ -23,6 +19,10 @@ export function depositPt( txb: TransactionBlock, typeArg: Type, args: DepositPt
 export interface DepositYtArgs { balance: ObjectArg; vault: ObjectArg }
 
 export function depositYt( txb: TransactionBlock, typeArg: Type, args: DepositYtArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::vault::deposit_yt`, typeArguments: [typeArg], arguments: [ obj(txb, args.balance), obj(txb, args.vault) ], }) }
+
+export interface WithdrawSyArgs { u64: bigint | TransactionArgument; vault: ObjectArg }
+
+export function withdrawSy( txb: TransactionBlock, typeArg: Type, args: WithdrawSyArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::vault::withdraw_sy`, typeArguments: [typeArg], arguments: [ pure(txb, args.u64, `u64`), obj(txb, args.vault) ], }) }
 
 export interface WithdrawPtArgs { u64: bigint | TransactionArgument; vault: ObjectArg }
 

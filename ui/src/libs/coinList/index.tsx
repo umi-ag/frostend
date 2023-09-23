@@ -1,4 +1,3 @@
-import { PTCoinType, YTCoinType } from "src/libs/frostendLib"
 import { SHASUI } from "src/libs/moveCall/sharbet/shasui/structs";
 import { UNSTSUI } from "src/libs/moveCall/sharbet/unstsui/structs";
 import { SUI } from "src/libs/moveCall/sui/sui/structs";
@@ -6,6 +5,7 @@ import { ETH } from "src/libs/moveCall/coinhouse/eth/structs";
 import { SOL } from "src/libs/moveCall/coinhouse/sol/structs";
 import { USDC } from "src/libs/moveCall/coinhouse/usdc/structs";
 import { STSUI_COIN } from "../moveCall/frostend/stsui-coin/structs";
+import { PTCoinType, YTCoinType } from "../frostendLib";
 
 
 export type CoinProfile = {

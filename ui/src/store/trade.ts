@@ -1,6 +1,6 @@
 import { YTCoinType } from 'src/libs/frostendLib';
 import { getPriceByCoinType } from 'src/libs/frostendLib/priceList';
-import { SHASUI } from 'src/libs/moveCall/sharbet/shasui/structs';
+import { STSUI_COIN } from "src/libs/moveCall/frostend/stsui-coin/structs";
 import { create } from "zustand";
 
 export const useTradeStore = create<{
@@ -15,8 +15,8 @@ export const useTradeStore = create<{
   setSwapPair: (sourceCoinType: string, targetCoinType: string) => void,
   reverse: () => void;
 }>((set) => ({
-  sourceCoinType: SHASUI.$typeName,
-  targetCoinType: YTCoinType(SHASUI.$typeName),
+  sourceCoinType: STSUI_COIN.$typeName,
+  targetCoinType: YTCoinType(STSUI_COIN.$typeName),
   sourceCoinAmount: BigInt(0),
   targetCoinAmount: BigInt(0),
   setSourceCoinType: (sourceCoinType: string) => set({ sourceCoinType }),

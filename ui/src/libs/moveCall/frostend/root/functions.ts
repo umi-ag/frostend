@@ -8,8 +8,8 @@ export function new_( txb: TransactionBlock, ) { return txb.moveCall({ target: `
 
 export function bankExists( txb: TransactionBlock, typeArg: Type, root: ObjectArg ) { return txb.moveCall({ target: `${PUBLISHED_AT}::root::bank_exists`, typeArguments: [typeArg], arguments: [ obj(txb, root) ], }) }
 
+export function vaultExists( txb: TransactionBlock, typeArg: Type, root: ObjectArg ) { return txb.moveCall({ target: `${PUBLISHED_AT}::root::vault_exists`, typeArguments: [typeArg], arguments: [ obj(txb, root) ], }) }
+
 export function createBank( txb: TransactionBlock, typeArg: Type, root: ObjectArg ) { return txb.moveCall({ target: `${PUBLISHED_AT}::root::create_bank`, typeArguments: [typeArg], arguments: [ obj(txb, root) ], }) }
 
 export function createVault( txb: TransactionBlock, typeArg: Type, root: ObjectArg ) { return txb.moveCall({ target: `${PUBLISHED_AT}::root::create_vault`, typeArguments: [typeArg], arguments: [ obj(txb, root) ], }) }
-
-export function vaultExists( txb: TransactionBlock, typeArg: Type, root: ObjectArg ) { return txb.moveCall({ target: `${PUBLISHED_AT}::root::vault_exists`, typeArguments: [typeArg], arguments: [ obj(txb, root) ], }) }

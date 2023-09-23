@@ -5,10 +5,11 @@ import { ConnectButton } from '@suiet/wallet-kit';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTradeStore } from 'src/store/trade';
+import { SHASUI } from 'src/libs/moveCall/sharbet/shasui/structs';
 import { SUI } from 'src/libs/moveCall/sui/sui/structs';
-import { isProduction } from 'src/config';
 import { YTCoinType } from 'src/libs/frostendLib';
 import { STSUI_COIN } from 'src/libs/moveCall/frostend/stsui-coin/structs';
+import { isProduction } from 'src/config';
 
 
 const NavLink: React.FC<{
@@ -65,7 +66,7 @@ export const AppBar: React.FC = () => {
         <div className='flex items-center gap-6'>
           <NavLink
             href="/stake"
-            callback={() => { setSwapPair(SUI.$typeName, STSUI_COIN.$typeName) }}
+            callback={() => { setSwapPair(SUI.$typeName, SHASUI.$typeName) }}
           >
             stake
           </NavLink>
