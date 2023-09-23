@@ -1,8 +1,16 @@
 module math::u128 {
+    use math::u64;
 
     const DIVIDE_BY_ZERO: u64 = 1002;
     const CALCULATION_OVERFLOW: u64 = 1003;
-    const U128_MAX: u128 = 340282366920938463463374607431768211455;
+
+    // 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    public fun max_value(): u128 { 340282366920938463463374607431768211455 }
+
+    public fun try_into_u64(x: u128): u64 {
+        assert!(x <= (max_value() as u128), CALCULATION_OVERFLOW);
+        (x as u64)
+    }
 
     /// Return the value of a * b / c
     public fun mul_div(a: u128, b: u128, c: u128): u128 {
@@ -30,8 +38,9 @@ module math::u128 {
 
     /// Check whether x * y doesn't lead to overflow
     public fun is_safe_mul(x: u128, y: u128): bool {
-    (U128_MAX / x >= y)
+    (max_value() / x >= y)
     }
+
 
     #[test]
     fun mul_div_test() {
@@ -48,7 +57,7 @@ module math::u128 {
 
     #[test, expected_failure(abort_code = CALCULATION_OVERFLOW)]
     fun mul_div_overflow_test() {
-    mul_div(U128_MAX, U128_MAX, 1);
+    mul_div(max_value(), max_value(), 1);
     }
 
     #[test, expected_failure(abort_code = DIVIDE_BY_ZERO)]
