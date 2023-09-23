@@ -1,7 +1,7 @@
 "use client";
 
 import { VaultCard } from 'src/components/VaultCard';
-import { useVaultStore } from 'src/store/vault';
+import { useVaultStore } from 'src/store/vaults';
 import { Vault } from 'src/types';
 
 const vaultId = (v: Vault) => `${v.syAssetType}-${v.maturityCode}-${v.maturity.toISOString()}`;
