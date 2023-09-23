@@ -27,7 +27,7 @@ export type VerifierInputs = {
 };
 
 export type Vault = {
-  protocol: "Sharbet" | "Haedal" | "Volo";
+  protocol: "Sharbet" | "Scallop" | "Haedal" | "Volo";
   syAssetType: string;
   ptAssetType: string;
   ytAssetType: string;

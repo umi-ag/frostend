@@ -11,3 +11,33 @@
   </strong>
 </div>
 
+
+# Development
+
+## Overview
+
+View [Makefile.toml](./Makefile.toml)
+
+## Requirements
+
+- cargo-make
+- suivm
+- bun
+
+```sh
+cargo install cargo-make
+```
+
+```sh
+brew install oven-sh/bun/bun
+```
+
+```sh
+cargo install --git https://github.com/origin-byte/suivm
+```
+
+## Test
+
+```sh
+makers test:sui
+```

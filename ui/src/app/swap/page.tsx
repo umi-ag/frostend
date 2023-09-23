@@ -2,7 +2,6 @@
 
 import { AppBar } from 'src/components/AppBar';
 import { SwapComponent } from 'src/components/SwapComponent';
-import { STSUI_PTCoinType, STSUI_SYCoinType, STSUI_YTCoinType } from 'src/libs/frostendLib';
 import { useTradeStore } from 'src/store/trade';
 import { match } from 'ts-pattern';
 import { whichCoinType } from '../../libs';
@@ -10,6 +9,8 @@ import { FaucetButton } from 'src/components/FaucetButton';
 import { vaults } from 'src/store/vault';
 import Decimal from 'decimal.js';
 import numeral from 'numeral';
+import { PTCoinType, YTCoinType } from 'src/libs/frostendLib';
+import { STSUI_COIN } from 'src/libs/moveCall/frostend/stsui-coin/structs';
 
 
 const ToggleToken = () => {
@@ -37,11 +38,15 @@ const ToggleToken = () => {
 
   return (
     <div className='grid grid-cols-2 min-h-[4em] rounded-xl text-black bg-gray-50 transition-all duration-200 shadow-xl'>
-      <button className={ytClassName} onClick={() => setSwapPair(STSUI_SYCoinType, STSUI_YTCoinType)}>
+      <button className={ytClassName} onClick={() => {
+        setSwapPair(STSUI_COIN.$typeName, YTCoinType(STSUI_COIN.$typeName))
+      }}>
         <p>YT: Long Yield APY</p>
         <p> {numeral(currentVault().longYieldAPY).format('0.0%')} </p>
       </button>
-      <button className={ptClassName} onClick={async () => setSwapPair(STSUI_SYCoinType, STSUI_PTCoinType)}>
+      <button className={ptClassName} onClick={() => {
+        setSwapPair(STSUI_COIN.$typeName, PTCoinType(STSUI_COIN.$typeName))
+      }}>
         <p>PT: Fixed APY</p>
         <p> {numeral(currentVault().fixedAPY).format('0.0%')} </p>
       </button>
