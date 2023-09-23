@@ -1,11 +1,12 @@
 module math::u64 {
+    use math::consts;
     use math::u128;
 
     const DIVIDE_BY_ZERO: u64 = 0;
     const OVER_FLOW: u64 = 1;
 
     // 0xFFFFFFFFFFFFFFFF
-    public fun max_value(): u64 { 18446744073709551615 }
+    public fun max_value(): u64 { consts::U64_MAX() }
 
     public fun mul_div(a: u64, b: u64, c: u64): u64 {
         let a = (a as u128);
