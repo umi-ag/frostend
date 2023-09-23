@@ -4,16 +4,16 @@ import {Encoding} from "@mysten/bcs";
 
 /* ============================== EventMint =============================== */
 
-bcs.registerStructType( "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::usdc::EventMint", {
+bcs.registerStructType( "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::susdc::EventMint", {
 amount: `u64`,
 user: `address`,
 } )
 
-export function isEventMint(type: Type): boolean { return type === "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::usdc::EventMint"; }
+export function isEventMint(type: Type): boolean { return type === "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::susdc::EventMint"; }
 
 export interface EventMintFields { amount: bigint; user: string }
 
-export class EventMint { static readonly $typeName = "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::usdc::EventMint"; static readonly $numTypeParams = 0;
+export class EventMint { static readonly $typeName = "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::susdc::EventMint"; static readonly $numTypeParams = 0;
 
   readonly amount: bigint; readonly user: string
 
@@ -31,16 +31,16 @@ export class EventMint { static readonly $typeName = "0x2d484eb3ad956818923e850e
 
 /* ============================== EventBurn =============================== */
 
-bcs.registerStructType( "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::usdc::EventBurn", {
+bcs.registerStructType( "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::susdc::EventBurn", {
 amount: `u64`,
 user: `address`,
 } )
 
-export function isEventBurn(type: Type): boolean { return type === "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::usdc::EventBurn"; }
+export function isEventBurn(type: Type): boolean { return type === "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::susdc::EventBurn"; }
 
 export interface EventBurnFields { amount: bigint; user: string }
 
-export class EventBurn { static readonly $typeName = "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::usdc::EventBurn"; static readonly $numTypeParams = 0;
+export class EventBurn { static readonly $typeName = "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::susdc::EventBurn"; static readonly $numTypeParams = 0;
 
   readonly amount: bigint; readonly user: string
 
@@ -56,28 +56,28 @@ export class EventBurn { static readonly $typeName = "0x2d484eb3ad956818923e850e
 
  }
 
-/* ============================== USDC =============================== */
+/* ============================== SUSDC =============================== */
 
-bcs.registerStructType( "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::usdc::USDC", {
+bcs.registerStructType( "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::susdc::SUSDC", {
 dummy_field: `bool`,
 } )
 
-export function isUSDC(type: Type): boolean { return type === "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::usdc::USDC"; }
+export function isSUSDC(type: Type): boolean { return type === "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::susdc::SUSDC"; }
 
-export interface USDCFields { dummyField: boolean }
+export interface SUSDCFields { dummyField: boolean }
 
-export class USDC { static readonly $typeName = "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::usdc::USDC"; static readonly $numTypeParams = 0;
+export class SUSDC { static readonly $typeName = "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::susdc::SUSDC"; static readonly $numTypeParams = 0;
 
   readonly dummyField: boolean
 
  constructor( dummyField: boolean, ) { this.dummyField = dummyField; }
 
- static fromFields( fields: Record<string, any> ): USDC { return new USDC( fields.dummy_field ) }
+ static fromFields( fields: Record<string, any> ): SUSDC { return new SUSDC( fields.dummy_field ) }
 
- static fromFieldsWithTypes(item: FieldsWithTypes): USDC { if (!isUSDC(item.type)) { throw new Error("not a USDC type");
+ static fromFieldsWithTypes(item: FieldsWithTypes): SUSDC { if (!isSUSDC(item.type)) { throw new Error("not a SUSDC type");
 
- } return new USDC( item.fields.dummy_field ) }
+ } return new SUSDC( item.fields.dummy_field ) }
 
- static fromBcs( data: Uint8Array | string, encoding?: Encoding ): USDC { return USDC.fromFields( bcs.de([USDC.$typeName, ], data, encoding) ) }
+ static fromBcs( data: Uint8Array | string, encoding?: Encoding ): SUSDC { return SUSDC.fromFields( bcs.de([SUSDC.$typeName, ], data, encoding) ) }
 
  }

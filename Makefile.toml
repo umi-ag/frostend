@@ -7,6 +7,9 @@ bun run dev
 [tasks."up"]
 dependencies = ["install:sui", "install:gen", "up:ui"]
 
+[tasks."test:sui"]
+dependencies = ["test:sharbet", "test:frostend", "test:math"]
+
 [tasks."install"]
 dependencies = ["install:sui", "install:gen"]
 
@@ -39,10 +42,34 @@ cd contracts/sharbet
 sui client publish --gas-budget 123456789 --skip-dependency-verification
 '''
 
+[tasks."test:sharbet"]
+script = '''
+cd contracts/sharbet
+sui move test
+'''
+
 [tasks."deploy:frostend"]
 script = '''
 cd contracts/frostend
 sui client publish --gas-budget 123456789 --skip-dependency-verification
+'''
+
+[tasks."test:frostend"]
+script = '''
+cd contracts/frostend
+sui move test
+'''
+
+[tasks."deploy:math"]
+script = '''
+cd contracts/math
+sui client publish --gas-budget 123456789 --skip-dependency-verification
+'''
+
+[tasks."test:math"]
+script = '''
+cd contracts/math
+sui move test
 '''
 
 [tasks."deploy:coinhouse"]

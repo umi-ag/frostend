@@ -4,9 +4,9 @@ version = "0.0.1"
 
 [dependencies]
 Math = {local = "../math"}
-MoveStdlib = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/move-stdlib", rev = "testnet-v1.9.1", override = true}
-Sui = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "testnet-v1.9.1", override = true}
-SuiSystem = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-system", rev = "testnet-v1.9.1", override = true}
+MoveStdlib = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/move-stdlib", rev = "mainnet-v1.9.1", override = true}
+Sui = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "mainnet-v1.9.1", override = true}
+SuiSystem = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-system", rev = "mainnet-v1.9.1", override = true}
 
 [addresses]
 sharbet = "0x0"

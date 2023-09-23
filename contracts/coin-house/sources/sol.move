@@ -44,7 +44,7 @@ module coinhouse::sol {
         coin::total_supply(treasury_cap)
     }
 
-    public(friend) fun mint(
+    public fun mint(
         treasury_cap: &mut TreasuryCap<SOL>,
         amount: u64,
         ctx: &mut TxContext
@@ -53,7 +53,7 @@ module coinhouse::sol {
         coin::mint(treasury_cap, amount, ctx)
     }
 
-    public(friend) fun burn(
+    public fun burn(
         treasury_cap: &mut TreasuryCap<SOL>,
         coin: Coin<SOL>,
         ctx: &mut TxContext
@@ -69,14 +69,5 @@ module coinhouse::sol {
     #[test_only]
     public fun init_for_testing(ctx: &mut TxContext) {
         init(SOL {}, ctx);
-    }
-
-    #[test_only]
-    public fun mint_for_testing(
-        treasury_cap: &mut TreasuryCap<SOL>,
-        amount: u64,
-        ctx: &mut TxContext,
-    ): Coin<SOL> {
-        mint(treasury_cap, amount, ctx)
     }
 }

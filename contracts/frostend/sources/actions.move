@@ -1,5 +1,5 @@
+// INFO: Do not use sui::balance in this module
 module frostend::actions {
-    use sui::balance::{Balance};
     use sui::clock::Clock;
     use sui::coin::{Self, Coin};
     use sui::tx_context::{TxContext};
@@ -39,10 +39,10 @@ module frostend::actions {
     /// BANK: 1 #cSY*#cSY -> 1 #SY*$SY
     /// TODO: mint cSY
     public fun deposit<X>(
-        balance_sy: Balance<X>,
+        coin_sy: Coin<X>,
         bank: &mut Bank<X>,
     ) {
-        ctoken::deposit(balance_sy, bank);
+        ctoken::deposit(coin::into_balance(coin_sy), bank);
     }
 
     /// LP: 1 #cSY*#cSY -> 1 #SY*$SY
@@ -50,42 +50,38 @@ module frostend::actions {
     public fun withdraw<X>(
         amount: u64,
         bank: &mut Bank<X>,
-    ): Balance<X> {
-        ctoken::withdraw(amount, bank)
-    }
-
-    public fun deposit_coins<X>(
-        coins_sy: vector<Coin<X>>,
-        bank: &mut Bank<X>,
         ctx: &mut TxContext,
-    ) {
-        let coin_sy = merge_coins(coins_sy, ctx);
-        let balance_sy = coin::into_balance(coin_sy);
-        deposit(balance_sy, bank);
+    ): Coin<X> {
+        let balance = ctoken::withdraw(amount, bank);
+        coin::from_balance(balance, ctx)
     }
 
     /// PETER: dx #SY -> dy #PT
     /// VAULT: dy #PT -> dx #SY
     /// where curve: x^(1-t) + y^(1-t) = const.
     /// TODO: Improve Curve
-    public fun convert_sy_to_pt<X>(
-        balance_sy: Balance<X>,
+    public fun swap_sy_to_pt<X>(
+        coin_sy: Coin<X>,
         vault: &mut Vault<X>,
         clock: &Clock,
-    ): Balance<PTCoin<X>> {
-        pt_amm::swap_sy_to_pt(balance_sy, vault, clock)
+        ctx: &mut TxContext,
+    ): Coin<PTCoin<X>> {
+        let balance_pt = pt_amm::swap_sy_to_pt(coin::into_balance(coin_sy), vault, clock);
+        coin::from_balance(balance_pt, ctx)
     }
 
     /// PETER: dy #PT -> dx #SY
     /// VAULT: dx #SY -> dy #PT
     /// where curve: x^(1-t) + y^(1-t) = const.
     /// TODO: Improve Curve
-    public fun convert_pt_to_sy<X>(
-        balance_pt: Balance<PTCoin<X>>,
+    public fun swap_pt_to_sy<X>(
+        coin_pt: Coin<PTCoin<X>>,
         vault: &mut Vault<X>,
         clock: &Clock,
-    ): Balance<X> {
-        pt_amm::swap_pt_to_sy(balance_pt, vault, clock)
+        ctx: &mut TxContext,
+    ): Coin<X> {
+        let balance_sy = pt_amm::swap_pt_to_sy(coin::into_balance(coin_pt), vault, clock);
+        coin::from_balance(balance_sy, ctx)
     }
 
     /// (dx_YAN + dx_BANK) #SY -> (dx_YAN + dx_BANK) #PT + (dx_YAN + dx_BANK) #YT
@@ -106,13 +102,15 @@ module frostend::actions {
     /// bank.#SY += -96
     /// vault.#SY += 100
     /// vault.#PT += 100
-    public fun convert_sy_to_yt<X>(
-        balance_sy: Balance<X>, // -dx_YAN
+    public fun swap_sy_to_yt<X>(
+        coin_sy: Coin<X>, // -dx_YAN
         vault: &mut Vault<X>,
         bank: &mut Bank<X>,
         clock: &Clock,
-    ): Balance<YTCoin<X>> {
-        sys_manager::swap_sy_to_yt(balance_sy, vault, bank, clock)
+        ctx: &mut TxContext,
+    ): Coin<YTCoin<X>> {
+        let balance_yt = sys_manager::swap_sy_to_yt(coin::into_balance(coin_sy), vault, bank, clock);
+        coin::from_balance(balance_yt, ctx)
     }
 
     /// (dx_YAN + dx_BANK) #PT + (dx_YAN + dx_BANK) #YT -> (dx_YAN + dx_BANK) #SY
@@ -124,32 +122,14 @@ module frostend::actions {
     ///     #PT: -(dx_YAN + dx_BANK)
     /// BANK:
     ///     #SY: +(dx_BANK)
-    public fun convert_yt_to_sy<X>(
-        balance_yt: Balance<YTCoin<X>>,
+    public fun coin_yt_to_sy<X>(
+        coin_yt: Coin<YTCoin<X>>,
         vault: &mut Vault<X>,
         bank: &mut Bank<X>,
         clock: &Clock,
-    ): Balance<X> {
-        sys_manager::swap_yt_to_sy(balance_yt, vault, bank, clock)
-    }
-
-    public fun convert_pt_to_yt<X>(
-        balance_pt: Balance<PTCoin<X>>,
-        vault: &mut Vault<X>,
-        bank: &mut Bank<X>,
-        clock: &Clock,
-    ): Balance<YTCoin<X>> {
-        let balance_sy = convert_pt_to_sy(balance_pt, vault, clock);
-        convert_sy_to_yt(balance_sy, vault, bank, clock)
-    }
-
-    public fun convert_yt_to_pt<X>(
-        balance_yt: Balance<YTCoin<X>>,
-        vault: &mut Vault<X>,
-        bank: &mut Bank<X>,
-        clock: &Clock,
-    ): Balance<PTCoin<X>> {
-        let balance_sy = convert_yt_to_sy(balance_yt, vault, bank, clock);
-        convert_sy_to_pt(balance_sy, vault, clock)
+        ctx: &mut TxContext,
+    ): Coin<X> {
+        let balance_sy = sys_manager::swap_yt_to_sy(coin::into_balance(coin_yt), vault, bank, clock);
+        coin::from_balance(balance_sy, ctx)
     }
 }

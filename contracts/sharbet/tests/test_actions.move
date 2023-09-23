@@ -7,13 +7,6 @@ module sharbet::test_actions {
     use sui::coin::{Self, Coin, TreasuryCap, CoinMetadata};
     use sui::transfer;
     use sui_system::sui_system::{SuiSystemState};
-
-    use sharbet::actions;
-    use sharbet::shasui::{Self, SHASUI};
-    use sharbet::stake_manager::{Self, StakeProfile};
-    use sharbet::test_utils::{mint};
-    use sharbet::unstsui::{Self, UnstakeTicket, UnstSuiTreasuryCap};
-    use sui::test_scenario::{Self as test, ctx};
     use sui_system::governance_test_utils::{
         create_sui_system_state_for_testing,
         create_validator_for_testing,
@@ -21,6 +14,13 @@ module sharbet::test_actions {
         assert_validator_total_stake_amounts,
         advance_epoch_with_reward_amounts
     };
+    use sui::test_scenario::{Self as test, ctx};
+
+    use sharbet::actions;
+    use sharbet::shasui::{Self, SHASUI};
+    use sharbet::stake_manager::{Self, StakeProfile};
+    use sharbet::test_utils::{mint};
+    use sharbet::unstsui::{Self, UnstakeTicket, UnstSuiTreasuryCap};
 
     const ALICE: address = @0xA11CE;
     const MYSTEN_LABS: address = @0x4;
@@ -53,7 +53,7 @@ module sharbet::test_actions {
                 {
                     let ctx = test::ctx(test);
 
-                    let coin_shasui = shasui::mint_for_testing(&mut treasury_shasui, 100, ctx);
+                    let coin_shasui = mint<SHASUI>(100, 8, ctx);
                     transfer::public_transfer(coin_shasui, ALICE);
                 };
                 test::return_shared(treasury_shasui);

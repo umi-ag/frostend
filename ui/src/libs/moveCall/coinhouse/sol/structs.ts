@@ -4,16 +4,16 @@ import {Encoding} from "@mysten/bcs";
 
 /* ============================== EventMint =============================== */
 
-bcs.registerStructType( "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::sol::EventMint", {
+bcs.registerStructType( "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::sol::EventMint", {
 amount: `u64`,
 user: `address`,
 } )
 
-export function isEventMint(type: Type): boolean { return type === "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::sol::EventMint"; }
+export function isEventMint(type: Type): boolean { return type === "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::sol::EventMint"; }
 
 export interface EventMintFields { amount: bigint; user: string }
 
-export class EventMint { static readonly $typeName = "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::sol::EventMint"; static readonly $numTypeParams = 0;
+export class EventMint { static readonly $typeName = "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::sol::EventMint"; static readonly $numTypeParams = 0;
 
   readonly amount: bigint; readonly user: string
 
@@ -31,16 +31,16 @@ export class EventMint { static readonly $typeName = "0x5bfafd2251a671f5f4a0317d
 
 /* ============================== EventBurn =============================== */
 
-bcs.registerStructType( "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::sol::EventBurn", {
+bcs.registerStructType( "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::sol::EventBurn", {
 amount: `u64`,
 user: `address`,
 } )
 
-export function isEventBurn(type: Type): boolean { return type === "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::sol::EventBurn"; }
+export function isEventBurn(type: Type): boolean { return type === "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::sol::EventBurn"; }
 
 export interface EventBurnFields { amount: bigint; user: string }
 
-export class EventBurn { static readonly $typeName = "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::sol::EventBurn"; static readonly $numTypeParams = 0;
+export class EventBurn { static readonly $typeName = "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::sol::EventBurn"; static readonly $numTypeParams = 0;
 
   readonly amount: bigint; readonly user: string
 
@@ -58,15 +58,15 @@ export class EventBurn { static readonly $typeName = "0x5bfafd2251a671f5f4a0317d
 
 /* ============================== SOL =============================== */
 
-bcs.registerStructType( "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::sol::SOL", {
+bcs.registerStructType( "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::sol::SOL", {
 dummy_field: `bool`,
 } )
 
-export function isSOL(type: Type): boolean { return type === "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::sol::SOL"; }
+export function isSOL(type: Type): boolean { return type === "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::sol::SOL"; }
 
 export interface SOLFields { dummyField: boolean }
 
-export class SOL { static readonly $typeName = "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::sol::SOL"; static readonly $numTypeParams = 0;
+export class SOL { static readonly $typeName = "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::sol::SOL"; static readonly $numTypeParams = 0;
 
   readonly dummyField: boolean
 
