@@ -20,6 +20,10 @@ export interface WithdrawSyArgs { u64: bigint | TransactionArgument; bank: Objec
 
 export function withdrawSy( txb: TransactionBlock, typeArg: Type, args: WithdrawSyArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::bank::withdraw_sy`, typeArguments: [typeArg], arguments: [ pure(txb, args.u64, `u64`), obj(txb, args.bank) ], }) }
 
+export interface DepositArgs { vecCoin: Array<ObjectArg> | TransactionArgument; bank: ObjectArg }
+
+export function deposit( txb: TransactionBlock, typeArg: Type, args: DepositArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::bank::deposit`, typeArguments: [typeArg], arguments: [ vector(txb, `0x2::coin::Coin<${typeArg}>`, args.vecCoin), obj(txb, args.bank) ], }) }
+
 export interface BorrowSyArgs { u64: bigint | TransactionArgument; vault: ObjectArg; bank: ObjectArg }
 
 export function borrowSy( txb: TransactionBlock, typeArg: Type, args: BorrowSyArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::bank::borrow_sy`, typeArguments: [typeArg], arguments: [ pure(txb, args.u64, `u64`), obj(txb, args.vault), obj(txb, args.bank) ], }) }
@@ -27,7 +31,3 @@ export function borrowSy( txb: TransactionBlock, typeArg: Type, args: BorrowSyAr
 export interface PaybackSyArgs { u64: bigint | TransactionArgument; vault: ObjectArg; bank: ObjectArg }
 
 export function paybackSy( txb: TransactionBlock, typeArg: Type, args: PaybackSyArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::bank::payback_sy`, typeArguments: [typeArg], arguments: [ pure(txb, args.u64, `u64`), obj(txb, args.vault), obj(txb, args.bank) ], }) }
-
-export interface DepositArgs { vecCoin: Array<ObjectArg> | TransactionArgument; bank: ObjectArg }
-
-export function deposit( txb: TransactionBlock, typeArg: Type, args: DepositArgs ) { return txb.moveCall({ target: `${PUBLISHED_AT}::bank::deposit`, typeArguments: [typeArg], arguments: [ vector(txb, `0x2::coin::Coin<${typeArg}>`, args.vecCoin), obj(txb, args.bank) ], }) }
