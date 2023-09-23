@@ -1,6 +1,5 @@
 module frostend::vault {
     use std::ascii::String;
-    use std::fixed_point32::{FixedPoint32};
     use std::type_name;
 
     use sui::clock::{Self, Clock};
@@ -8,7 +7,8 @@ module frostend::vault {
     use sui::balance::{Self, Supply, Balance};
     use sui::tx_context::{TxContext};
 
-    use math::fixedU32;
+    use math::fixed_point64::{FixedPoint64};
+    use math::fixedU64;
 
     friend frostend::pt_amm;
     friend frostend::sys_manager;
@@ -27,8 +27,6 @@ module frostend::vault {
         issued_at: u64,
         matures_at: u64,
     }
-
-    fun init(_ctx: &TxContext) { }
 
     public fun new<X>(
         issued_at: u64,
@@ -68,17 +66,17 @@ module frostend::vault {
     public fun get_time_to_maturity<X>(
         vault: &Vault<X>,
         clock: &Clock,
-    ): FixedPoint32 {
+    ): FixedPoint64 {
         let current_time = clock::timestamp_ms(clock);
 
         if (current_time < vault.issued_at) {
-            fixedU32::from_u64(1)
+            fixedU64::from_u64(1)
         } else if (current_time > vault.matures_at) {
-            fixedU32::from_u64(0)
+            fixedU64::from_u64(0)
         } else {
-            fixedU32::div(
-                fixedU32::from_u64(current_time - vault.issued_at),
-                fixedU32::from_u64(vault.matures_at - vault.issued_at)
+            fixedU64::div(
+                fixedU64::from_u64(current_time - vault.issued_at),
+                fixedU64::from_u64(vault.matures_at - vault.issued_at)
             )
         }
     }

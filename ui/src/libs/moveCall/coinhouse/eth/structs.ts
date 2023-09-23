@@ -4,15 +4,15 @@ import {Encoding} from "@mysten/bcs";
 
 /* ============================== ETH =============================== */
 
-bcs.registerStructType( "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::eth::ETH", {
+bcs.registerStructType( "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::eth::ETH", {
 dummy_field: `bool`,
 } )
 
-export function isETH(type: Type): boolean { return type === "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::eth::ETH"; }
+export function isETH(type: Type): boolean { return type === "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::eth::ETH"; }
 
 export interface ETHFields { dummyField: boolean }
 
-export class ETH { static readonly $typeName = "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::eth::ETH"; static readonly $numTypeParams = 0;
+export class ETH { static readonly $typeName = "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::eth::ETH"; static readonly $numTypeParams = 0;
 
   readonly dummyField: boolean
 
@@ -30,16 +30,16 @@ export class ETH { static readonly $typeName = "0x5bfafd2251a671f5f4a0317dafe29e
 
 /* ============================== EventMint =============================== */
 
-bcs.registerStructType( "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::eth::EventMint", {
+bcs.registerStructType( "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::eth::EventMint", {
 amount: `u64`,
 user: `address`,
 } )
 
-export function isEventMint(type: Type): boolean { return type === "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::eth::EventMint"; }
+export function isEventMint(type: Type): boolean { return type === "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::eth::EventMint"; }
 
 export interface EventMintFields { amount: bigint; user: string }
 
-export class EventMint { static readonly $typeName = "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::eth::EventMint"; static readonly $numTypeParams = 0;
+export class EventMint { static readonly $typeName = "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::eth::EventMint"; static readonly $numTypeParams = 0;
 
   readonly amount: bigint; readonly user: string
 
@@ -57,16 +57,16 @@ export class EventMint { static readonly $typeName = "0x5bfafd2251a671f5f4a0317d
 
 /* ============================== EventBurn =============================== */
 
-bcs.registerStructType( "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::eth::EventBurn", {
+bcs.registerStructType( "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::eth::EventBurn", {
 amount: `u64`,
 user: `address`,
 } )
 
-export function isEventBurn(type: Type): boolean { return type === "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::eth::EventBurn"; }
+export function isEventBurn(type: Type): boolean { return type === "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::eth::EventBurn"; }
 
 export interface EventBurnFields { amount: bigint; user: string }
 
-export class EventBurn { static readonly $typeName = "0x5bfafd2251a671f5f4a0317dafe29e761f7887624fb7055d7211e28cce8ecf35::eth::EventBurn"; static readonly $numTypeParams = 0;
+export class EventBurn { static readonly $typeName = "0x2d484eb3ad956818923e850ee7df41dee476cb75d675159dbf9aa725d7b88919::eth::EventBurn"; static readonly $numTypeParams = 0;
 
   readonly amount: bigint; readonly user: string
 

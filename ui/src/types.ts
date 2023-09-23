@@ -34,6 +34,7 @@ export type Vault = {
   principalAssetType: string;
   maturity: Date;
   maturityCode: "01Y" | "02Y";
+  reserveSYAsset: bigint;
   longYieldAPY: Decimal;
   ytPrice: Decimal;
   fixedAPY: Decimal;
@@ -41,5 +42,5 @@ export type Vault = {
   underlyingAPY: Decimal;
   underlyingAssetPrice: Decimal;
   impliedAPY: Decimal;
-  status: 'upcoming' | 'live' | 'matured'
+  status: "upcoming" | "live" | "matured";
 };

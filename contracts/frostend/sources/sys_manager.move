@@ -4,7 +4,8 @@ module frostend::sys_manager {
     use sui::tx_context::{TxContext};
     use sui::transfer;
 
-    use math::fixedU32;
+    use math::fixedU64;
+    use math::u128;
 
     use frostend::vault::{Self, Vault, YTCoin};
     use frostend::bank::{Self, Bank};
@@ -47,10 +48,12 @@ module frostend::sys_manager {
         clock: &Clock,
     ): Balance<YTCoin<X>> {
         let price_yt = pt_amm::get_price_yt_to_sy(vault, clock); // 4
-        let delta_supply = fixedU32::floor(
-            fixedU32::div(
-                fixedU32::from_u64(balance::value(&balance_sy)), // 4
-                price_yt, // 0.04
+        let delta_supply = u128::try_into_u64(
+            fixedU64::floor(
+                fixedU64::div(
+                    fixedU64::from_u64(balance::value(&balance_sy)), // 4
+                    price_yt, // 0.04
+                )
             )
         ); // 100
 
@@ -80,10 +83,12 @@ module frostend::sys_manager {
 
         let price_pt = pt_amm::get_price_pt_to_sy(vault, clock);
 
-        let amount_to_yan = fixedU32::floor(
-            fixedU32::mul(
-                fixedU32::from_u64(delta_supply),
-                price_pt,
+        let amount_to_yan = u128::try_into_u64(
+            fixedU64::floor(
+                fixedU64::mul(
+                    fixedU64::from_u64(delta_supply),
+                    price_pt,
+                )
             )
         );
         let balance_sy_to_repay_for_bank = balance::split(&mut balance_sy, amount_to_yan);
