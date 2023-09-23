@@ -6,7 +6,6 @@ module sharbet::sha_manager {
     use sui_system::sui_system::{SuiSystemState};
 
     use math::u64;
-    use sharbet::constants::{MAX_U64};
     use sharbet::errors;
     use sharbet::event_emit;
     use sharbet::shasui::{Self, SHASUI};
@@ -43,7 +42,7 @@ module sharbet::sha_manager {
         ctx: &mut TxContext,
     ): UnstakeTicket {
         let amount_sui_to_withdraw = burn_shasui_into_amount_sui(stake_profile, coin_shasui, treasury_shasui, ctx);
-        let unstake_ticket = unstsui::mint(treasury_unstsui, amount_sui_to_withdraw, MAX_U64(), ctx);
+        let unstake_ticket = unstsui::mint(treasury_unstsui, amount_sui_to_withdraw, u64::max_value(), ctx);
         unstake_ticket
     }
 
