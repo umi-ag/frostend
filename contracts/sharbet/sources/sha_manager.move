@@ -6,11 +6,12 @@ module sharbet::sha_manager {
     use sui_system::sui_system::{SuiSystemState};
 
     use math::u64;
+    use sharbet::constants::{MAX_U64};
+    use sharbet::errors;
+    use sharbet::event_emit;
     use sharbet::shasui::{Self, SHASUI};
     use sharbet::stake_manager::{Self, StakeProfile};
-    use sharbet::event_emit;
     use sharbet::unstsui::{Self, UnstakeTicket, UnstSuiTreasuryCap};
-    use sharbet::constants::{MAX_U64};
 
     friend sharbet::actions;
 
@@ -54,6 +55,8 @@ module sharbet::sha_manager {
         treasury_unstsui: &mut UnstSuiTreasuryCap,
         ctx: &mut TxContext,
     ): Coin<SUI> {
+        assert!(unstsui::is_unlocked(&unstsui, ctx), errors::E_TICKET_LOCKED());
+
         let amount_sui_to_unstake = unstsui::burn(treasury_unstsui, unstsui);
         let coin_sui = stake_manager::unstake_sui(stake_profile, amount_sui_to_unstake, wrapper, ctx);
         coin_sui
