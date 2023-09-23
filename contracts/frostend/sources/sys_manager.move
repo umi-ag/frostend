@@ -7,13 +7,14 @@ module frostend::sys_manager {
     use math::fixedU64;
     use math::u128;
 
-    use frostend::vault::{Self, Vault, YTCoin};
     use frostend::bank::{Self, Bank};
+    use frostend::vault::{Self, Vault, YTCoin};
     use frostend::pt_amm;
 
     friend frostend::actions;
 
-    fun init(_ctx: &TxContext) { }
+    const E_issued_at_must_be_less_than_matures_at: u64 = 102;
+    const E_amount_supply_must_be_greater_than_balance_sy: u64 = 103;
 
     public(friend) fun init_vault<X>(
         issued_at: u64,
@@ -23,8 +24,10 @@ module frostend::sys_manager {
         bank: &mut Bank<X>,
         ctx: &mut TxContext,
     ): Balance<YTCoin<X>> {
-        let vault = vault::new<X>(issued_at, matures_at, ctx);
+        assert!(issued_at < matures_at, E_issued_at_must_be_less_than_matures_at);
+        assert!(amount_supply > balance::value(&balance_sy), E_amount_supply_must_be_greater_than_balance_sy);
 
+        let vault = vault::new<X>(issued_at, matures_at, ctx);
         let amount_sy_to_borrow_from_bank = amount_supply - balance::value(&balance_sy);
         let balance_sy_bank = bank::withdraw_sy(amount_sy_to_borrow_from_bank, bank);
         balance::join(&mut balance_sy, balance_sy_bank);

@@ -1,5 +1,5 @@
 [package]
-name = "umi-utils"
+name = "Toolkit"
 published-at = "0x5f4fc4ed2a6e09ade898aa3383df4a2f3ce09852e2e68ebfd942b120520dc2cb"
 version = "0.0.1"
 
@@ -7,4 +7,4 @@ version = "0.0.1"
 Sui = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "mainnet-v1.9.1"}
 
 [addresses]
-umi_utils = "0x0"
+toolkit = "0x0"

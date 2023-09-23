@@ -7,7 +7,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useTradeStore } from 'src/store/trade';
 import { SHASUI } from 'src/libs/moveCall/sharbet/shasui/structs';
 import { SUI } from 'src/libs/moveCall/sui/sui/structs';
-import { STSUI_SYCoinType, STSUI_YTCoinType } from 'src/libs/frostendLib';
+import { YTCoinType } from 'src/libs/frostendLib';
+import { STSUI_COIN } from 'src/libs/moveCall/frostend/stsui-coin/structs';
 import { isProduction } from 'src/config';
 
 
@@ -72,7 +73,7 @@ export const AppBar: React.FC = () => {
           <NavLink href="/vaults">vault</NavLink>
           <NavLink
             href="/swap"
-            callback={() => { setSwapPair(STSUI_SYCoinType, STSUI_YTCoinType) }}
+            callback={() => { setSwapPair(STSUI_COIN.$typeName, YTCoinType(STSUI_COIN.$typeName)) }}
           >
             swap
           </NavLink>

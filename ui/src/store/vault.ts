@@ -1,9 +1,9 @@
 import Decimal from "decimal.js";
-import {
-  STSUI_PTCoinType,
-  STSUI_SYCoinType,
-  STSUI_YTCoinType,
-} from "src/libs/frostendLib";
+import { PTCoinType, YTCoinType } from "src/libs/frostendLib";
+import { SSUI } from "src/libs/moveCall/coinhouse/ssui/structs";
+import { SUSDC } from "src/libs/moveCall/coinhouse/susdc/structs";
+import { USDC } from "src/libs/moveCall/coinhouse/usdc/structs";
+import { STSUI_COIN } from "src/libs/moveCall/frostend/stsui-coin/structs";
 import { SUI } from "src/libs/moveCall/sui/sui/structs";
 import { Vault } from "src/types";
 import { create } from "zustand";
@@ -15,9 +15,9 @@ const _02Y = new Date("2024-12-26");
 export const vaults: Vault[] = [
   {
     protocol: "Sharbet",
-    syAssetType: STSUI_SYCoinType,
-    ptAssetType: STSUI_PTCoinType,
-    ytAssetType: STSUI_YTCoinType,
+    syAssetType: STSUI_COIN.$typeName,
+    ptAssetType: PTCoinType(STSUI_COIN.$typeName),
+    ytAssetType: YTCoinType(STSUI_COIN.$typeName),
     principalAssetType: SUI.$typeName,
     maturity: _01Y,
     maturityCode: "01Y",
@@ -33,9 +33,9 @@ export const vaults: Vault[] = [
   },
   {
     protocol: "Sharbet",
-    syAssetType: STSUI_SYCoinType,
-    ptAssetType: STSUI_PTCoinType,
-    ytAssetType: STSUI_YTCoinType,
+    syAssetType: STSUI_COIN.$typeName,
+    ptAssetType: PTCoinType(STSUI_COIN.$typeName),
+    ytAssetType: YTCoinType(STSUI_COIN.$typeName),
     principalAssetType: SUI.$typeName,
     maturity: _02Y,
     maturityCode: "02Y",
@@ -53,10 +53,44 @@ export const vaults: Vault[] = [
 
 [
   {
+    protocol: "Scallop",
+    syAssetType: SSUI.$typeName,
+    ptAssetType: PTCoinType(SSUI.$typeName),
+    ytAssetType: YTCoinType(SSUI.$typeName),
+    principalAssetType: SUI.$typeName,
+    maturity: _02Y,
+    maturityCode: "02Y",
+    fixedAPY: new Decimal(0),
+    longYieldAPY: new Decimal(0),
+    impliedAPY: new Decimal(0),
+    underlyingAPY: new Decimal(0),
+    ptPrice: new Decimal(0),
+    ytPrice: new Decimal(0),
+    underlyingAssetPrice: new Decimal(0),
+    status: "upcoming",
+  },
+  {
+    protocol: "Scallop",
+    syAssetType: SUSDC.$typeName,
+    ptAssetType: PTCoinType(SUSDC.$typeName),
+    ytAssetType: YTCoinType(SUSDC.$typeName),
+    principalAssetType: USDC.$typeName,
+    maturity: _02Y,
+    maturityCode: "02Y",
+    fixedAPY: new Decimal(0),
+    longYieldAPY: new Decimal(0),
+    impliedAPY: new Decimal(0),
+    underlyingAPY: new Decimal(0),
+    ptPrice: new Decimal(0),
+    ytPrice: new Decimal(0),
+    underlyingAssetPrice: new Decimal(0),
+    status: "upcoming",
+  },
+  {
     protocol: "Haedal",
     syAssetType: "0xhasui::hasui::HASUI",
-    ptAssetType: STSUI_PTCoinType,
-    ytAssetType: STSUI_YTCoinType,
+    ptAssetType: PTCoinType(STSUI_COIN.$typeName),
+    ytAssetType: YTCoinType(STSUI_COIN.$typeName),
     principalAssetType: SUI.$typeName,
     maturity: _02Y,
     maturityCode: "02Y",
@@ -72,8 +106,8 @@ export const vaults: Vault[] = [
   {
     protocol: "Volo",
     syAssetType: "0xvolo::volo::VOLO",
-    ptAssetType: STSUI_PTCoinType,
-    ytAssetType: STSUI_YTCoinType,
+    ptAssetType: PTCoinType(STSUI_COIN.$typeName),
+    ytAssetType: YTCoinType(STSUI_COIN.$typeName),
     principalAssetType: SUI.$typeName,
     maturity: _02Y,
     maturityCode: "02Y",

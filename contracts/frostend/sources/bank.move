@@ -9,6 +9,7 @@ module frostend::bank {
     friend frostend::ctoken;
     friend frostend::sys_manager;
 
+    const E_amount_must_be_less_than_equal_bank_reserve: u64 = 103;
 
     struct Bank<phantom X> has key, store {
         id: UID,
@@ -42,6 +43,7 @@ module frostend::bank {
         amount: u64,
         bank: &mut Bank<X>,
     ): Balance<X> {
+        assert!(amount <= balance::value(&bank.coin_sy_reserve), E_amount_must_be_less_than_equal_bank_reserve);
         balance::split(&mut bank.coin_sy_reserve, amount)
     }
 }

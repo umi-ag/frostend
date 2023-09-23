@@ -1,4 +1,4 @@
-module umi_utils::coin {
+module toolkit::coin {
     use sui::pay;
     use sui::transfer;
     use sui::coin::{Self, Coin};

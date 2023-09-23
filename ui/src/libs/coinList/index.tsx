@@ -1,10 +1,11 @@
-import { STSUI_PTCoinType, STSUI_SYCoinType, STSUI_YTCoinType } from "src/libs/frostendLib"
 import { SHASUI } from "src/libs/moveCall/sharbet/shasui/structs";
 import { UNSTSUI } from "src/libs/moveCall/sharbet/unstsui/structs";
 import { SUI } from "src/libs/moveCall/sui/sui/structs";
 import { ETH } from "src/libs/moveCall/coinhouse/eth/structs";
 import { SOL } from "src/libs/moveCall/coinhouse/sol/structs";
 import { USDC } from "src/libs/moveCall/coinhouse/usdc/structs";
+import { STSUI_COIN } from "../moveCall/frostend/stsui-coin/structs";
+import { PTCoinType, YTCoinType } from "../frostendLib";
 
 
 export type CoinProfile = {
@@ -32,6 +33,15 @@ const coinList: CoinProfile[] = [
     name: "Sharbet Staked SUI",
     symbol: "shaSUI",
     description: "Sharbet Staked SUI",
+    coinType: STSUI_COIN.$typeName,
+    iconUrl: "/img/coins/shasui.png",
+    decimals: 9,
+  },
+  {
+    id: "",
+    name: "Sharbet Staked SUI",
+    symbol: "shaSUI",
+    description: "Sharbet Staked SUI",
     coinType: SHASUI.$typeName,
     iconUrl: "/img/coins/shasui.png",
     decimals: 9,
@@ -47,29 +57,11 @@ const coinList: CoinProfile[] = [
   },
   {
     id: "",
-    name: "Sharbet Staked SUI",
-    symbol: "shaSUI",
-    description: "Sharbet Staked SUI",
-    coinType: STSUI_SYCoinType,
-    iconUrl: "/img/coins/shasui.png",
-    decimals: 9,
-  },
-  {
-    id: "",
-    name: "Sharbet Staked SUI",
-    symbol: "shaSUI",
-    description: "Sharbet Staked SUI",
-    coinType: STSUI_SYCoinType,
-    iconUrl: "/img/coins/shasui.png",
-    decimals: 9,
-  },
-  {
-    id: "",
     name: "Princial Token of Sharbet Staked SUI",
     symbol: "PT-shaSUI",
     description: "Princial Token of Sharbet Staked SUI",
     iconUrl: "/img/coins/pt-shasui.png",
-    coinType: STSUI_PTCoinType,
+    coinType: PTCoinType(STSUI_COIN.$typeName),
     decimals: 8,
   },
   {
@@ -78,7 +70,7 @@ const coinList: CoinProfile[] = [
     symbol: "YT-shaSUI",
     description: "Yield Token of Sharbet Staked SUI",
     iconUrl: "/img/coins/yt-shasui.png",
-    coinType: STSUI_YTCoinType,
+    coinType: YTCoinType(STSUI_COIN.$typeName),
     decimals: 8,
   },
   {
