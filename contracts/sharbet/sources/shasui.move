@@ -46,7 +46,8 @@ module sharbet::shasui {
         coin::total_supply(treasury_cap)
     }
 
-    public(friend) fun mint(
+    // TODO: should be public(friend) in mainnet
+    public fun mint(
         treasury_cap: &mut TreasuryCap<SHASUI>,
         amount: u64,
         ctx: &mut TxContext
@@ -55,7 +56,8 @@ module sharbet::shasui {
         coin::mint(treasury_cap, amount, ctx)
     }
 
-    public(friend) fun burn(
+    // TODO: should be public(friend) in mainnet
+    public fun burn(
         treasury_cap: &mut TreasuryCap<SHASUI>,
         coin: Coin<SHASUI>,
         ctx: &mut TxContext
