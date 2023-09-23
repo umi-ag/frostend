@@ -1,14 +1,13 @@
 module math::u128 {
-    use math::u64;
+    use math::consts;
 
     const DIVIDE_BY_ZERO: u64 = 1002;
     const CALCULATION_OVERFLOW: u64 = 1003;
 
-    // 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-    public fun max_value(): u128 { 340282366920938463463374607431768211455 }
+    public fun max_value(): u128 { consts::U128_MAX() }
 
     public fun try_into_u64(x: u128): u64 {
-        assert!(x <= (max_value() as u128), CALCULATION_OVERFLOW);
+        assert!(x <= (consts::U64_MAX() as u128), CALCULATION_OVERFLOW);
         (x as u64)
     }
 
