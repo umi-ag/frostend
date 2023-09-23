@@ -28,8 +28,6 @@ module frostend::vault {
         matures_at: u64,
     }
 
-    fun init(_ctx: &TxContext) { }
-
     public fun new<X>(
         issued_at: u64,
         matures_at: u64,

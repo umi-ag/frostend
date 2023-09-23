@@ -1,16 +1,13 @@
 module frostend::pt_amm {
     use sui::balance::{Self, Balance};
     use sui::clock::{Clock};
-    use sui::tx_context::{TxContext};
-
-    use frostend::vault::{Self, Vault, PTCoin};
 
     use math::fixed_point64::{FixedPoint64};
     use math::fixedU64;
+    use frostend::vault::{Self, Vault, PTCoin};
 
     friend frostend::actions;
 
-    fun init(_ctx: &TxContext) { }
 
     /// (Y/X)^t
     public fun get_price_pt_to_sy<X>(
