@@ -53,7 +53,7 @@ module sharbet::test_actions {
                 {
                     let ctx = test::ctx(test);
 
-                    let coin_shasui = shasui::mint_for_testing(&mut treasury_shasui, 100, ctx);
+                    let coin_shasui = mint<SHASUI>(100, 8, ctx);
                     transfer::public_transfer(coin_shasui, ALICE);
                 };
                 test::return_shared(treasury_shasui);
