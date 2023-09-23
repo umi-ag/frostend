@@ -62,4 +62,10 @@ module frostend::root {
         // df::add(&mut root.id, vault::get_type_name<X>(), object::id(&vault));
         transfer::public_share_object(vault);
     }
+
+
+    #[test_only]
+    public fun init_for_testing(ctx: &mut TxContext) {
+        init(ctx);
+    }
 }
