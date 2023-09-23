@@ -1,13 +1,13 @@
 #[allow(unused_field)]
 module sharbet::unstsui {
-    use std::string::{utf8, String};
+    use std::string::{utf8};
 
     use sui::balance::{Self, Balance, Supply};
     use sui::display;
     use sui::object::{Self, UID};
     use sui::package;
     use sui::transfer;
-    use sui::tx_context::{TxContext};
+    use sui::tx_context::{Self, TxContext};
 
     friend sharbet::sha_manager;
 
@@ -17,7 +17,7 @@ module sharbet::unstsui {
     struct UnstakeTicket has key, store {
         id: UID,
         balance: Balance<UNSTSUI_COIN>,
-        unstake_timestamp: u64,
+        unstake_epoch: u64,
     }
 
     struct UnstSuiTreasuryCap has key, store {
@@ -65,13 +65,13 @@ module sharbet::unstsui {
     public(friend) fun mint(
         cap: &mut UnstSuiTreasuryCap,
         amount: u64,
-        unstake_timestamp: u64,
+        unstake_epoch: u64,
         ctx: &mut TxContext,
     ): UnstakeTicket {
         UnstakeTicket {
             id: object::new(ctx),
             balance: balance::increase_supply(&mut cap.total_supply, amount),
-            unstake_timestamp,
+            unstake_epoch,
         }
     }
 
@@ -79,11 +79,14 @@ module sharbet::unstsui {
         cap: &mut UnstSuiTreasuryCap,
         c: UnstakeTicket,
     ): u64 {
-        let UnstakeTicket { id, balance, unstake_timestamp : _ } = c;
+        let UnstakeTicket { id, balance, unstake_epoch : _ } = c;
         object::delete(id);
         balance::decrease_supply(&mut cap.total_supply, balance)
     }
 
+    public fun is_unlocked(ticket: &UnstakeTicket, ctx: &TxContext): bool {
+        ticket.unstake_epoch <= tx_context::epoch(ctx)
+    }
 
     #[test_only]
     public fun init_for_testing(ctx: &mut TxContext) {

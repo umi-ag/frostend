@@ -1,0 +1,12 @@
+[package]
+name = "third-party"
+version = "0.0.1"
+
+[dependencies]
+Frostend = {git = "https://github.com/umi-ag/frostend.git", subdir = "contracts/frostend", rev = "beta"}
+MoveStdlib = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/move-stdlib", rev = "testnet-v1.9.1", override = true}
+Sharbet = {git = "https://github.com/umi-ag/sharbet.git", subdir = "contracts/sharbet", rev = "beta"}
+Sui = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "testnet-v1.9.1", override = true}
+
+[addresses]
+third-party = "0x0"
