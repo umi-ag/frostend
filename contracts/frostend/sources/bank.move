@@ -91,34 +91,35 @@ module frostend::bank {
     fun deposit_tag<X>(
         self: &mut Bank<X>,
         balance_tag: Balance<X>,
-    )  {
+    ): Balance<SYCoin<X>>  {
         let balance_sy = mint_sy(self, balance::value(&balance_tag));
-        deposit_sy(self, balance_sy);
         balance::join(&mut self.reverse_tag, balance_tag);
+        balance_sy
     }
 
     fun withdraw_tag<X>(
         self: &mut Bank<X>,
-        amount: u64,
+        balance_sy: Balance<SYCoin<X>>,
     ): Balance<X> {
+        let amount = balance::value(&balance_sy);
         assert!(amount <= balance::value(&self.reverse_tag), E_amount_must_be_less_than_equal_bank_reserve_tag);
 
-        let balance_sy = withdraw_sy(self, amount);
         burn_sy(self, balance_sy);
         balance::split(&mut self.reverse_tag, amount)
     }
 
     public(friend) fun deposit_tag_to_mint_csy<X>(
         self: &mut Bank<X>,
-        coin_sy: Coin<X>,
+        coin_tag: Coin<X>,
         ctx: &mut TxContext,
     ): Coin<CSYCoin<X>> {
         let amount_csy = u64::mul_div(
-            coin::value(&coin_sy),
+            coin::value(&coin_tag),
             balance::supply_value(&self.supply_csy),
             balance::supply_value(&self.supply_sy),
         );
-        deposit_tag(self, coin::into_balance(coin_sy));
+        let balance_sy = deposit_tag(self, coin::into_balance(coin_tag));
+        deposit_sy(self, balance_sy);
         coin::from_balance(mint_csy(self, amount_csy), ctx)
     }
 
@@ -127,13 +128,14 @@ module frostend::bank {
         coin_csy: Coin<CSYCoin<X>>,
         ctx: &mut TxContext,
     ): Coin<X> {
-        let amount_sy = u64::mul_div(
+        let amount_tag = u64::mul_div(
             coin::value(&coin_csy),
             balance::supply_value(&self.supply_sy),
             balance::supply_value(&self.supply_csy),
         );
-        let balance_tag = withdraw_tag(self, amount_sy);
         burn_csy(self, coin::into_balance(coin_csy));
+        let balance_sy = withdraw_sy(self, amount_tag);
+        let balance_tag = withdraw_tag(self, balance_sy);
         coin::from_balance(balance_tag, ctx)
     }
 
