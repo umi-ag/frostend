@@ -140,7 +140,7 @@ const coinList: CoinProfile[] = [
     name: "NAVI Staked SUI",
     symbol: "nSUI",
     description: "NAVI Stake SUI",
-    iconUrl: "/img/coins/sui.png",
+    iconUrl: null,
     coinType: "0xnavi::navi::nSUI",
     decimals: 8,
   },
