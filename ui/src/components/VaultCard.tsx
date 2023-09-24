@@ -42,7 +42,7 @@ const Maturity: React.FC<{ vault: Vault }> = (props) => {
   return (
     <div className={`flex justify-between px-4 py-2 text-white mb-4 ${barColor}`}>
       <span>Maturity</span>
-      <span>{props.vault.maturity.toLocaleDateString()} ({remaining} days)</span>
+      <span suppressHydrationWarning>{props.vault.maturity.toLocaleDateString()} ({remaining} days)</span>
     </div>
   );
 };
@@ -128,6 +128,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = (props) => {
           ? liveClass
           : notLiveClass
       }
+      disabled={props.vault.status !== 'live'}
       onClick={goSwap}
     >
       {
