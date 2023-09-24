@@ -6,8 +6,31 @@ import { CoinIcon } from './CoinIcon';
 import { useRouter } from 'next/navigation';
 import { useTradeStore } from 'src/store/trade';
 import { getCoinProfileByCoinType } from 'src/libs/coinList';
+import { ProtocolIcon, } from './ProtocolIcon';
 
 const percent = (d: Decimal) => d.mul(100).toNumber();
+
+const VaultIcon: React.FC<{ vault: Vault }> = (props) => {
+  const syCoinProfile = getCoinProfileByCoinType(props.vault.syAssetType)!
+
+  const shouldShowProtocolIcon = () => !syCoinProfile.iconUrl;
+
+  // If syCoinProfile doesn't have `iconUrl`, then use principalAsset instead.
+  const coin = shouldShowProtocolIcon()
+    ? getCoinProfileByCoinType(props.vault.principalAssetType)!
+    : syCoinProfile;
+
+  return (
+    <div className="relative">
+      <CoinIcon coin={coin} size={50} />
+      {
+        shouldShowProtocolIcon() && <span className="absolute right-0 bottom-0">
+          <ProtocolIcon protocolName={props.vault.protocol} size={20} />
+        </span>
+      }
+    </div>
+  );
+}
 
 const CardHeader: React.FC<{ vault: Vault }> = (props) => {
   const syCoinProfile = getCoinProfileByCoinType(props.vault.syAssetType)!
@@ -16,7 +39,7 @@ const CardHeader: React.FC<{ vault: Vault }> = (props) => {
 
   return (
     <div className="flex gap-4 px-4 mb-4">
-      <CoinIcon coin={syCoinProfile} size={50} />
+      <VaultIcon vault={props.vault} />
       <div className="">
         <p className="text-left text-2xl font-bold">{syCoinProfile.symbol}</p>
         <p className="flex items-center gap-1">
@@ -42,7 +65,7 @@ const Maturity: React.FC<{ vault: Vault }> = (props) => {
   return (
     <div className={`flex justify-between px-4 py-2 text-white mb-4 ${barColor}`}>
       <span>Maturity</span>
-      <span>{props.vault.maturity.toLocaleDateString()} ({remaining} days)</span>
+      <span suppressHydrationWarning>{props.vault.maturity.toLocaleDateString()} ({remaining} days)</span>
     </div>
   );
 };
@@ -128,6 +151,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = (props) => {
           ? liveClass
           : notLiveClass
       }
+      disabled={props.vault.status !== 'live'}
       onClick={goSwap}
     >
       {

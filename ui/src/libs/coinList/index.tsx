@@ -6,6 +6,8 @@ import { SOL } from "src/libs/moveCall/coinhouse/sol/structs";
 import { USDC } from "src/libs/moveCall/coinhouse/usdc/structs";
 import { STSUI_COIN } from "../moveCall/frostend/stsui-coin/structs";
 import { PTCoinType, YTCoinType } from "../frostendLib";
+import { SSUI } from 'src/libs/moveCall/coinhouse/ssui/structs';
+import { SUSDC } from 'src/libs/moveCall/coinhouse/susdc/structs';
 
 
 export type CoinProfile = {
@@ -111,11 +113,38 @@ const coinList: CoinProfile[] = [
   },
   {
     id: "",
-    name: "Haedal Staked Volo",
+    name: "Volo Staked SUI",
     symbol: "voloSUI",
     description: "Sharbet Staked SUI",
     iconUrl: "/img/coins/volosui.png",
     coinType: "0xvolo::volo::VOLO",
+    decimals: 8,
+  },
+  {
+    id: "",
+    name: "Scallop Staked SUI",
+    symbol: "sSUI",
+    description: "Scallop Staked SUI",
+    iconUrl: "/img/coins/ssui.png",
+    coinType: SSUI.$typeName,
+    decimals: 8,
+  },
+  {
+    id: "",
+    name: "Scallop Staked USDC",
+    symbol: "sUSDC",
+    description: "Scallop Staked USDC",
+    iconUrl: "/img/coins/susdc.png",
+    coinType: SUSDC.$typeName,
+    decimals: 8,
+  },
+  {
+    id: "",
+    name: "NAVI Staked SUI",
+    symbol: "nSUI",
+    description: "NAVI Stake SUI",
+    iconUrl: null,
+    coinType: "0xnavi::navi::nSUI",
     decimals: 8,
   },
 ];

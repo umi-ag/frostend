@@ -26,8 +26,10 @@ export type VerifierInputs = {
   proof_points: string;
 };
 
+export type Protocol = "Sharbet" | "Haedal" | "Volo" | "Scallop" | "NAVI";
+
 export type Vault = {
-  protocol: "Sharbet" | "Haedal" | "Volo";
+  protocol: Protocol;
   syAssetType: string;
   ptAssetType: string;
   ytAssetType: string;

@@ -8,7 +8,7 @@ import { useTradeStore } from 'src/store/trade';
 import { match } from 'ts-pattern';
 import { whichCoinType } from '../../libs';
 import { FaucetButton } from 'src/components/FaucetButton';
-import { vaults } from 'src/store/vault';
+import { vaults } from 'src/store/vaults';
 import Decimal from 'decimal.js';
 import numeral from 'numeral';
 
