@@ -6,6 +6,8 @@ import { SOL } from "src/libs/moveCall/coinhouse/sol/structs";
 import { USDC } from "src/libs/moveCall/coinhouse/usdc/structs";
 import { STSUI_COIN } from "../moveCall/frostend/stsui-coin/structs";
 import { PTCoinType, YTCoinType } from "../frostendLib";
+import { SSUI } from 'src/libs/moveCall/coinhouse/ssui/structs';
+import { SUSDC } from 'src/libs/moveCall/coinhouse/susdc/structs';
 
 
 export type CoinProfile = {
@@ -124,7 +126,16 @@ const coinList: CoinProfile[] = [
     symbol: "sSUI",
     description: "Scallop Staked SUI",
     iconUrl: "/img/coins/ssui.png",
-    coinType: "0xscallop::scallop::sSUI",
+    coinType: SSUI.$typeName,
+    decimals: 8,
+  },
+  {
+    id: "",
+    name: "Scallop Staked USDC",
+    symbol: "sSUI",
+    description: "Scallop Staked USDC",
+    iconUrl: "/img/coins/susdc.png",
+    coinType: SUSDC.$typeName,
     decimals: 8,
   },
   {

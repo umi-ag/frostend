@@ -5,6 +5,7 @@ const nextConfig = {
     domains: [
       // 'storage.googleapis.com',
       'user-images.githubusercontent.com',
+      'assets.coingecko.com',
     ],
   },
   experimental: {
