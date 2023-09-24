@@ -10,7 +10,7 @@ export default function Layout({
   return (
     <div className="min-h-screen bg-blue-500">
       <AppBar />
-      <main className="grid place-items-center py-16">
+      <main className="p-16">
         {children}
       </main>
     </div>
