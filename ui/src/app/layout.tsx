@@ -8,7 +8,6 @@ import {
 } from '@suiet/wallet-kit';
 import { Toaster } from 'react-hot-toast';
 
-
 export default function RootLayout({
   children,
 }: {

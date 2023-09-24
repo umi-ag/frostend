@@ -14,7 +14,7 @@
   "dependencies": {
     "@mysten/kiosk": "^0.6.0",
     "@mysten/sui.js": "^0.42.0",
-    "@suiet/wallet-kit": "^0.2.18",
+    "@suiet/wallet-kit": "^0.2.19",
     "@umi-ag/sui-sdk": "^0.202308.3",
     "autoprefixer": "10.4.15",
     "crypto-js": "^4.1.1",
