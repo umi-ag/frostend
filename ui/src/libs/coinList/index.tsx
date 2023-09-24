@@ -132,7 +132,7 @@ const coinList: CoinProfile[] = [
   {
     id: "",
     name: "Scallop Staked USDC",
-    symbol: "sSUI",
+    symbol: "sUSDC",
     description: "Scallop Staked USDC",
     iconUrl: "/img/coins/susdc.png",
     coinType: SUSDC.$typeName,
