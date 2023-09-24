@@ -4,7 +4,8 @@ module frostend::pt_amm {
 
     use math::fixed_point64::{FixedPoint64};
     use math::fixedU64;
-    use frostend::vault::{Self, Vault, PTCoin};
+    use frostend::token::{PTCoin};
+    use frostend::vault::{Self, Vault};
 
     friend frostend::actions;
 

@@ -8,7 +8,8 @@ module frostend::sys_manager {
     use math::u128;
 
     use frostend::bank::{Self, Bank};
-    use frostend::vault::{Self, Vault, YTCoin};
+    use frostend::token::{YTCoin};
+    use frostend::vault::{Self, Vault};
     use frostend::pt_amm;
 
     friend frostend::actions;

@@ -9,7 +9,8 @@ module frostend::actions {
     use frostend::pt_amm;
     use frostend::sys_manager;
     use frostend::root::{Self, Root};
-    use frostend::vault::{Vault, PTCoin, YTCoin};
+    use frostend::token::{PTCoin, YTCoin};
+    use frostend::vault::{Vault};
 
     fun init(_ctx: &TxContext) { }
 

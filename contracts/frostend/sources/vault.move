@@ -7,15 +7,14 @@ module frostend::vault {
     use sui::balance::{Self, Supply, Balance};
     use sui::tx_context::{TxContext};
 
+    use frostend::token::{Self, PTCoin, YTCoin};
+
     use math::fixed_point64::{FixedPoint64};
     use math::fixedU64;
 
     friend frostend::pt_amm;
     friend frostend::sys_manager;
 
-    struct PTCoin<phantom X> has drop {}
-
-    struct YTCoin<phantom X> has drop {}
 
     struct Vault<phantom X> has key, store {
         id: UID,
@@ -38,8 +37,8 @@ module frostend::vault {
             coin_sy_reserve: balance::zero(),
             coin_pt_reserve: balance::zero(),
             coin_yt_reserve: balance::zero(),
-            coin_pt_supply: balance::create_supply( PTCoin {} ),
-            coin_yt_supply: balance::create_supply(YTCoin {}),
+            coin_pt_supply: token::create_supply_pt<X>(),
+            coin_yt_supply: token::create_supply_yt<X>(),
             issued_at,
             matures_at,
         }
