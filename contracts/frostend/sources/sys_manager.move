@@ -12,6 +12,8 @@ module frostend::sys_manager {
     use frostend::vault::{Self, Vault};
     use frostend::pt_amm;
 
+    #[test_only] use std::debug::print;
+
     friend frostend::actions;
 
     const E_issued_at_must_be_less_than_matures_at: u64 = 102;
@@ -30,6 +32,9 @@ module frostend::sys_manager {
 
         let vault = vault::new<X>(issued_at, matures_at, ctx);
         let amount_sy_to_borrow_from_bank = amount_supply - balance::value(&balance_sy);
+        // print(bank);
+        print(&vector[amount_supply, balance::value(&balance_sy)]);
+        print(&vector[451, amount_sy_to_borrow_from_bank]);
         let balance_sy_bank = bank::withdraw_sy(bank, amount_sy_to_borrow_from_bank);
         balance::join(&mut balance_sy, balance_sy_bank);
         let (balance_pt, balance_yt) = vault::mint_pt_and_yt(&mut vault, balance_sy);

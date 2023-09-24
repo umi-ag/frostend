@@ -11,7 +11,9 @@ module frostend::bank {
 
     use frostend::token::{Self, CSYCoin, SYCoin};
 
-    friend frostend::ctoken;
+    #[test_only] use std::debug::print;
+
+    friend frostend::actions;
     friend frostend::sys_manager;
 
     const E_amount_must_be_less_than_equal_bank_reserve_tag: u64 = 103;
@@ -108,18 +110,37 @@ module frostend::bank {
         balance::split(&mut self.reverse_tag, amount)
     }
 
+    public(friend) fun deposit_tag_to_mint_sy<X>(
+        self: &mut Bank<X>,
+        coin_tag: Coin<X>,
+        ctx: &mut TxContext
+    ): Coin<SYCoin<X>> {
+        let balance_sy = deposit_tag(self, coin::into_balance(coin_tag));
+        coin::from_balance(balance_sy, ctx)
+    }
+
+    public(friend) fun burn_sy_to_withdraw_tag<X>(
+        self: &mut Bank<X>,
+        coin_sy: Coin<SYCoin<X>>,
+        ctx: &mut TxContext,
+    ): Coin<X> {
+        let balance_tag = withdraw_tag(self, coin::into_balance(coin_sy));
+        coin::from_balance(balance_tag, ctx)
+    }
+
     public(friend) fun deposit_tag_to_mint_csy<X>(
         self: &mut Bank<X>,
         coin_tag: Coin<X>,
         ctx: &mut TxContext,
     ): Coin<CSYCoin<X>> {
+        let amount_tag = coin::value(&coin_tag);
+        let balance_sy = deposit_tag(self, coin::into_balance(coin_tag));
+        deposit_sy(self, balance_sy);
         let amount_csy = u64::mul_div(
-            coin::value(&coin_tag),
+            amount_tag,
             balance::supply_value(&self.supply_csy),
             balance::supply_value(&self.supply_sy),
         );
-        let balance_sy = deposit_tag(self, coin::into_balance(coin_tag));
-        deposit_sy(self, balance_sy);
         coin::from_balance(mint_csy(self, amount_csy), ctx)
     }
 
@@ -139,11 +160,26 @@ module frostend::bank {
         coin::from_balance(balance_tag, ctx)
     }
 
-    #[test_only]
-    use std::debug::print;
+    #[test_only] use sui::tx_context;
+    #[test_only] use sui::transfer;
+    #[test_only] use sui::sui::SUI;
+    #[test_only] use toolkit::test_utils::{decimals, mint};
+    #[test_only] use sui::test_utils::{assert_eq, destroy};
 
     #[test]
-    public fun test_deposit_sy() {
-        print(&114514);
+    fun test_A105_deposit(){
+        let ctx = &mut tx_context::dummy();
+        let bank = new<SUI>(ctx);
+        let coin = deposit_tag_to_mint_csy(
+            &mut bank,
+            mint<SUI>(1234, 9, ctx),
+            ctx,
+        );
+        assert_eq(
+            balance::value(&bank.reverse_sy),
+            decimals(1234, 9)
+        );
+        destroy(coin);
+        destroy(bank);
     }
 }
