@@ -7,10 +7,10 @@ module frostend::vault {
     use sui::balance::{Self, Supply, Balance};
     use sui::tx_context::{TxContext};
 
-    use frostend::token::{Self, PTCoin, YTCoin};
-
     use math::fixed_point64::{FixedPoint64};
     use math::fixedU64;
+
+    use frostend::token::{Self, SYCoin, PTCoin, YTCoin};
 
     friend frostend::pt_amm;
     friend frostend::sys_manager;
@@ -18,7 +18,7 @@ module frostend::vault {
 
     struct Vault<phantom X> has key, store {
         id: UID,
-        coin_sy_reserve: Balance<X>,
+        coin_sy_reserve: Balance<SYCoin<X>>,
         coin_pt_reserve: Balance<PTCoin<X>>,
         coin_yt_reserve: Balance<YTCoin<X>>,
         coin_pt_supply: Supply<PTCoin<X>>,
@@ -81,7 +81,7 @@ module frostend::vault {
     }
 
     public(friend) fun deposit_sy<X>(
-        balance_sy: Balance<X>,
+        balance_sy: Balance<SYCoin<X>>,
         vault: &mut Vault<X>,
     ) {
         balance::join(&mut vault.coin_sy_reserve, balance_sy);
@@ -104,7 +104,7 @@ module frostend::vault {
     public(friend) fun withdraw_sy<X>(
         amount: u64,
         vault: &mut Vault<X>,
-    ): Balance<X> {
+    ): Balance<SYCoin<X>> {
         balance::split(&mut vault.coin_sy_reserve, amount)
     }
 
@@ -151,7 +151,7 @@ module frostend::vault {
     }
 
     public(friend) fun mint_pt_and_yt<X>(
-        balance_sy: Balance<X>,
+        balance_sy: Balance<SYCoin<X>>,
         vault: &mut Vault<X>,
     ): (Balance<PTCoin<X>>, Balance<YTCoin<X>>) {
         let amount = balance::value(&balance_sy);
@@ -166,7 +166,7 @@ module frostend::vault {
         balance_pt: Balance<PTCoin<X>>,
         balance_yt: Balance<YTCoin<X>>,
         vault: &mut Vault<X>,
-    ): Balance<X> {
+    ): Balance<SYCoin<X>> {
         let amount = balance::value(&balance_pt);
 
         // TODO: Uncomment this

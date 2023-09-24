@@ -4,7 +4,7 @@ module frostend::pt_amm {
 
     use math::fixed_point64::{FixedPoint64};
     use math::fixedU64;
-    use frostend::token::{PTCoin};
+    use frostend::token::{PTCoin, SYCoin};
     use frostend::vault::{Self, Vault};
 
     friend frostend::actions;
@@ -63,7 +63,7 @@ module frostend::pt_amm {
     }
 
     public(friend) fun swap_sy_to_pt<X>(
-        balance_sy: Balance<X>,
+        balance_sy: Balance<SYCoin<X>>,
         vault: &mut Vault<X>,
         clock: &Clock,
     ): Balance<PTCoin<X>> {
@@ -82,7 +82,7 @@ module frostend::pt_amm {
         balance_pt: Balance<PTCoin<X>>,
         vault: &mut Vault<X>,
         clock: &Clock,
-    ): Balance<X> {
+    ): Balance<SYCoin<X>> {
 
         let reserve_s = fixedU64::from_u64(vault::coin_pt_reserve(vault));
         let reserve_t = fixedU64::from_u64(vault::coin_sy_reserve(vault));

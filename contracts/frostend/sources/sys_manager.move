@@ -8,7 +8,7 @@ module frostend::sys_manager {
     use math::u128;
 
     use frostend::bank::{Self, Bank};
-    use frostend::token::{YTCoin};
+    use frostend::token::{SYCoin, YTCoin};
     use frostend::vault::{Self, Vault};
     use frostend::pt_amm;
 
@@ -20,7 +20,7 @@ module frostend::sys_manager {
     public(friend) fun init_vault<X>(
         issued_at: u64,
         matures_at: u64,
-        balance_sy: Balance<X>,
+        balance_sy: Balance<SYCoin<X>>,
         amount_supply: u64,
         bank: &mut Bank<X>,
         ctx: &mut TxContext,
@@ -30,7 +30,7 @@ module frostend::sys_manager {
 
         let vault = vault::new<X>(issued_at, matures_at, ctx);
         let amount_sy_to_borrow_from_bank = amount_supply - balance::value(&balance_sy);
-        let balance_sy_bank = bank::withdraw_sy(amount_sy_to_borrow_from_bank, bank);
+        let balance_sy_bank = bank::withdraw_sy(bank, amount_sy_to_borrow_from_bank);
         balance::join(&mut balance_sy, balance_sy_bank);
         let (balance_pt, balance_yt) = vault::mint_pt_and_yt(balance_sy, &mut vault);
         vault::deposit_pt(balance_pt, &mut vault);
@@ -46,7 +46,7 @@ module frostend::sys_manager {
     /// vault.#SY += 100
     /// vault.#PT += 100
     public(friend) fun swap_sy_to_yt<X>(
-        balance_sy: Balance<X>,
+        balance_sy: Balance<SYCoin<X>>,
         vault: &mut Vault<X>,
         bank: &mut Bank<X>,
         clock: &Clock,
@@ -62,7 +62,7 @@ module frostend::sys_manager {
         ); // 100
 
         let amount_sy_to_borrow_from_bank = delta_supply - balance::value(&balance_sy); // 96
-        let balance_sy_bank = bank::withdraw_sy(amount_sy_to_borrow_from_bank, bank);
+        let balance_sy_bank = bank::withdraw_sy(bank, amount_sy_to_borrow_from_bank);
         balance::join(&mut balance_sy, balance_sy_bank); // 100
         let (balance_pt, balance_yt) = vault::mint_pt_and_yt(balance_sy, vault);
         vault::deposit_pt(balance_pt, vault);
@@ -80,7 +80,7 @@ module frostend::sys_manager {
         vault: &mut Vault<X>,
         bank: &mut Bank<X>,
         clock: &Clock,
-    ): Balance<X> {
+    ): Balance<SYCoin<X>> {
         let delta_supply = balance::value(&balance_yt); // 100
         let balance_pt = vault::withdraw_pt(delta_supply, vault);
         let balance_sy = vault::burn_pt_and_yt(balance_pt, balance_yt, vault);
@@ -96,7 +96,7 @@ module frostend::sys_manager {
             )
         );
         let balance_sy_to_repay_for_bank = balance::split(&mut balance_sy, amount_to_yan);
-        bank::deposit_sy(balance_sy_to_repay_for_bank, bank);
+        bank::deposit_sy(bank, balance_sy_to_repay_for_bank);
 
         balance_sy
     }

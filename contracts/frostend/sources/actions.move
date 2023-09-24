@@ -9,7 +9,7 @@ module frostend::actions {
     use frostend::pt_amm;
     use frostend::sys_manager;
     use frostend::root::{Self, Root};
-    use frostend::token::{PTCoin, YTCoin};
+    use frostend::token::{SYCoin, PTCoin, YTCoin};
     use frostend::vault::{Vault};
 
     fun init(_ctx: &TxContext) { }
@@ -24,7 +24,7 @@ module frostend::actions {
     public fun init_vault<X>(
         issued_at: u64,
         matures_at: u64,
-        coin_sy: Coin<X>,
+        coin_sy: Coin<SYCoin<X>>,
         amount_supply: u64,
         bank: &mut Bank<X>,
         ctx: &mut TxContext,
@@ -38,7 +38,7 @@ module frostend::actions {
     /// BANK: 1 #cSY*#cSY -> 1 #SY*$SY
     /// TODO: mint cSY
     public fun deposit<X>(
-        coin_sy: Coin<X>,
+        coin_sy: Coin<SYCoin<X>>,
         bank: &mut Bank<X>,
     ) {
         ctoken::deposit(coin::into_balance(coin_sy), bank);
@@ -50,7 +50,7 @@ module frostend::actions {
         amount: u64,
         bank: &mut Bank<X>,
         ctx: &mut TxContext,
-    ): Coin<X> {
+    ): Coin<SYCoin<X>> {
         let balance = ctoken::withdraw(amount, bank);
         coin::from_balance(balance, ctx)
     }
@@ -60,7 +60,7 @@ module frostend::actions {
     /// where curve: x^(1-t) + y^(1-t) = const.
     /// TODO: Improve Curve
     public fun swap_sy_to_pt<X>(
-        coin_sy: Coin<X>,
+        coin_sy: Coin<SYCoin<X>>,
         vault: &mut Vault<X>,
         clock: &Clock,
         ctx: &mut TxContext,
@@ -78,7 +78,7 @@ module frostend::actions {
         vault: &mut Vault<X>,
         clock: &Clock,
         ctx: &mut TxContext,
-    ): Coin<X> {
+    ): Coin<SYCoin<X>> {
         let balance_sy = pt_amm::swap_pt_to_sy(coin::into_balance(coin_pt), vault, clock);
         coin::from_balance(balance_sy, ctx)
     }
@@ -102,7 +102,7 @@ module frostend::actions {
     /// vault.#SY += 100
     /// vault.#PT += 100
     public fun swap_sy_to_yt<X>(
-        coin_sy: Coin<X>, // -dx_YAN
+        coin_sy: Coin<SYCoin<X>>, // -dx_YAN
         vault: &mut Vault<X>,
         bank: &mut Bank<X>,
         clock: &Clock,
@@ -127,7 +127,7 @@ module frostend::actions {
         bank: &mut Bank<X>,
         clock: &Clock,
         ctx: &mut TxContext,
-    ): Coin<X> {
+    ): Coin<SYCoin<X>> {
         let balance_sy = sys_manager::swap_yt_to_sy(coin::into_balance(coin_yt), vault, bank, clock);
         coin::from_balance(balance_sy, ctx)
     }
