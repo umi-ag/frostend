@@ -131,7 +131,7 @@ const coinList: CoinProfile[] = [
     name: "Scallop Staked SUI",
     symbol: "sSUI",
     description: "Scallop Staked SUI",
-    iconUrl: "/img/coins/sui.png",
+    iconUrl: "/img/coins/ssui.png",
     coinType: "0xscallop::scallop::sSUI",
     decimals: 8,
   },
