@@ -2,8 +2,8 @@
 
 [move]
 version = 0
-manifest_digest = "A33972757B542B9D12EF21C34676A168A63B39CEEA5BC938C37EA55A8107947A"
-deps_digest = "11F006D47598B87C3DADFB0AD28913F9BB3F69166D7FF762EF5E0DF215263328"
+manifest_digest = "553F659A45E4DABE56148D7EA4EA113CDBFE05F9E1DB63390439A4C0E78DF88F"
+deps_digest = "757316567F4CF495BC0E707EC0A92AC6F6E518A304C1CB047D969AAC1BD5C321"
 
 dependencies = [
   { name = "Math" },
@@ -12,6 +12,7 @@ dependencies = [
 
 dev-dependencies = [
   { name = "CoinHouse" },
+  { name = "Toolkit" },
 ]
 
 [[move.package]]
@@ -41,4 +42,12 @@ source = { git = "https://github.com/MystenLabs/sui.git", rev = "mainnet-v1.9.1"
 
 dependencies = [
   { name = "MoveStdlib" },
+]
+
+[[move.package]]
+name = "Toolkit"
+source = { local = "../toolkit" }
+
+dependencies = [
+  { name = "Sui" },
 ]

@@ -8,6 +8,7 @@ Sui = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-frame
 
 [dev-dependencies]
 CoinHouse = {local = "../coin-house"}
+Toolkit = {local = "../toolkit"}
 
 [addresses]
 frostend = "0x0"

@@ -8,5 +8,8 @@ MoveStdlib = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/su
 Sui = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "mainnet-v1.9.1", override = true}
 SuiSystem = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-system", rev = "mainnet-v1.9.1", override = true}
 
+[dev-dependencies]
+Toolkit = {local = "../toolkit"}
+
 [addresses]
 sharbet = "0x0"

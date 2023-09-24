@@ -4,7 +4,7 @@ import {
   whichCoinTypeIsSyPtYt,
 } from "src/libs/frostendLib";
 import { match } from "ts-pattern";
-import { isSHASUI } from "src/libs/moveCall/sharbet/shasui/structs";
+import { SHASUI, isSHASUI } from "src/libs/moveCall/sharbet/shasui/structs";
 import { isSUI } from "src/libs/moveCall/sui/sui/structs";
 import { sharbetMoveCall } from "src/libs/sharbetLib";
 import { isUNSTSUI } from "src/libs/moveCall/sharbet/unstsui/structs";
@@ -55,6 +55,7 @@ export const moveCallSwap = async (txb: TransactionBlock, args: {
     .with(["sy", "pt"], async () => {
       console.log("swapSyToPt", args);
       await frostendMoveCall.swapSyToPt(txb, {
+        syCoinType: SHASUI.$typeName,
         address,
         amount: BigInt(10_000),
       });
@@ -62,6 +63,7 @@ export const moveCallSwap = async (txb: TransactionBlock, args: {
     .with(["pt", "sy"], async () => {
       console.log("swapPtToSy", args);
       await frostendMoveCall.swapPtToSy(txb, {
+        syCoinType: SHASUI.$typeName,
         address,
         amount: BigInt(10_000),
       });
@@ -69,6 +71,7 @@ export const moveCallSwap = async (txb: TransactionBlock, args: {
     .with(["sy", "yt"], async () => {
       console.log("swapSyToYt", args);
       await frostendMoveCall.swapSyToYt(txb, {
+        syCoinType: SHASUI.$typeName,
         address,
         amount: BigInt(10_000),
       });
@@ -76,6 +79,7 @@ export const moveCallSwap = async (txb: TransactionBlock, args: {
     .with(["yt", "sy"], async () => {
       console.log("swapYtToSy", args);
       await frostendMoveCall.swapYtToSy(txb, {
+        syCoinType: SHASUI.$typeName,
         address,
         amount: BigInt(10_000),
       });

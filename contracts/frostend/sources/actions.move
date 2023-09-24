@@ -5,7 +5,6 @@ module frostend::actions {
     use sui::tx_context::{TxContext};
 
     use frostend::bank::{Bank};
-    use frostend::coin_utils::merge_coins;
     use frostend::ctoken;
     use frostend::pt_amm;
     use frostend::sys_manager;
@@ -24,12 +23,11 @@ module frostend::actions {
     public fun init_vault<X>(
         issued_at: u64,
         matures_at: u64,
-        coins_sy: vector<Coin<X>>,
+        coin_sy: Coin<X>,
         amount_supply: u64,
         bank: &mut Bank<X>,
         ctx: &mut TxContext,
     ): Coin<YTCoin<X>> {
-        let coin_sy = merge_coins(coins_sy, ctx);
         let balance_sy = coin::into_balance(coin_sy);
         let balance_yt = sys_manager::init_vault(issued_at, matures_at, balance_sy, amount_supply, bank, ctx);
         coin::from_balance(balance_yt, ctx)
