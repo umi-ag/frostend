@@ -74,8 +74,8 @@ module frostend::pt_amm {
         let delta_t = compute_delta_y(reserve_s, reserve_t, delta_s, t);
 
         let amount_target = fixedU64::floor(delta_t);
-        vault::deposit_sy(balance_sy, vault);
-        vault::withdraw_pt((amount_target as u64), vault)
+        vault::deposit_sy(vault, balance_sy);
+        vault::withdraw_pt(vault, (amount_target as u64))
     }
 
     public(friend) fun swap_pt_to_sy<X>(
@@ -91,7 +91,7 @@ module frostend::pt_amm {
         let delta_t = compute_delta_y(reserve_s, reserve_t, delta_s, t);
 
         let amount_target = fixedU64::floor(delta_t);
-        vault::deposit_pt(balance_pt, vault);
-        vault::withdraw_sy((amount_target as u64), vault)
+        vault::deposit_pt(vault, balance_pt);
+        vault::withdraw_sy(vault, (amount_target as u64))
     }
 }

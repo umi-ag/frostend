@@ -32,8 +32,8 @@ module frostend::sys_manager {
         let amount_sy_to_borrow_from_bank = amount_supply - balance::value(&balance_sy);
         let balance_sy_bank = bank::withdraw_sy(bank, amount_sy_to_borrow_from_bank);
         balance::join(&mut balance_sy, balance_sy_bank);
-        let (balance_pt, balance_yt) = vault::mint_pt_and_yt(balance_sy, &mut vault);
-        vault::deposit_pt(balance_pt, &mut vault);
+        let (balance_pt, balance_yt) = vault::mint_pt_and_yt(&mut vault, balance_sy);
+        vault::deposit_pt(&mut vault, balance_pt);
 
         transfer::public_share_object(vault);
 
@@ -64,8 +64,8 @@ module frostend::sys_manager {
         let amount_sy_to_borrow_from_bank = delta_supply - balance::value(&balance_sy); // 96
         let balance_sy_bank = bank::withdraw_sy(bank, amount_sy_to_borrow_from_bank);
         balance::join(&mut balance_sy, balance_sy_bank); // 100
-        let (balance_pt, balance_yt) = vault::mint_pt_and_yt(balance_sy, vault);
-        vault::deposit_pt(balance_pt, vault);
+        let (balance_pt, balance_yt) = vault::mint_pt_and_yt(vault, balance_sy);
+        vault::deposit_pt(vault, balance_pt);
 
         balance_yt
     }
@@ -82,8 +82,8 @@ module frostend::sys_manager {
         clock: &Clock,
     ): Balance<SYCoin<X>> {
         let delta_supply = balance::value(&balance_yt); // 100
-        let balance_pt = vault::withdraw_pt(delta_supply, vault);
-        let balance_sy = vault::burn_pt_and_yt(balance_pt, balance_yt, vault);
+        let balance_pt = vault::withdraw_pt(vault, delta_supply);
+        let balance_sy = vault::burn_pt_and_yt(vault, balance_pt, balance_yt);
 
         let price_pt = pt_amm::get_price_pt_to_sy(vault, clock);
 

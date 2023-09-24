@@ -81,100 +81,100 @@ module frostend::vault {
     }
 
     public(friend) fun deposit_sy<X>(
+        self: &mut Vault<X>,
         balance_sy: Balance<SYCoin<X>>,
-        vault: &mut Vault<X>,
     ) {
-        balance::join(&mut vault.coin_sy_reserve, balance_sy);
+        balance::join(&mut self.coin_sy_reserve, balance_sy);
     }
 
     public(friend) fun deposit_pt<X>(
+        self: &mut Vault<X>,
         balance_pt: Balance<PTCoin<X>>,
-        vault: &mut Vault<X>,
     ) {
-        balance::join(&mut vault.coin_pt_reserve, balance_pt);
+        balance::join(&mut self.coin_pt_reserve, balance_pt);
     }
 
     public(friend) fun deposit_yt<X>(
+        self: &mut Vault<X>,
         balance_yt: Balance<YTCoin<X>>,
-        vault: &mut Vault<X>,
     ) {
-        balance::join(&mut vault.coin_yt_reserve, balance_yt);
+        balance::join(&mut self.coin_yt_reserve, balance_yt);
     }
 
     public(friend) fun withdraw_sy<X>(
+        self: &mut Vault<X>,
         amount: u64,
-        vault: &mut Vault<X>,
     ): Balance<SYCoin<X>> {
-        balance::split(&mut vault.coin_sy_reserve, amount)
+        balance::split(&mut self.coin_sy_reserve, amount)
     }
 
     public(friend) fun withdraw_pt<X>(
+        self: &mut Vault<X>,
         amount: u64,
-        vault: &mut Vault<X>,
     ): Balance<PTCoin<X>> {
-        balance::split(&mut vault.coin_pt_reserve, amount)
+        balance::split(&mut self.coin_pt_reserve, amount)
     }
 
     public(friend) fun withdraw_yt<X>(
+        self: &mut Vault<X>,
         amount: u64,
-        vault: &mut Vault<X>,
     ): Balance<YTCoin<X>> {
-        balance::split(&mut vault.coin_yt_reserve, amount)
+        balance::split(&mut self.coin_yt_reserve, amount)
     }
 
     fun mint_pt<X>(
+        self: &mut Vault<X>,
         amount: u64,
-        vault: &mut Vault<X>,
     ): Balance<PTCoin<X>> {
-        balance::increase_supply(&mut vault.coin_pt_supply, amount)
+        balance::increase_supply(&mut self.coin_pt_supply, amount)
     }
 
     fun burn_pt<X>(
+        self: &mut Vault<X>,
         balance_pt: Balance<PTCoin<X>>,
-        vault: &mut Vault<X>,
     ) {
-        balance::decrease_supply(&mut vault.coin_pt_supply, balance_pt);
+        balance::decrease_supply(&mut self.coin_pt_supply, balance_pt);
     }
 
     fun mint_yt<X>(
+        self: &mut Vault<X>,
         amount: u64,
-        vault: &mut Vault<X>,
     ): Balance<YTCoin<X>> {
-        balance::increase_supply(&mut vault.coin_yt_supply, amount)
+        balance::increase_supply(&mut self.coin_yt_supply, amount)
     }
 
     fun burn_yt<X>(
+        self: &mut Vault<X>,
         balance_yt: Balance<YTCoin<X>>,
-        vault: &mut Vault<X>,
     ) {
-        balance::decrease_supply(&mut vault.coin_yt_supply, balance_yt);
+        balance::decrease_supply(&mut self.coin_yt_supply, balance_yt);
     }
 
     public(friend) fun mint_pt_and_yt<X>(
+        self: &mut Vault<X>,
         balance_sy: Balance<SYCoin<X>>,
-        vault: &mut Vault<X>,
     ): (Balance<PTCoin<X>>, Balance<YTCoin<X>>) {
         let amount = balance::value(&balance_sy);
-        deposit_sy(balance_sy, vault);
-        let balance_pt = mint_pt(amount, vault);
-        let balance_yt = mint_yt(amount, vault);
+        deposit_sy(self, balance_sy);
+        let balance_pt = mint_pt(self, amount);
+        let balance_yt = mint_yt(self, amount);
 
         (balance_pt, balance_yt)
     }
 
     public(friend) fun burn_pt_and_yt<X>(
+        self: &mut Vault<X>,
         balance_pt: Balance<PTCoin<X>>,
         balance_yt: Balance<YTCoin<X>>,
-        vault: &mut Vault<X>,
     ): Balance<SYCoin<X>> {
         let amount = balance::value(&balance_pt);
 
         // TODO: Uncomment this
         // assert(balance::value(&balance_yt) == amount);
 
-        burn_pt(balance_pt, vault);
-        burn_yt(balance_yt, vault);
-        withdraw_sy(amount, vault)
+        burn_pt(self, balance_pt);
+        burn_yt(self, balance_yt);
+        withdraw_sy(self, amount)
     }
 
     public fun all_is_zero<X>(
