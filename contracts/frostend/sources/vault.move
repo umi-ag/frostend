@@ -1,11 +1,13 @@
 module frostend::vault {
     use std::ascii::String;
+    use std::debug::print;
     use std::type_name;
 
     use sui::clock::{Self, Clock};
     use sui::object::{Self, UID};
     use sui::balance::{Self, Supply, Balance};
     use sui::tx_context::{TxContext};
+
 
     use math::fixed_point64::{FixedPoint64};
     use math::fixedU64;
@@ -18,11 +20,11 @@ module frostend::vault {
 
     struct Vault<phantom X> has key, store {
         id: UID,
-        coin_sy_reserve: Balance<SYCoin<X>>,
-        coin_pt_reserve: Balance<PTCoin<X>>,
-        coin_yt_reserve: Balance<YTCoin<X>>,
-        coin_pt_supply: Supply<PTCoin<X>>,
-        coin_yt_supply: Supply<YTCoin<X>>,
+        reserve_sy: Balance<SYCoin<X>>,
+        reserve_pt: Balance<PTCoin<X>>,
+        reserve_yt: Balance<YTCoin<X>>,
+        supply_pt: Supply<PTCoin<X>>,
+        supply_yt: Supply<YTCoin<X>>,
         issued_at: u64,
         matures_at: u64,
     }
@@ -34,11 +36,11 @@ module frostend::vault {
     ): Vault<X> {
         Vault {
             id: object::new(ctx),
-            coin_sy_reserve: balance::zero(),
-            coin_pt_reserve: balance::zero(),
-            coin_yt_reserve: balance::zero(),
-            coin_pt_supply: token::create_supply_pt<X>(),
-            coin_yt_supply: token::create_supply_yt<X>(),
+            reserve_sy: balance::zero(),
+            reserve_pt: balance::zero(),
+            reserve_yt: balance::zero(),
+            supply_pt: token::create_supply_pt<X>(),
+            supply_yt: token::create_supply_yt<X>(),
             issued_at,
             matures_at,
         }
@@ -49,33 +51,33 @@ module frostend::vault {
         type_name::into_string(type_name::get<Vault<X>>())
     }
 
-    public fun coin_sy_reserve<X>(
-        vault: &Vault<X>,
+    public fun reserve_sy<X>(
+        self: &Vault<X>,
     ): u64 {
-        balance::value(&vault.coin_sy_reserve)
+        balance::value(&self.reserve_sy)
     }
 
-    public fun coin_pt_reserve<X>(
-        vault: &Vault<X>,
+    public fun reserve_pt<X>(
+        self: &Vault<X>,
     ): u64 {
-        balance::value(&vault.coin_pt_reserve)
+        balance::value(&self.reserve_pt)
     }
 
     /// constrains 0 <= t <= 1
     public fun get_time_to_maturity<X>(
-        vault: &Vault<X>,
+        self: &Vault<X>,
         clock: &Clock,
     ): FixedPoint64 {
         let current_time = clock::timestamp_ms(clock);
 
-        if (current_time < vault.issued_at) {
+        if (current_time < self.issued_at) {
             fixedU64::from_u64(1)
-        } else if (current_time > vault.matures_at) {
+        } else if (current_time > self.matures_at) {
             fixedU64::from_u64(0)
         } else {
             fixedU64::div(
-                fixedU64::from_u64(current_time - vault.issued_at),
-                fixedU64::from_u64(vault.matures_at - vault.issued_at)
+                fixedU64::from_u64(current_time - self.issued_at),
+                fixedU64::from_u64(self.matures_at - self.issued_at)
             )
         }
     }
@@ -84,70 +86,70 @@ module frostend::vault {
         self: &mut Vault<X>,
         balance_sy: Balance<SYCoin<X>>,
     ) {
-        balance::join(&mut self.coin_sy_reserve, balance_sy);
+        balance::join(&mut self.reserve_sy, balance_sy);
     }
 
     public(friend) fun deposit_pt<X>(
         self: &mut Vault<X>,
         balance_pt: Balance<PTCoin<X>>,
     ) {
-        balance::join(&mut self.coin_pt_reserve, balance_pt);
+        balance::join(&mut self.reserve_pt, balance_pt);
     }
 
     public(friend) fun deposit_yt<X>(
         self: &mut Vault<X>,
         balance_yt: Balance<YTCoin<X>>,
     ) {
-        balance::join(&mut self.coin_yt_reserve, balance_yt);
+        balance::join(&mut self.reserve_yt, balance_yt);
     }
 
     public(friend) fun withdraw_sy<X>(
         self: &mut Vault<X>,
         amount: u64,
     ): Balance<SYCoin<X>> {
-        balance::split(&mut self.coin_sy_reserve, amount)
+        balance::split(&mut self.reserve_sy, amount)
     }
 
     public(friend) fun withdraw_pt<X>(
         self: &mut Vault<X>,
         amount: u64,
     ): Balance<PTCoin<X>> {
-        balance::split(&mut self.coin_pt_reserve, amount)
+        balance::split(&mut self.reserve_pt, amount)
     }
 
     public(friend) fun withdraw_yt<X>(
         self: &mut Vault<X>,
         amount: u64,
     ): Balance<YTCoin<X>> {
-        balance::split(&mut self.coin_yt_reserve, amount)
+        balance::split(&mut self.reserve_yt, amount)
     }
 
     fun mint_pt<X>(
         self: &mut Vault<X>,
         amount: u64,
     ): Balance<PTCoin<X>> {
-        balance::increase_supply(&mut self.coin_pt_supply, amount)
+        balance::increase_supply(&mut self.supply_pt, amount)
     }
 
     fun burn_pt<X>(
         self: &mut Vault<X>,
         balance_pt: Balance<PTCoin<X>>,
     ) {
-        balance::decrease_supply(&mut self.coin_pt_supply, balance_pt);
+        balance::decrease_supply(&mut self.supply_pt, balance_pt);
     }
 
     fun mint_yt<X>(
         self: &mut Vault<X>,
         amount: u64,
     ): Balance<YTCoin<X>> {
-        balance::increase_supply(&mut self.coin_yt_supply, amount)
+        balance::increase_supply(&mut self.supply_yt, amount)
     }
 
     fun burn_yt<X>(
         self: &mut Vault<X>,
         balance_yt: Balance<YTCoin<X>>,
     ) {
-        balance::decrease_supply(&mut self.coin_yt_supply, balance_yt);
+        balance::decrease_supply(&mut self.supply_yt, balance_yt);
     }
 
     public(friend) fun mint_pt_and_yt<X>(
@@ -178,12 +180,40 @@ module frostend::vault {
     }
 
     public fun all_is_zero<X>(
-        vault: &Vault<X>,
+        self: &Vault<X>,
     ): bool {
-        balance::value(&vault.coin_sy_reserve) == 0
-        && balance::value(&vault.coin_pt_reserve) == 0
-        && balance::value(&vault.coin_yt_reserve) == 0
-        && balance::supply_value(&vault.coin_pt_supply) == 0
-        && balance::supply_value(&vault.coin_yt_supply) == 0
+        balance::value(&self.reserve_sy) == 0
+        && balance::value(&self.reserve_pt) == 0
+        && balance::value(&self.reserve_yt) == 0
+        && balance::supply_value(&self.supply_pt) == 0
+        && balance::supply_value(&self.supply_yt) == 0
+    }
+
+    #[test_only] use sui::test_utils::{assert_eq, destroy};
+
+
+    #[test_only]
+    public fun assert_eq_reserve_sy<X>(self: &Vault<X>, expected: u64) {
+        assert_eq(balance::value(&self.reserve_sy), expected);
+    }
+
+    #[test_only]
+    public fun assert_eq_reserve_pt<X>(self: &Vault<X>, expected: u64) {
+        assert_eq(balance::value(&self.reserve_pt), expected);
+    }
+
+    #[test_only]
+    public fun assert_eq_reserve_yt<X>(self: &Vault<X>, expected: u64) {
+        assert_eq(balance::value(&self.reserve_yt), expected);
+    }
+
+    #[test_only]
+    public fun assert_eq_supply_pt<X>(self: &Vault<X>, expected: u64) {
+        assert_eq(balance::supply_value(&self.supply_pt), expected);
+    }
+
+    #[test_only]
+    public fun assert_eq_supply_yt<X>(self: &Vault<X>, expected: u64) {
+        assert_eq(balance::supply_value(&self.supply_yt), expected);
     }
 }

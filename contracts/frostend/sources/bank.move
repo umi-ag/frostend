@@ -15,6 +15,7 @@ module frostend::bank {
 
     friend frostend::actions;
     friend frostend::sys_manager;
+    friend frostend::pt_amm;
 
     const E_amount_must_be_less_than_equal_bank_reserve_tag: u64 = 103;
     const E_amount_must_be_less_than_equal_bank_reserve_sy: u64 = 104;
@@ -160,11 +161,29 @@ module frostend::bank {
         coin::from_balance(balance_tag, ctx)
     }
 
-    #[test_only] use sui::tx_context;
-    #[test_only] use sui::transfer;
+
     #[test_only] use sui::sui::SUI;
-    #[test_only] use toolkit::test_utils::{decimals, mint};
+    #[test_only] use sui::transfer;
+    #[test_only] use sui::tx_context;
     #[test_only] use sui::test_utils::{assert_eq, destroy};
+    #[test_only] use toolkit::test_utils::{decimals, mint};
+    #[test_only] use sui::test_scenario::{Self as test, Scenario, ctx};
+
+    #[test_only]
+    public fun create_bank<X>(test: &mut Scenario) {
+        let bank = new<SUI>(ctx(test));
+        transfer::public_share_object(bank);
+    }
+
+    #[test_only]
+    public fun deposit<X>(coin: Coin<X>, test: &mut Scenario) {
+        let bank = test::take_shared<Bank<X>>(test);
+        {
+            let coin_csy = deposit_tag_to_mint_csy(&mut bank, coin, ctx(test));
+            transfer::public_transfer(coin_csy, tx_context::sender(ctx(test)));
+        };
+        test::return_shared(bank);
+    }
 
     #[test]
     fun test_A105_deposit(){

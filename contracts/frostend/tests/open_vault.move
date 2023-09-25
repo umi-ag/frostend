@@ -13,6 +13,7 @@ module frostend::open_vault {
     use frostend::bank::{Self, Bank};
     use frostend::root::{Self, Root};
     use frostend::actions;
+    use frostend::for_testing;
 
     use coinhouse::sol::{Self, SOL};
 
@@ -23,143 +24,66 @@ module frostend::open_vault {
     fun test_E102(){
         let scenario = test::begin(@0x0);
         let test = &mut scenario;
+
+        for_testing::init_package(test);
+        test::next_tx(test, ALICE);
+        for_testing::create_bank<SUI>(test);
+        test::next_tx(test, ALICE);
         {
+            let bank = test::take_shared<Bank<SUI>>(test);
             {
-                root::init_for_testing(ctx(test));
-            };
-            test::next_tx(test, ALICE);
-            {
+                let issued_at = 1234567890123;
+                let matures_at = 123;
                 let coin = mint<SUI>(100, 9, ctx(test));
-                transfer::public_transfer(coin, ALICE);
-                let coin = mint<SOL>(100, 9, ctx(test));
-                transfer::public_transfer(coin, ALICE);
+                let amount_supply = decimals(1, 9);
+                let (coin_pt, coin_yt) = actions::init_vault(
+                    issued_at,
+                    matures_at,
+                    coin,
+                    amount_supply,
+                    &mut bank,
+                    ctx(test),
+                );
+                transfer::public_transfer(coin_pt, ALICE);
+                transfer::public_transfer(coin_yt, ALICE);
             };
-            test::next_tx(test, ALICE);
-            {
-                let root = test::take_shared<Root>(test);
-                {
-                    actions::create_bank<SUI>(&mut root, ctx(test));
-                    actions::create_bank<SOL>(&mut root, ctx(test));
-                };
-                test::return_shared(root);
-            };
-            test::next_tx(test, ALICE);
-            {
-                let bank = test::take_shared<Bank<SUI>>(test);
-                {
-                    let issued_at = 1234567890123;
-                    let matures_at = 123;
-                    let coin = mint<SUI>(100, 9, ctx(test));
-                    let amount_supply = decimals(1, 9);
-                    let ytCoin = actions::init_vault(
-                        issued_at,
-                        matures_at,
-                        coin,
-                        amount_supply,
-                        &mut bank,
-                        ctx(test),
-                    );
-                    transfer::public_transfer(ytCoin, ALICE);
-                };
-                test::return_shared(bank);
-            };
+            test::return_shared(bank);
         };
+
         test::end(scenario);
     }
 
-    #[test, expected_failure(abort_code = frostend::sys_manager::E_amount_supply_must_be_greater_than_balance_sy)]
-    fun test_E103(){
-        let scenario = test::begin(@0x0);
-        let test = &mut scenario;
-        {
-            {
-                root::init_for_testing(ctx(test));
-            };
-            test::next_tx(test, ALICE);
-            {
-                let coin = mint<SUI>(100, 9, ctx(test));
-                transfer::public_transfer(coin, ALICE);
-                let coin = mint<SOL>(100, 9, ctx(test));
-                transfer::public_transfer(coin, ALICE);
-            };
-            test::next_tx(test, ALICE);
-            {
-                let root = test::take_shared<Root>(test);
-                {
-                    actions::create_bank<SUI>(&mut root, ctx(test));
-                    actions::create_bank<SOL>(&mut root, ctx(test));
-                };
-                test::return_shared(root);
-            };
-            test::next_tx(test, ALICE);
-            {
-                let bank = test::take_shared<Bank<SUI>>(test);
-                {
-                    let issued_at = 1234567890123;
-                    let matures_at = 1239567890123;
-                    let coin = mint<SUI>(100, 9, ctx(test));
-                    let amount_supply = decimals(1, 9);
-                    let ytCoin = actions::init_vault(
-                        issued_at,
-                        matures_at,
-                        coin,
-                        amount_supply,
-                        &mut bank,
-                        ctx(test),
-                    );
-                    transfer::public_transfer(ytCoin, ALICE);
-                };
-                test::return_shared(bank);
-            };
-        };
-        test::end(scenario);
-    }
 
-    #[test, expected_failure(abort_code = frostend::bank::E_amount_must_be_less_than_equal_bank_reserve_sy)]
+    #[test, expected_failure(abort_code = frostend::pt_amm::E_amount_pt_to_provider_must_be_greater_than_amount_sy)]
     fun test_E104(){
         let scenario = test::begin(@0x0);
         let test = &mut scenario;
+
+        for_testing::init_package(test);
+        test::next_tx(test, ALICE);
+        for_testing::create_bank<SUI>(test);
+        test::next_tx(test, ALICE);
         {
+            let bank = test::take_shared<Bank<SUI>>(test);
             {
-                root::init_for_testing(ctx(test));
-            };
-            test::next_tx(test, ALICE);
-            {
+                let issued_at = 1234567890123;
+                let matures_at = 1239567890123;
                 let coin = mint<SUI>(100, 9, ctx(test));
-                transfer::public_transfer(coin, ALICE);
-                let coin = mint<SOL>(100, 9, ctx(test));
-                transfer::public_transfer(coin, ALICE);
+                let amount_supply = decimals(1_000, 9);
+                let (coin_pt, coin_yt) = actions::init_vault(
+                    issued_at,
+                    matures_at,
+                    coin,
+                    amount_supply,
+                    &mut bank,
+                    ctx(test),
+                );
+                transfer::public_transfer(coin_pt, ALICE);
+                transfer::public_transfer(coin_yt, ALICE);
             };
-            test::next_tx(test, ALICE);
-            {
-                let root = test::take_shared<Root>(test);
-                {
-                    actions::create_bank<SUI>(&mut root, ctx(test));
-                    actions::create_bank<SOL>(&mut root, ctx(test));
-                };
-                test::return_shared(root);
-            };
-            test::next_tx(test, ALICE);
-            {
-                let bank = test::take_shared<Bank<SUI>>(test);
-                {
-                    let issued_at = 1234567890123;
-                    let matures_at = 1239567890123;
-                    let coin = mint<SUI>(100, 9, ctx(test));
-                    let amount_supply = decimals(1_000, 9);
-                    let ytCoin = actions::init_vault(
-                        issued_at,
-                        matures_at,
-                        coin,
-                        amount_supply,
-                        &mut bank,
-                        ctx(test),
-                    );
-                    transfer::public_transfer(ytCoin, ALICE);
-                };
-                test::return_shared(bank);
-            };
+            test::return_shared(bank);
         };
+
         test::end(scenario);
     }
 
@@ -168,25 +92,9 @@ module frostend::open_vault {
         let scenario = test::begin(@0x0);
         let test = &mut scenario;
         {
-            {
-                root::init_for_testing(ctx(test));
-            };
+            for_testing::init_package(test);
             test::next_tx(test, ALICE);
-            {
-                let coin = mint<SUI>(100, 9, ctx(test));
-                transfer::public_transfer(coin, ALICE);
-                let coin = mint<SOL>(100, 9, ctx(test));
-                transfer::public_transfer(coin, ALICE);
-            };
-            test::next_tx(test, ALICE);
-            {
-                let root = test::take_shared<Root>(test);
-                {
-                    actions::create_bank<SUI>(&mut root, ctx(test));
-                    actions::create_bank<SOL>(&mut root, ctx(test));
-                };
-                test::return_shared(root);
-            };
+            for_testing::create_bank<SUI>(test);
             test::next_tx(test, ALICE);
             {
                 let bank = test::take_shared<Bank<SUI>>(test);
@@ -210,62 +118,45 @@ module frostend::open_vault {
     fun test_A105(){
         let scenario = test::begin(@0x0);
         let test = &mut scenario;
+
+        for_testing::init_package(test);
+        test::next_tx(test, ALICE);
+        for_testing::create_bank<SUI>(test);
+        test::next_tx(test, ALICE);
         {
+            let bank = test::take_shared<Bank<SUI>>(test);
             {
-                root::init_for_testing(ctx(test));
+                let coin_csy = actions::deposit(
+                    &mut bank,
+                    mint<SUI>(1234, 9, ctx(test)),
+                    ctx(test),
+                );
+                transfer::public_transfer(coin_csy, ALICE);
             };
-            test::next_tx(test, ALICE);
-            {
-                let coin = mint<SUI>(100, 9, ctx(test));
-                transfer::public_transfer(coin, ALICE);
-                let coin = mint<SOL>(100, 9, ctx(test));
-                transfer::public_transfer(coin, ALICE);
-            };
-            test::next_tx(test, ALICE);
-            {
-                let root = test::take_shared<Root>(test);
-                {
-                    actions::create_bank<SUI>(&mut root, ctx(test));
-                    actions::create_bank<SOL>(&mut root, ctx(test));
-                };
-                test::return_shared(root);
-            };
-            test::next_tx(test, ALICE);
-            {
-                let bank = test::take_shared<Bank<SUI>>(test);
-                {
-                    let coin_csy = actions::deposit(
-                        &mut bank,
-                        mint<SUI>(1234, 9, ctx(test)),
-                        ctx(test),
-                    );
-                    transfer::public_transfer(coin_csy, ALICE);
-                };
-                print(&vector[5600, 0]);
-                print(&bank);
-                test::return_shared(bank);
-            };
-            test::next_tx(test, ALICE);
-            {
-                let bank = test::take_shared<Bank<SUI>>(test);
-                {
-                    let issued_at = 1234567890123;
-                    let matures_at = 1239567890123;
-                    let coin = mint<SUI>(123, 9, ctx(test));
-                    let amount_supply = decimals(1234, 9);
-                    let ytCoin = actions::init_vault(
-                        issued_at,
-                        matures_at,
-                        coin,
-                        amount_supply,
-                        &mut bank,
-                        ctx(test),
-                    );
-                    transfer::public_transfer(ytCoin, ALICE);
-                };
-                test::return_shared(bank);
-            };
+            test::return_shared(bank);
         };
+        test::next_tx(test, ALICE);
+        {
+            let bank = test::take_shared<Bank<SUI>>(test);
+            {
+                let issued_at = 1234567890123;
+                let matures_at = 1239567890123;
+                let coin = mint<SUI>(1234, 9, ctx(test));
+                let amount_supply = decimals(999, 9);
+                let (coin_pt, coin_yt) = actions::init_vault(
+                    issued_at,
+                    matures_at,
+                    coin,
+                    amount_supply,
+                    &mut bank,
+                    ctx(test),
+                );
+                transfer::public_transfer(coin_pt, ALICE);
+                transfer::public_transfer(coin_yt, ALICE);
+            };
+            test::return_shared(bank);
+        };
+
         test::end(scenario);
     }
 }

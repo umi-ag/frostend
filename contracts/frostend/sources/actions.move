@@ -27,11 +27,8 @@ module frostend::actions {
         amount_supply: u64,
         bank: &mut Bank<X>,
         ctx: &mut TxContext,
-    ): Coin<YTCoin<X>> {
-        let coin_sy = bank::deposit_tag_to_mint_sy(bank,  coin_tag, ctx);
-        let balance_sy = coin::into_balance(coin_sy);
-        let balance_yt = sys_manager::init_vault(issued_at, matures_at, balance_sy, amount_supply, bank, ctx);
-        coin::from_balance(balance_yt, ctx)
+    ): (Coin<PTCoin<X>>, Coin<YTCoin<X>>) {
+        sys_manager::init_vault(issued_at, matures_at, coin_tag, amount_supply, bank, ctx)
     }
 
     /// LP: 1 #SY*$SY -> 1 #cSY*#cSY
