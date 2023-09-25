@@ -80,16 +80,11 @@ module math::fixedU64 {
         return a_raw < b_raw
     }
 
-    /// TODO: Remove this, but it's needed for now because
-    /// Unbound function 'floor' in module '(std=0x1)::fixed_point64'
     public fun floor(num: FixedPoint64): u128 {
         let raw_value = fixed_point64::get_raw_value(num);
-        let integer_part = raw_value >> 32; // Shift right to remove the fractional part
+        let integer_part = raw_value >> 64; // Shift right to remove the fractional part
         integer_part
     }
-
-    /// TODO: Remove this, but it's needed for now because
-    /// Unbound function 'floor' in module '(std=0x1)::fixed_point64'
 
     // Add 2 FixedPoint64 numers
     public fun add(a: FixedPoint64, b: FixedPoint64): FixedPoint64 {
@@ -117,7 +112,7 @@ module math::fixedU64 {
         let a_raw = fixed_point64::get_raw_value(a);
         let b_raw = fixed_point64::get_raw_value(b);
         let unscaled_res = (a_raw as u256) * (b_raw as u256);
-        let scaled_res = (unscaled_res >> 32 as u128);
+        let scaled_res = (unscaled_res >> 64 as u128);
         fixed_point64::create_from_raw_value(scaled_res)
     }
 
@@ -338,5 +333,14 @@ module math::fixedU64 {
         let (sign, ln_x) = ln(x);
         let y_times_ln_x = mul(y, ln_x);
         exp(sign, y_times_ln_x)
+    }
+
+
+    #[test_only] use sui::test_utils::{assert_eq, destroy};
+
+    #[test]
+    fun test_floor() {
+        let v = fixed_point64::create_from_rational(1000, 7);
+        assert_eq(floor(v), 142u128);
     }
 }

@@ -17,8 +17,7 @@ module frostend::swap {
     use frostend::root::{Self, Root};
     use frostend::actions;
     use frostend::for_testing;
-
-    use coinhouse::sol::{Self, SOL};
+    use frostend::sys_manager;
 
     const ALICE: address = @0xA11CE;
 
@@ -33,49 +32,26 @@ module frostend::swap {
         test::next_tx(test, ALICE);
         for_testing::create_bank<SUI>(test);
         test::next_tx(test, ALICE);
-        {
-            let bank = test::take_shared<Bank<SUI>>(test);
-            {
-                let coin_csy = actions::deposit(
-                    &mut bank,
-                    mint<SUI>(1234, 9, ctx(test)),
-                    ctx(test),
-                );
-                transfer::public_transfer(coin_csy, ALICE);
-            };
-            test::return_shared(bank);
-        };
+        bank::deposit(mint<SUI>(1234, 9, ctx(test)), test);
         test::next_tx(test, ALICE);
-        {
-            let bank = test::take_shared<Bank<SUI>>(test);
-            {
-                let (coin_pt, coin_yt) = actions::init_vault(
-                    1_600_333_444_000,
-                    1_610_333_444_000,
-                    mint<SUI>(1234, 9, ctx(test)),
-                    decimals(999, 9),
-                    &mut bank,
-                    ctx(test),
-                );
-
-                transfer::public_transfer(coin_pt, ALICE);
-                transfer::public_transfer(coin_yt, ALICE);
-            };
-            test::return_shared(bank);
-        };
+        sys_manager::create_vault(
+            mint<SUI>(1234, 9, ctx(test)),
+            decimals(999, 9),
+            test,
+        );
         test::next_tx(test, ALICE);
         {
             let bank = test::take_shared<Bank<SUI>>(test);
             let vault = test::take_shared<Vault<SUI>>(test);
             {
-                let ytCoin = actions::swap_tag_to_yt(
+                let coin_yt = actions::swap_tag_to_yt(
                     &mut bank,
                     &mut vault,
                     mint<SUI>(10, 9, ctx(test)),
                     &clock,
                     ctx(test),
                 );
-                transfer::public_transfer(ytCoin, ALICE);
+                transfer::public_transfer(coin_yt, ALICE);
             };
             test::return_shared(bank);
             test::return_shared(vault);
@@ -85,4 +61,53 @@ module frostend::swap {
         test::end(scenario);
     }
 
+    #[test]
+    fun test_swap_tag_to_yt_to_tag() {
+        let scenario = test::begin(@0x0);
+        let test = &mut scenario;
+        let clock = clock::create_for_testing(ctx(test));
+
+        for_testing::init_package(test);
+        test::next_tx(test, ALICE);
+        for_testing::create_bank<SUI>(test);
+        test::next_tx(test, ALICE);
+        bank::deposit(mint<SUI>(1234, 9, ctx(test)), test);
+        test::next_tx(test, ALICE);
+        sys_manager::create_vault(
+            mint<SUI>(1234, 9, ctx(test)),
+            decimals(999, 9),
+            test,
+        );
+        test::next_tx(test, ALICE);
+        {
+            let bank = test::take_shared<Bank<SUI>>(test);
+            let vault = test::take_shared<Vault<SUI>>(test);
+            {
+                let coin_yt = actions::swap_tag_to_yt(
+                    &mut bank,
+                    &mut vault,
+                    mint<SUI>(10, 9, ctx(test)),
+                    &clock,
+                    ctx(test),
+                );
+                print(&math::display::from_u64(&coin::value(&coin_yt)));
+
+                let coin_tag = actions::swap_yt_to_tag(
+                    &mut bank,
+                    &mut vault,
+                    coin_yt,
+                    &clock,
+                    ctx(test),
+                );
+                print(&math::display::from_u64(&coin::value(&coin_tag)));
+
+                transfer::public_transfer(coin_tag, ALICE);
+            };
+            test::return_shared(bank);
+            test::return_shared(vault);
+        };
+
+        clock::destroy_for_testing(clock);
+        test::end(scenario);
+    }
 }

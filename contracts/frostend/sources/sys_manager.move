@@ -13,8 +13,6 @@ module frostend::sys_manager {
     use frostend::vault::{Self, Vault};
     use frostend::pt_amm;
 
-    use std::debug::print;
-
     friend frostend::actions;
 
     const E_issued_at_must_be_less_than_matures_at: u64 = 102;
@@ -54,6 +52,7 @@ module frostend::sys_manager {
         clock: &Clock,
     ): Balance<YTCoin<X>> {
         let price_yt = pt_amm::get_price_yt_to_sy(vault, clock); // 4
+
         let delta_supply = u128::try_into_u64(
             fixedU64::floor(
                 fixedU64::div(
@@ -89,6 +88,8 @@ module frostend::sys_manager {
 
         let price_pt = pt_amm::get_price_pt_to_sy(vault, clock);
 
+
+
         let amount_to_yan = u128::try_into_u64(
             fixedU64::floor(
                 fixedU64::mul(
@@ -104,12 +105,35 @@ module frostend::sys_manager {
     }
 
     #[test_only] use sui::sui::SUI;
-    #[test_only] use sui::tx_context;
+    #[test_only] use sui::tx_context::{Self, sender};
     #[test_only] use sui::test_utils::{assert_eq, destroy};
     #[test_only] use toolkit::test_utils::{decimals, mint};
-    #[test_only] use sui::test_scenario::{Self as test, ctx};
+    #[test_only] use sui::test_scenario::{Self as test, Scenario, ctx};
 
     #[test_only] const ALICE: address = @0xA11CE;
+
+    #[test_only]
+    public fun create_vault<X>(
+        coin_tag: Coin<X>,
+        amount_pt_to_provide: u64,
+        test: &mut Scenario,
+    ) {
+        let bank = test::take_shared<Bank<X>>(test);
+        {
+            let (coin_pt, coin_yt) = init_vault(
+                1_600_333_444_000,
+                1_610_333_444_000,
+                coin_tag,
+                amount_pt_to_provide,
+                &mut bank,
+                ctx(test),
+            );
+
+            transfer::public_transfer(coin_pt, sender(ctx(test)));
+            transfer::public_transfer(coin_yt, sender(ctx(test)));
+        };
+        test::return_shared(bank);
+    }
 
     #[test, expected_failure(abort_code = frostend::sys_manager::E_issued_at_must_be_less_than_matures_at)]
     fun test_should_fail_matures_at() {

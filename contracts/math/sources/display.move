@@ -147,12 +147,21 @@ module math::display {
 
         // Convert integer part to ASCII and add to result vector
         let int_part = integer_part;
-        while (int_part > 0) {
-            let digit = ((int_part % 10) as u8) + 48; // using 48 as ASCII value for '0'
-            vector::push_back(&mut result, digit);
-            int_part = int_part / 10;
+        let digit_count = 0;
+        if (int_part == 0) {
+            vector::push_back(&mut result, 48); // using 48 as ASCII value for '0'
+        } else {
+            while (int_part > 0) {
+                if (digit_count > 0 && digit_count % 3 == 0) {
+                    vector::push_back(&mut result, 44); // using 44 as ASCII value for ','
+                };
+                let digit = ((int_part % 10) as u8) + 48; // using 48 as ASCII value for '0'
+                vector::push_back(&mut result, digit);
+                int_part = int_part / 10;
+                digit_count = digit_count + 1;
+            };
+            vector::reverse(&mut result);
         };
-        vector::reverse(&mut result);
 
         // Add dot
         vector::push_back(&mut result, 46); // using 46 as ASCII value for '.'
@@ -178,14 +187,23 @@ module math::display {
 
         let result = vector::empty<u8>();
 
-        // Convert integer part to ASCII and add to result vector
+        // Convert integer part to ASCII and add to result vector with comma separation
         let int_part = integer_part;
-        while (int_part > 0) {
-            let digit = ((int_part % 10) as u8) + 48; // using 48 as ASCII value for '0'
-            vector::push_back(&mut result, digit);
-            int_part = int_part / 10;
+        let digit_count = 0;
+        if (int_part == 0) {
+            vector::push_back(&mut result, 48); // using 48 as ASCII value for '0'
+        } else {
+            while (int_part > 0) {
+                if (digit_count > 0 && digit_count % 3 == 0) {
+                    vector::push_back(&mut result, 44); // using 44 as ASCII value for ','
+                };
+                let digit = ((int_part % 10) as u8) + 48; // using 48 as ASCII value for '0'
+                vector::push_back(&mut result, digit);
+                int_part = int_part / 10;
+                digit_count = digit_count + 1;
+            };
+            vector::reverse(&mut result);
         };
-        vector::reverse(&mut result);
 
         // Add dot
         vector::push_back(&mut result, 46); // using 46 as ASCII value for '.'
@@ -203,6 +221,8 @@ module math::display {
 
         ascii::string(result)
     }
+
+
 
 
     #[test_only] use std::debug::print;

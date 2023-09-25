@@ -10,7 +10,6 @@ module frostend::pt_amm {
     use frostend::token::{PTCoin, SYCoin, YTCoin};
     use frostend::vault::{Self, Vault};
 
-    use std::debug::print;
 
     friend frostend::actions;
     friend frostend::sys_manager;
@@ -22,13 +21,12 @@ module frostend::pt_amm {
         vault: &Vault<X>,
         clock: &Clock,
     ): FixedPoint64 {
-        let x = fixedU64::from_u64(vault::reserve_pt(vault));
-        let y = fixedU64::from_u64(vault::reserve_sy(vault));
+        let x = fixedU64::from_u64(vault::reserve_sy(vault));
+        let y = fixedU64::from_u64(vault::reserve_pt(vault));
         let t = vault::get_time_to_maturity(vault, clock);
 
         let r = fixedU64::powf(fixedU64::div(y, x), t);
         r
-
     }
 
     /// 1 - (Y/X)^t
@@ -104,7 +102,6 @@ module frostend::pt_amm {
         vault::deposit_pt(vault, balance_pt);
         vault::withdraw_sy(vault, (amount_target as u64))
     }
-
 
     /// VAULT:
     ///     #SY: +100
