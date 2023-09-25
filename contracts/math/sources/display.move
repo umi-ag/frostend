@@ -3,6 +3,9 @@ module math::display {
     use std::debug::print;
     use std::vector;
 
+    use std::fixed_point32::{Self, FixedPoint32};
+    use math::fixed_point64::{Self, FixedPoint64};
+
     public fun from_u64(num: u64): String {
         let num_str_bytes = vector::empty<u8>();
         let n = num;
@@ -105,6 +108,73 @@ module math::display {
         ascii::string(num_str_bytes)
     }
 
+    public fun from_fixedU32(num: FixedPoint32): String {
+        let raw_value = fixed_point32::get_raw_value(num);
+        let integer_part = raw_value >> 32;
+        let fractional_part = raw_value & 0xFFFFFFFF;
+
+        let result = vector::empty<u8>();
+
+        // Convert integer part to ASCII and add to result vector
+        let int_part = integer_part;
+        while (int_part > 0) {
+            let digit = ((int_part % 10) as u8) + 48; // using 48 as ASCII value for '0'
+            vector::push_back(&mut result, digit);
+            int_part = int_part / 10;
+        };
+        vector::reverse(&mut result);
+
+        // Add dot
+        vector::push_back(&mut result, 46); // using 46 as ASCII value for '.'
+
+        // Convert fractional part to ASCII and add to result vector
+        let frac_part = fractional_part;
+        let count = 0;
+        while (count < 32) {
+            frac_part = frac_part * 10;
+            let digit = ((frac_part >> 32) as u8) + 48; // using 48 as ASCII value for '0'
+            vector::push_back(&mut result, digit);
+            frac_part = frac_part & 0xFFFFFFFF;
+            count = count + 1;
+        };
+
+        ascii::string(result)
+    }
+
+
+    public fun from_fixedU64(num: FixedPoint64): String {
+        let raw_value = fixed_point64::get_raw_value(num);
+        let integer_part = raw_value >> 64;
+        let fractional_part = raw_value & 0xFFFFFFFFFFFFFFFF;
+
+        let result = vector::empty<u8>();
+
+        // Convert integer part to ASCII and add to result vector
+        let int_part = integer_part;
+        while (int_part > 0) {
+            let digit = ((int_part % 10) as u8) + 48; // using 48 as ASCII value for '0'
+            vector::push_back(&mut result, digit);
+            int_part = int_part / 10;
+        };
+        vector::reverse(&mut result);
+
+        // Add dot
+        vector::push_back(&mut result, 46); // using 46 as ASCII value for '.'
+
+        // Convert fractional part to ASCII and add to result vector
+        let frac_part = fractional_part;
+        let count = 0;
+        while (count < 64) {
+            frac_part = frac_part * 10;
+            let digit = ((frac_part >> 64) as u8) + 48; // using 48 as ASCII value for '0'
+            vector::push_back(&mut result, digit);
+            frac_part = frac_part & 0xFFFFFFFFFFFFFFFF;
+            count = count + 1;
+        };
+
+        ascii::string(result)
+    }
+
 
     #[test_only] use math::u64;
     #[test_only] use math::u128;
@@ -124,5 +194,17 @@ module math::display {
     #[test]
     fun test_u256() {
         print(&from_u256(u256::max_value()));
+    }
+
+    #[test]
+    fun test_fixedU32() {
+        let v = fixed_point32::create_from_rational(10, 7);
+        print(&from_fixedU32(v));
+    }
+
+    #[test]
+    fun test_fixedU64() {
+        let v = fixed_point64::create_from_rational(10, 7);
+        print(&from_fixedU64(v));
     }
 }
