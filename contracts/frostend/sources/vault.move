@@ -8,7 +8,6 @@ module frostend::vault {
     use sui::balance::{Self, Supply, Balance};
     use sui::tx_context::{TxContext};
 
-
     use math::fixed_point64::{FixedPoint64};
     use math::fixedU64;
 
@@ -69,6 +68,11 @@ module frostend::vault {
         clock: &Clock,
     ): FixedPoint64 {
         let current_time = clock::timestamp_ms(clock);
+
+        print(&vector[8900, 1]);
+        print(&math::display::from_u64(&current_time));
+        print(&math::display::from_u64(&self.issued_at));
+        print(&math::display::from_u64(&self.matures_at));
 
         if (current_time < self.issued_at) {
             fixedU64::from_u64(1)

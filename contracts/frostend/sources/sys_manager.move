@@ -121,8 +121,8 @@ module frostend::sys_manager {
         let bank = test::take_shared<Bank<X>>(test);
         {
             let (coin_pt, coin_yt) = init_vault(
-                1_600_333_444_000,
-                1_610_333_444_000,
+                1_600_000_000_000,
+                1_700_000_000_000,
                 coin_tag,
                 amount_pt_to_provide,
                 &mut bank,

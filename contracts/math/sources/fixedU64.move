@@ -3,6 +3,7 @@ This is the helper module for std::fixed_point64
 */
 module math::fixedU64 {
     use math::fixed_point64::{Self, FixedPoint64};
+    use math::u128;
 
     /// When exponent is too large
     const ERR_EXPONENT_TOO_LARGE: u64 = 0;
@@ -34,6 +35,10 @@ module math::fixedU64 {
 
     const ONE_PLUS_TEN_EXP_MINUS_9: u128 = 18446744092156295689; // fixed_point64::fraction(1000000001, 1000000000)
     const ONE_MINUS_TEN_EXP_MINUS_9: u128 = 18446744055262807542; // fixed_point64::fraction(999999999, 1000000000)
+
+    const E_devided_by_zero: u64 = 103;
+    const E_calculation_overflow: u64 = 104;
+
 
     const PRECISION: u8 = 64; // number of bits in the mantissa
 
@@ -100,6 +105,17 @@ module math::fixedU64 {
         fixed_point64::create_from_raw_value(a_raw - b_raw)
     }
 
+    // Multiple 2 FixedPoint64 numers
+    public fun mul(a: FixedPoint64, b: FixedPoint64): FixedPoint64 {
+        let a_raw = fixed_point64::get_raw_value(a);
+        let b_raw = fixed_point64::get_raw_value(b);
+        let unscaled_res = (a_raw as u256) * (b_raw as u256);
+        std::debug::print(&vector[8888999998888, 2]);
+        std::debug::print(&unscaled_res);
+        let scaled_res = (unscaled_res >> 128 as u128);
+        fixed_point64::create_from_raw_value(scaled_res)
+    }
+
     // Divide 2 FixedPoint64 numers
     public fun div(a: FixedPoint64, b: FixedPoint64): FixedPoint64 {
         let a_raw = fixed_point64::get_raw_value(a);
@@ -107,13 +123,14 @@ module math::fixedU64 {
         fixed_point64::create_from_rational(a_raw, b_raw)
     }
 
-    // Multiple 2 FixedPoint64 numers
-    public fun mul(a: FixedPoint64, b: FixedPoint64): FixedPoint64 {
+    // a * b / c
+    public fun mul_div(a: FixedPoint64, b: FixedPoint64, c: FixedPoint64): FixedPoint64 {
         let a_raw = fixed_point64::get_raw_value(a);
         let b_raw = fixed_point64::get_raw_value(b);
-        let unscaled_res = (a_raw as u256) * (b_raw as u256);
-        let scaled_res = (unscaled_res >> 64 as u128);
-        fixed_point64::create_from_raw_value(scaled_res)
+        let c_raw = fixed_point64::get_raw_value(c);
+
+        let result = u128::mul_div(a_raw, b_raw, c_raw);
+        fixed_point64::create_from_raw_value(result)
     }
 
     // Power function for FixedPoint64 numbers
@@ -180,10 +197,10 @@ module math::fixedU64 {
     }
 
     public fun exp(sign: u8, x: FixedPoint64): FixedPoint64 {
-        assert!(fixed_point64::get_raw_value(x) < TWO_POW_6_RAW, ERR_EXPONENT_TOO_LARGE);
+        // assert!(fixed_point64::get_raw_value(x) < TWO_POW_6_RAW, ERR_EXPONENT_TOO_LARGE);
         let result;
         if (fixed_point64::get_raw_value(x) == 0) {
-            result = from_u64(1);
+            result = from_u64(1)
         } else if (sign == 0) {
             result = div(from_u64(1), exp(1, x));
         } else if (fixed_point64::get_raw_value(x) == ONE_RAW) {
@@ -191,87 +208,20 @@ module math::fixedU64 {
         } else {
             result = from_u64(1);
 
-            if (fixed_point64::get_raw_value(x) >= TWO_POW_5_RAW) {
-                x = sub(x, fixed_point64::create_from_u128(TWO_POW_5_RAW));
-                result = mul(result, fixed_point64::create_from_u128(EXP_32_RAW));
-            };
-            if (fixed_point64::get_raw_value(x) >= TWO_POW_4_RAW) {
-                x = sub(x, fixed_point64::create_from_u128(TWO_POW_4_RAW));
-                result = mul(result, fixed_point64::create_from_u128(EXP_16_RAW));
-            };
-            if (fixed_point64::get_raw_value(x) >= TWO_POW_3_RAW) {
-                x = sub(x, fixed_point64::create_from_u128(TWO_POW_3_RAW));
-                result = mul(result, fixed_point64::create_from_u128(EXP_8_RAW));
-            };
-            if (fixed_point64::get_raw_value(x) >= TWO_POW_2_RAW) {
-                x = sub(x, fixed_point64::create_from_u128(TWO_POW_2_RAW));
-                result = mul(result, fixed_point64::create_from_u128(EXP_4_RAW));
-            };
-            if (fixed_point64::get_raw_value(x) >= TWO_RAW) {
-                x = sub(x, fixed_point64::create_from_u128(TWO_RAW));
-                result = mul(result, fixed_point64::create_from_u128(EXP_2_RAW));
-            };
-            if (fixed_point64::get_raw_value(x) >= ONE_RAW) {
-                x = sub(x, fixed_point64::create_from_u128(ONE_RAW));
-                result = mul(result, fixed_point64::create_from_u128(EXP_1_RAW));
-            };
-            if (fixed_point64::get_raw_value(x) >= TWO_POW_NEG_1_RAW) {
-                x = sub(x, fixed_point64::create_from_u128(TWO_POW_NEG_1_RAW));
-                result = mul(result, fixed_point64::create_from_u128(EXP_1_OVER_2_RAW));
-            };
-            if (fixed_point64::get_raw_value(x) >= TWO_POW_NEG_2_RAW) {
-                x = sub(x, fixed_point64::create_from_u128(TWO_POW_NEG_2_RAW));
-                result = mul(result, fixed_point64::create_from_u128(EXP_1_OVER_4_RAW));
-            };
-            if (fixed_point64::get_raw_value(x) >= TWO_POW_NEG_3_RAW) {
-                x = sub(x, fixed_point64::create_from_u128(TWO_POW_NEG_3_RAW));
-                result = mul(result, fixed_point64::create_from_u128(EXP_1_OVER_8_RAW));
-            };
-            if (fixed_point64::get_raw_value(x) >= TWO_POW_NEG_4_RAW) {
-                x = sub(x, fixed_point64::create_from_u128(TWO_POW_NEG_4_RAW));
-                result = mul(result, fixed_point64::create_from_u128(EXP_1_OVER_16_RAW));
-            };
+            let term = from_u64(1);
+            let factorial = from_u64(1);
+            let n = from_u64(1);
 
-            // now, x is in the range [0, e^{1/16})
-            // if x is 0, we can directly return
-            // otherwise, use Taylor series expansion for e^x: 1 + x + (x^2 / 2!) + (x^3 / 3!) + ... + (x^n / n!).
-
-            if (fixed_point64::get_raw_value(x) != 0) {
-                let term = x;
-                let series_sum = from_u64(1);
-                series_sum = add(series_sum, term);
-
-                term = div(mul(term, x), from_u64(2));
-                series_sum = add(series_sum, term);
-
-                term = div(mul(term, x), from_u64(3));
-                series_sum = add(series_sum, term);
-
-                term = div(mul(term, x), from_u64(4));
-                series_sum = add(series_sum, term);
-
-                term = div(mul(term, x), from_u64(5));
-                series_sum = add(series_sum, term);
-
-                term = div(mul(term, x), from_u64(6));
-                series_sum = add(series_sum, term);
-
-                term = div(mul(term, x), from_u64(7));
-                series_sum = add(series_sum, term);
-
-                term = div(mul(term, x),from_u64(8));
-                series_sum = add(series_sum, term);
-
-                result = mul(result, series_sum);
+            let iteration_limit = from_u64(10); // Iterate 10 times for approximation
+            while (lt(n, iteration_limit)) {
+                term = mul(term, x);
+                factorial = mul(factorial, n);
+                result = add(result, div(term, factorial));
+                n = add(n, from_u64(1));
             };
         };
-        result
-    }
 
-    spec exp {
-        // opaque is required for recursive function
-        // otherwise move prover will complain even if we don't prove anything here
-        pragma opaque;
+        result
     }
 
     public fun powf(x: FixedPoint64, y: FixedPoint64): FixedPoint64 {
@@ -336,11 +286,44 @@ module math::fixedU64 {
     }
 
 
+    #[test_only] use std::debug::print;
     #[test_only] use sui::test_utils::{assert_eq, destroy};
 
     #[test]
     fun test_floor() {
         let v = fixed_point64::create_from_rational(1000, 7);
         assert_eq(floor(v), 142u128);
+    }
+
+    #[test]
+    fun test_muxx() {
+        let xx = mul(
+            from_u64(10),
+            from_u64(7),
+        );
+        let yy = div(
+            xx,
+            from_u64(3),
+        );
+        print(&yy);
+        // assert_eq(floor(v), 142u128);
+    }
+
+    #[test]
+    fun test_mul_div() {
+        let v = mul_div(
+            from_u64(10),
+            from_u64(7),
+            from_u64(3),
+        );
+        print(&v);
+        // assert_eq(floor(v), 142u128);
+    }
+
+    #[test]
+    fun test_exp() {
+        let t = exp(1, from_u64(2));
+        print(&vector[1245,88]);
+        print(&math::display::from_fixedU64(&t));
     }
 }

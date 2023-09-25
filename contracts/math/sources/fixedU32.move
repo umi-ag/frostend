@@ -60,13 +60,6 @@ module math::fixedU32 {
         fixed_point32::create_from_raw_value(a_raw - b_raw)
     }
 
-    // Divide 2 FixedPoint32 numers
-    public fun div(a: FixedPoint32, b: FixedPoint32): FixedPoint32 {
-        let a_raw = fixed_point32::get_raw_value(a);
-        let b_raw = fixed_point32::get_raw_value(b);
-        fixed_point32::create_from_rational(a_raw, b_raw)
-    }
-
     // Multiple 2 FixedPoint32 numers
     public fun mul(a: FixedPoint32, b: FixedPoint32): FixedPoint32 {
         let a_raw = fixed_point32::get_raw_value(a);
@@ -76,6 +69,13 @@ module math::fixedU32 {
         fixed_point32::create_from_raw_value(scaled_res)
     }
 
+
+    // Divide 2 FixedPoint32 numers
+    public fun div(a: FixedPoint32, b: FixedPoint32): FixedPoint32 {
+        let a_raw = fixed_point32::get_raw_value(a);
+        let b_raw = fixed_point32::get_raw_value(b);
+        fixed_point32::create_from_rational(a_raw, b_raw)
+    }
     // Power function for FixedPoint32 numbers
     public fun powi(base: FixedPoint32, exponent: u64): FixedPoint32 {
         let result = from_u64(1);

@@ -1,10 +1,11 @@
 [package]
 name = "Math"
-published-at = "0x7d585a32d020760c3f3118b49b01308e0066d6997d0ee54d78551f6e4a93e106"
+# published-at = "0x7d585a32d020760c3f3118b49b01308e0066d6997d0ee54d78551f6e4a93e106"
 version = "0.0.1"
 
 [dependencies]
 Sui = {git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "mainnet-v1.9.1"}
 
 [addresses]
-math = "0x7d585a32d020760c3f3118b49b01308e0066d6997d0ee54d78551f6e4a93e106"
+# math = "0x7d585a32d020760c3f3118b49b01308e0066d6997d0ee54d78551f6e4a93e106"
+math = "0x0"

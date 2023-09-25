@@ -110,4 +110,46 @@ module frostend::swap {
         clock::destroy_for_testing(clock);
         test::end(scenario);
     }
+
+    #[test]
+    fun test_swap_tag_to_pt() {
+        let scenario = test::begin(@0x0);
+        let test = &mut scenario;
+        let clock = clock::create_for_testing(ctx(test));
+        clock::set_for_testing(&mut clock, 1_620_000_000_000);
+        print(&clock);
+
+        for_testing::init_package(test);
+        test::next_tx(test, ALICE);
+        for_testing::create_bank<SUI>(test);
+        test::next_tx(test, ALICE);
+        bank::deposit(mint<SUI>(1234, 9, ctx(test)), test);
+        test::next_tx(test, ALICE);
+        sys_manager::create_vault(
+            mint<SUI>(1234, 9, ctx(test)),
+            decimals(999, 9),
+            test,
+        );
+        test::next_tx(test, ALICE);
+        {
+            let bank = test::take_shared<Bank<SUI>>(test);
+            let vault = test::take_shared<Vault<SUI>>(test);
+            {
+                let coin_pt = actions::swap_tag_to_pt(
+                    &mut bank,
+                    &mut vault,
+                    mint<SUI>(56, 9, ctx(test)),
+                    &clock,
+                    ctx(test),
+                );
+                transfer::public_transfer(coin_pt, ALICE);
+            };
+            test::return_shared(bank);
+            test::return_shared(vault);
+        };
+
+        clock::destroy_for_testing(clock);
+        test::end(scenario);
+    }
+
 }
