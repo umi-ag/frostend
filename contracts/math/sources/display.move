@@ -1,21 +1,51 @@
+#[allow(unused_function)]
 module math::display {
     use std::ascii::{Self, String};
-    use std::debug::print;
+    use std::type_name;
     use std::vector;
 
     use std::fixed_point32::{Self, FixedPoint32};
     use math::fixed_point64::{Self, FixedPoint64};
 
-    public fun from_u64(num: u64): String {
+    fun get_type_name<X>(): String {
+        type_name::into_string(type_name::get<X>())
+    }
+
+    fun are_strings_equal(s1: &String, s2: &String): bool {
+        let len1 = ascii::length(s1);
+        let len2 = ascii::length(s2);
+
+        if (len1 != len2) {
+            return false
+        };
+
+        let i = 0;
+        while (i < len1) {
+            let byte1 = *vector::borrow(ascii::as_bytes(s1), i);
+            let byte2 = *vector::borrow(ascii::as_bytes(s2), i);
+            if (byte1 != byte2) {
+                return false
+            };
+            i = i + 1;
+        };
+
+        true
+    }
+
+    fun are_types_equal<X, Y>(): bool {
+        are_strings_equal(&get_type_name<X>(), &get_type_name<Y>())
+    }
+
+    public fun from_u64(num: &u64): String {
         let num_str_bytes = vector::empty<u8>();
-        let n = num;
+        let n = *num;
         let ten = 10;
         let count = 0;
 
         // Handle zero explicitly
         if (n == 0) {
             vector::push_back(&mut num_str_bytes, 0x30); // ASCII for '0'
-            return ascii::string(num_str_bytes);
+            return ascii::string(num_str_bytes)
         };
 
         // Convert the number to ASCII representation with commas
@@ -42,15 +72,15 @@ module math::display {
         ascii::string(num_str_bytes)
     }
 
-    public fun from_u128(num: u128): String {
+    public fun from_u128(num: &u128): String {
         let num_str_bytes = vector::empty<u8>();
-        let n = num;
+        let n = *num;
         let ten = 10;
         let count = 0;
 
         if (n == 0) {
             vector::push_back(&mut num_str_bytes, 0x30);
-            return ascii::string(num_str_bytes);
+            return ascii::string(num_str_bytes)
         };
 
         while (n > 0) {
@@ -75,15 +105,15 @@ module math::display {
         ascii::string(num_str_bytes)
     }
 
-    public fun from_u256(num: u256): String {
+    public fun from_u256(num: &u256): String {
         let num_str_bytes = vector::empty<u8>();
-        let n = num;
+        let n = *num;
         let ten = 10;
         let count = 0;
 
         if (n == 0) {
             vector::push_back(&mut num_str_bytes, 0x30);
-            return ascii::string(num_str_bytes);
+            return ascii::string(num_str_bytes)
         };
 
         while (n > 0) {
@@ -108,8 +138,8 @@ module math::display {
         ascii::string(num_str_bytes)
     }
 
-    public fun from_fixedU32(num: FixedPoint32): String {
-        let raw_value = fixed_point32::get_raw_value(num);
+    public fun from_fixedU32(num: &FixedPoint32): String {
+        let raw_value = fixed_point32::get_raw_value(*num);
         let integer_part = raw_value >> 32;
         let fractional_part = raw_value & 0xFFFFFFFF;
 
@@ -141,9 +171,8 @@ module math::display {
         ascii::string(result)
     }
 
-
-    public fun from_fixedU64(num: FixedPoint64): String {
-        let raw_value = fixed_point64::get_raw_value(num);
+    public fun from_fixedU64(num: &FixedPoint64): String {
+        let raw_value = fixed_point64::get_raw_value(*num);
         let integer_part = raw_value >> 64;
         let fractional_part = raw_value & 0xFFFFFFFFFFFFFFFF;
 
@@ -176,35 +205,36 @@ module math::display {
     }
 
 
+    #[test_only] use std::debug::print;
     #[test_only] use math::u64;
     #[test_only] use math::u128;
     #[test_only] use math::u256;
 
     #[test]
     fun test_u64() {
-        print(&from_u64(114514));
-        print(&from_u64(u64::max_value()));
+        print(&from_u64(&114514));
+        print(&from_u64(&u64::max_value()));
     }
 
     #[test]
     fun test_u128() {
-        print(&from_u128(u128::max_value()));
+        print(&from_u128(&u128::max_value()));
     }
 
     #[test]
     fun test_u256() {
-        print(&from_u256(u256::max_value()));
+        print(&from_u256(&u256::max_value()));
     }
 
     #[test]
     fun test_fixedU32() {
         let v = fixed_point32::create_from_rational(10, 7);
-        print(&from_fixedU32(v));
+        print(&from_fixedU32(&v));
     }
 
     #[test]
     fun test_fixedU64() {
         let v = fixed_point64::create_from_rational(10, 7);
-        print(&from_fixedU64(v));
+        print(&from_fixedU64(&v));
     }
 }
