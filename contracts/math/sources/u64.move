@@ -14,4 +14,25 @@ module math::u64 {
         let res = u128::mul_div(a, b, c);
         u128::try_into_u64(res)
     }
+
+    public fun powi(base: u64, exp: u8): u64 {
+        let result = 1;
+        while (exp > 0) {
+            if ((exp & 1) == 1) {
+                result = result * base;
+            };
+            exp = exp >> 1;
+            base = base *base;
+        };
+        result
+    }
+
+    #[test_only] use sui::test_utils::{assert_eq};
+
+    #[test]
+    fun test_powi() {
+        let actual = powi(2, 3);
+        let exppcted = 8;
+        assert_eq(actual, exppcted);
+    }
 }

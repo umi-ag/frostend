@@ -93,7 +93,7 @@ module math::fixedU32 {
     }
 
     // Power function for FixedPoint32 base and FixedPoint32 exponent
-    public fun powf(base: FixedPoint32, exponent: FixedPoint32): FixedPoint32 {
+    public fun powfp(base: FixedPoint32, exponent: FixedPoint32): FixedPoint32 {
         let ln_base = ln_approx(base);
         let exponent_times_ln_base = mul(exponent, ln_base);
         let result = exp_approx(exponent_times_ln_base);

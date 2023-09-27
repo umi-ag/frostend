@@ -169,6 +169,10 @@ module math::fixed_point64 {
         ensures result.value == value;
     }
 
+    public fun raw_value(num: &FixedPoint64): &u128 {
+        &num.value
+    }
+
     /// Accessor for the raw u128 value. Other less common operations, such as
     /// adding or subtracting FixedPoint64 values, can be done using the raw
     /// values directly.

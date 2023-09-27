@@ -252,29 +252,10 @@ module math::display {
 
     #[test]
     fun test_u64() {
-        print(&format_u64_pretty(&114514));
-        print(&u64::max_value());
-        print(&format_u64(&u64::max_value()));
         assert_eq(
             ascii::into_bytes( format_u64(&u64::max_value())),
             b"18446744073709551615"
         );
-    }
-
-    #[test]
-    fun test_u128() {
-        print(&from_u128(&u128::max_value()));
-    }
-
-    #[test]
-    fun test_u256() {
-        print(&from_u256(&u256::max_value()));
-    }
-
-    #[test]
-    fun test_fixedU32() {
-        let v = fixed_point32::create_from_rational(10, 7);
-        print(&from_fixedU32(&v));
     }
 
     #[test]

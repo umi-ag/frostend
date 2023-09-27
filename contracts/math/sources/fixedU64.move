@@ -2,6 +2,9 @@
 This is the helper module for std::fixed_point64
 */
 module math::fixedU64 {
+    use std::vector;
+    use std::ascii::{Self, String};
+
     use math::fixed_point64::{Self, FixedPoint64, floor, round};
     use math::u128;
     use math::u64;
@@ -56,11 +59,8 @@ module math::fixedU64 {
     public fun PI(): FixedPoint64 {
         fixed_point64::create_from_rational(
             314_159_265_358_979_323_846_264_338_327_950_288,
-
             100_000_000_000_000_000_000_000_000_000_000_000,
         )
-        // 314_159_265_358_979_323_846_264_338_327_950_288,
-        // 010_000_000_000_000_000_000_000_000_000_000_000,
     }
 
     // Euler_s number (e)
@@ -126,23 +126,55 @@ module math::fixedU64 {
         fixed_point64::create_from_raw_value(a_raw - b_raw)
     }
 
-    // Multiple 2 FixedPoint64 numers
-    public fun mul(a: FixedPoint64, b: FixedPoint64): FixedPoint64 {
+   // Multiple 2 FixedPoint64 numers
+    public fun d_mul(a: FixedPoint64, b: FixedPoint64): FixedPoint64 {
         let a_raw = fixed_point64::get_raw_value(a);
         let b_raw = fixed_point64::get_raw_value(b);
         let unscaled_res = (a_raw as u256) * (b_raw as u256);
         std::debug::print(&vector[8888999998888, 2]);
         std::debug::print(&unscaled_res);
-        let scaled_res = (unscaled_res >> 128 as u128);
+        let scaled_res = (unscaled_res >> 64 as u128);
         fixed_point64::create_from_raw_value(scaled_res)
     }
 
+    public fun mul(a: FixedPoint64, b: FixedPoint64): FixedPoint64 {
+        let a_raw = fixed_point64::get_raw_value(a);
+        let b_raw = fixed_point64::get_raw_value(b);
+        let a_shift = a_raw >> 32;
+        let b_shift = b_raw >> 32;
+        let a_low_32 = a_raw - a_shift * TWO_POW_32;
+        let b_low_32 = b_raw - b_shift * TWO_POW_32;
+
+        let v =
+            u128::checked_mul(a_shift, b_shift) + (u128::checked_mul(a_shift, b_low_32) >> 32) + (u128::checked_mul(b_shift, a_low_32) >> 32);
+
+        fixed_point64::create_from_raw_value(v)
+    }
+
     // Divide 2 FixedPoint64 numers
-    public fun div(a: FixedPoint64, b: FixedPoint64): FixedPoint64 {
+    public fun d_div(a: FixedPoint64, b: FixedPoint64): FixedPoint64 {
         let a_raw = fixed_point64::get_raw_value(a);
         let b_raw = fixed_point64::get_raw_value(b);
         fixed_point64::create_from_rational(a_raw, b_raw)
     }
+
+//    /// Divide a `FixedPoint64` by a `FixedPoint64`, returning a `FixedPoint64`.
+    /// To avoid overflow, the result must be smaller than MAX_U64
+    public fun div(a: FixedPoint64, b: FixedPoint64): FixedPoint64 {
+        let a_raw = fixed_point64::get_raw_value(a);
+        let b_raw = fixed_point64::get_raw_value(b);
+        let b_shift = b_raw >> 32;
+        assert!(b_shift != 0, E_divisor_result_too_small);
+
+        let result = a_raw / b_shift;
+        // make sure result << 32 won't overflow
+        assert!(result >> 96 == 0, E_divide_result_too_large);
+        let v = result << 32;
+
+        fixed_point64::create_from_raw_value(v)
+    }
+
+
 
     // a * b / c
     public fun mul_div(a: FixedPoint64, b: FixedPoint64, c: FixedPoint64): FixedPoint64 {
@@ -154,18 +186,52 @@ module math::fixedU64 {
         fixed_point64::create_from_raw_value(result)
     }
 
-    // Power function for FixedPoint64 numbers
-    public fun powi(base: FixedPoint64, exponent: u64): FixedPoint64 {
-        let result = from_u64(1);
-        let current_exponent = exponent;
-        let current_base = base;
+    public fun dbg_mul(a: FixedPoint64, b: FixedPoint64): FixedPoint64 {
+        let a_raw = fixed_point64::get_raw_value(a);
+        let b_raw = fixed_point64::get_raw_value(b);
+        let a_shift = a_raw >> 32;
+        let b_shift = b_raw >> 32;
+        let a_low_32 = a_raw - a_shift * TWO_POW_32;
+        let b_low_32 = b_raw - b_shift * TWO_POW_32;
 
-        while (current_exponent > 0) {
-            if (current_exponent % 2 == 1) {
-            result = mul(result, current_base);
+        let v =
+            u128::checked_mul(a_shift, b_shift)
+            + (u128::checked_mul(a_shift, b_low_32) >> 32)
+            + (u128::checked_mul(b_shift, a_low_32) >> 32);
+
+        fixed_point64::create_from_raw_value(v)
+    }
+
+    /// Divide a `FixedPoint64` by a `FixedPoint64`, returning a `FixedPoint64`.
+    /// To avoid overflow, the result must be smaller than MAX_U64
+    public fun dbg_div(a: FixedPoint64, b: FixedPoint64): FixedPoint64 {
+        let a_raw = fixed_point64::get_raw_value(a);
+        let b_raw = fixed_point64::get_raw_value(b);
+        let b_shift = b_raw >> 32;
+        assert!(b_shift != 0, E_divisor_result_too_small);
+
+        let result = a_raw / b_shift;
+        // make sure result << 32 won't overflow
+        assert!(result >> 96 == 0, E_divide_result_too_large);
+        let v = result << 32;
+
+        fixed_point64::create_from_raw_value(v)
+    }
+
+    public fun powi(base: FixedPoint64, exponent: u8): FixedPoint64 {
+        if (exponent == 0) {
+            return from_u64(1)
+        };
+        let result = base;
+        let exp = exponent;
+        while (exp > 1) {
+            if (exp % 2 == 0) {
+                result = mul(result, result);
+                exp = exp / 2;
+            } else {
+                result = mul(base, mul(result, result));
+                exp = (exp - 1) / 2;
             };
-            current_base = mul(current_base, current_base);
-            current_exponent = current_exponent / 2;
         };
         result
     }
@@ -205,7 +271,12 @@ module math::fixedU64 {
             i = i + 1;
         };
 
-        let result = if (sign > 0) { fixed_point64::create_from_u128(y) } else { fixed_point64::create_from_u128(y_negative - y) };
+        // let result = if (sign > 0) { fixed_point64::create_from_u128(y) } else { fixed_point64::create_from_u128(y_negative - y) };
+        let result = if (sign > 0) {
+            fixed_point64::create_from_raw_value(y)
+        } else {
+            fixed_point64::create_from_raw_value(y_negative - y)
+        };
 
         (sign, result)
     }
@@ -213,10 +284,11 @@ module math::fixedU64 {
     public fun ln(x: FixedPoint64): (u8, FixedPoint64) {
         // ln(x) = log_2(x) / log_2(e)
         let (sign, result) = log2(x);
-        result = mul(result, fixed_point64::create_from_u128(LOG_2_E_INV_RAW));
+        result = mul(result, fixed_point64::create_from_raw_value(LOG_2_E_INV_RAW));
         (sign, result)
     }
 
+    const ITERATION: u8 = 20;
     public fun exp(sign: u8, x: FixedPoint64): FixedPoint64 {
         // assert!(fixed_point64::get_raw_value(x) < TWO_POW_6_RAW, ERR_EXPONENT_TOO_LARGE);
         let result;
@@ -233,7 +305,7 @@ module math::fixedU64 {
             let factorial = from_u64(1);
             let n = from_u64(1);
 
-            let iteration_limit = from_u64(10); // Iterate 10 times for approximation
+            let iteration_limit = from_u64((ITERATION as u64));
             while (lt(n, iteration_limit)) {
                 term = mul(term, x);
                 factorial = mul(factorial, n);
@@ -245,13 +317,10 @@ module math::fixedU64 {
         result
     }
 
-    public fun powf(x: FixedPoint64, y: FixedPoint64): FixedPoint64 {
-        let (success, result) = try_simple_pow(x, y);
-        if (success) {
-            result
-        } else {
-            pow_internal(x, y)
-        }
+    public fun powfp(x: FixedPoint64, y: FixedPoint64): FixedPoint64 {
+        let (sign, ln_x) = ln(x);
+        let y_ln_x = mul(y, ln_x);
+        exp(sign, y_ln_x)
     }
 
     /// pow_up multiplies pow result by (1 + 10^-9) if numerical approximation is used in pow
@@ -308,7 +377,7 @@ module math::fixedU64 {
 
 
     #[test_only] use std::debug::print;
-    #[test_only] use sui::test_utils::{Self as test, destroy};
+    #[test_only] use sui::test_utils::{Self as test};
 
     #[test_only]
     public fun assert_eq(actual: &FixedPoint64, expected: &FixedPoint64) {
@@ -328,38 +397,31 @@ module math::fixedU64 {
     #[test]
     fun test_floor() {
         let v = fixed_point64::create_from_rational(1000, 7);
-        assert_eq(floor(v), 142u128);
+        test::assert_eq(floor(v), 142u128);
     }
 
     #[test]
-    fun test_muxx() {
-        let xx = mul(
-            from_u64(10),
-            from_u64(7),
+    fun test_div_and_mul() {
+        let v = mul(
+            div(
+                from_u64(100),
+                from_u64(7),
+            ),
+            from_u64(13),
         );
-        let yy = div(
-            xx,
-            from_u64(3),
-        );
-        print(&yy);
-        // assert_eq(floor(v), 142u128);
+        test::assert_eq(floor(v), 185u128);
     }
 
-    #[test]
-    fun test_mul_div() {
-        let v = mul_div(
-            from_u64(10),
-            from_u64(7),
-            from_u64(3),
-        );
-        print(&v);
-        // assert_eq(floor(v), 142u128);
-    }
 
     #[test]
-    fun test_exp() {
-        let t = exp(1, from_u64(2));
-        print(&vector[1245,88]);
-        print(&math::display::from_fixedU64(&t));
+    fun test_powi() {
+        let res = powi(from_u64(2), 3);
+        print(&math::display::format_fixedU64_pretty(&res));
+
+        assert_eq_precision(
+            &powi(from_u64(2), 3),
+            &from_u64(8),
+            12,
+        );
     }
 }
