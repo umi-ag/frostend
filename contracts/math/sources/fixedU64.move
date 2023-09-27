@@ -2,8 +2,9 @@
 This is the helper module for std::fixed_point64
 */
 module math::fixedU64 {
-    use math::fixed_point64::{Self, FixedPoint64};
+    use math::fixed_point64::{Self, FixedPoint64, floor, round};
     use math::u128;
+    use math::u64;
 
     /// When exponent is too large
     const ERR_EXPONENT_TOO_LARGE: u64 = 0;
@@ -36,18 +37,38 @@ module math::fixedU64 {
     const ONE_PLUS_TEN_EXP_MINUS_9: u128 = 18446744092156295689; // fixed_point64::fraction(1000000001, 1000000000)
     const ONE_MINUS_TEN_EXP_MINUS_9: u128 = 18446744055262807542; // fixed_point64::fraction(999999999, 1000000000)
 
+
     const E_devided_by_zero: u64 = 103;
     const E_calculation_overflow: u64 = 104;
+    const E_divisor_result_too_small: u64 = 105;
+    const E_divide_result_too_large: u64 = 106;
 
+    /// 2^64 == 1 << 64
+    const TWO_POW_64: u128 = 1 << 64;
+
+    /// 2^32 == 1 << 32
+    const TWO_POW_32: u128 = 1 << 32;
 
     const PRECISION: u8 = 64; // number of bits in the mantissa
+
+
+    // 3.14159265358979323846264338327950288f64
+    public fun PI(): FixedPoint64 {
+        fixed_point64::create_from_rational(
+            314_159_265_358_979_323_846_264_338_327_950_288,
+
+            100_000_000_000_000_000_000_000_000_000_000_000,
+        )
+        // 314_159_265_358_979_323_846_264_338_327_950_288,
+        // 010_000_000_000_000_000_000_000_000_000_000_000,
+    }
 
     // Euler_s number (e)
     // 2.71828182845904523536028747135266250f64;
     public fun E(): FixedPoint64 {
         fixed_point64::create_from_rational(
             271_828_182_845_904_523_536_028_747_135_266_250,
-            010_000_000_000_000_000_000_000_000_000_000_000,
+            100_000_000_000_000_000_000_000_000_000_000_000,
         )
     }
 
@@ -58,10 +79,6 @@ module math::fixedU64 {
 
     public fun from_u64(val: u64): FixedPoint64 {
         fixed_point64::create_from_rational((val as u128), 1)
-    }
-
-    public fun from_u128(val: u128): FixedPoint64 {
-        fixed_point64::create_from_rational(val, 1)
     }
 
     // Greater than
@@ -85,10 +102,14 @@ module math::fixedU64 {
         return a_raw < b_raw
     }
 
-    public fun floor(num: FixedPoint64): u128 {
-        let raw_value = fixed_point64::get_raw_value(num);
-        let integer_part = raw_value >> 64; // Shift right to remove the fractional part
-        integer_part
+    public fun precision(num: FixedPoint64, digits: u8): FixedPoint64 {
+        let multiplier = from_u64(u64::powi(10, digits));
+        let x = round(mul(num, multiplier));
+
+        div(
+            fixed_point64::create_from_u128(x),
+            multiplier
+        )
     }
 
     // Add 2 FixedPoint64 numers
@@ -287,7 +308,22 @@ module math::fixedU64 {
 
 
     #[test_only] use std::debug::print;
-    #[test_only] use sui::test_utils::{assert_eq, destroy};
+    #[test_only] use sui::test_utils::{Self as test, destroy};
+
+    #[test_only]
+    public fun assert_eq(actual: &FixedPoint64, expected: &FixedPoint64) {
+        let a = fixed_point64::raw_value(actual);
+        let b = fixed_point64::raw_value(expected);
+        test::assert_eq(*a,*b);
+    }
+
+    #[test_only]
+    public fun assert_eq_precision(actual: &FixedPoint64, expected: &FixedPoint64, digits: u8) {
+        let multiplier = from_u64(u64::powi(10, digits));
+        let x = round(mul(*actual, multiplier));
+        let y = round(mul(*expected,multiplier));
+        test::assert_eq(x, y);
+    }
 
     #[test]
     fun test_floor() {

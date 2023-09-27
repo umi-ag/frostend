@@ -6,6 +6,10 @@ module math::parse {
 
     use math::fixed_point64::{Self, FixedPoint64};
 
+
+    /// This function converts a byte vector representing a decimal number into a FixedPoint64.
+    /// Note: Due to the binary representation of decimal numbers in computers,
+    /// the result may not be exact and should be treated as an approximation.
     public fun into_fixedU64(bytes: vector<u8>): FixedPoint64 {
         let len = length(&bytes);
         let integer_part: u128 = 0;
@@ -32,14 +36,24 @@ module math::parse {
             i = i + 1;
         };
 
-        // Adjust the fractional part based on the base
-        fractional_part = fractional_part << 64;
-        fractional_part = fractional_part / frac_base;
+        // Calculate the fractional part
+        let fractional_result: u128 = 0;
+        let temp_frac = fractional_part;
+        let temp_base = frac_base;
+        while (temp_frac > 0) {
+            let digit = temp_frac % 10;
+            fractional_result = fractional_result + ((digit << 64) / temp_base);
+            temp_frac = temp_frac / 10;
+            temp_base = temp_base / 10;
+        };
 
         fixed_point64::create_from_raw_value(
-            ((integer_part as u128) << 64) | (fractional_part as u128)
+            (integer_part << 64) | fractional_result
         )
     }
+
+
+    #[test_only] use math::fixedU64;
 
     #[test]
     fun debug() {
@@ -51,5 +65,24 @@ module math::parse {
 
         let r = into_fixedU64(b"123456");
         print(&math::display::from_fixedU64(&r));
+    }
+
+
+    #[test_only] const PRECISION: u8 = 12;
+
+    #[test]
+    fun test_pi() {
+        let actual = into_fixedU64(b"3.14159265358979323846264338327950288");
+        let expected = fixedU64::PI();
+
+        fixedU64::assert_eq_precision(&actual, &expected,  PRECISION);
+    }
+
+    #[test]
+    fun test_E() {
+        let actual = into_fixedU64(b"2.71828182845904523536028747135266250");
+        let expected = fixedU64::E();
+
+        fixedU64::assert_eq_precision(&actual, &expected, PRECISION);
     }
 }
