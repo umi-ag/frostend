@@ -36,7 +36,16 @@ module math::display {
         are_strings_equal(&get_type_name<X>(), &get_type_name<Y>())
     }
 
-    public fun from_u64(num: &u64): String {
+
+    public fun format_u64(num: &u64): String {
+        from_u64(num, false)
+    }
+
+    public fun format_u64_pretty(num: &u64): String {
+        from_u64(num, false)
+    }
+
+    fun from_u64(num: &u64, add_comma: bool): String {
         let num_str_bytes = vector::empty<u8>();
         let n = *num;
         let ten = 10;
@@ -50,7 +59,7 @@ module math::display {
 
         // Convert the number to ASCII representation with commas
         while (n > 0) {
-            if (count > 0 && count % 3 == 0) {
+            if (add_comma && count > 0 && count % 3 == 0) {
                 vector::push_back(&mut num_str_bytes, 0x2C); // ASCII for ','
             };
             let digit = ((n % ten) as u8);
@@ -180,7 +189,19 @@ module math::display {
         ascii::string(result)
     }
 
-    public fun from_fixedU64(num: &FixedPoint64): String {
+    public fun format_fixedU64(num: &FixedPoint64): String {
+        from_fixedU64(num, false)
+    }
+
+    public fun format_fixedU64_pretty(num: &FixedPoint64): String {
+        from_fixedU64(num, true)
+    }
+
+    public fun pretty_print_fixedU64(num: &FixedPoint64) {
+        print(&format_fixedU64_pretty(num))
+    }
+
+    fun from_fixedU64(num: &FixedPoint64, add_comma: bool): String {
         let raw_value = fixed_point64::get_raw_value(*num);
         let integer_part = raw_value >> 64;
         let fractional_part = raw_value & 0xFFFFFFFFFFFFFFFF;
@@ -194,7 +215,7 @@ module math::display {
             vector::push_back(&mut result, 48); // using 48 as ASCII value for '0'
         } else {
             while (int_part > 0) {
-                if (digit_count > 0 && digit_count % 3 == 0) {
+                if (add_comma && digit_count > 0 && digit_count % 3 == 0) {
                     vector::push_back(&mut result, 44); // using 44 as ASCII value for ','
                 };
                 let digit = ((int_part % 10) as u8) + 48; // using 48 as ASCII value for '0'
@@ -222,18 +243,67 @@ module math::display {
         ascii::string(result)
     }
 
+    #[test_only]
+    fun equal_precision(a_bytes: vector<u8>, b_bytes: vector<u8>, digits: u64): bool {
+        let a_len = vector::length(&a_bytes);
+        let b_len = vector::length(&b_bytes);
+        let min_len = if (a_len < b_len) { a_len } else { b_len };
+        let compare_digits = if (digits < min_len) { digits } else { min_len };
 
+        let i = 0;
+        while (i < compare_digits) {
+            let a_byte = *vector::borrow(&a_bytes, i);
+            let b_byte = *vector::borrow(&b_bytes, i);
+            if (a_byte != b_byte) {
+                return false
+            };
+            i = i + 1;
+        };
+        true
+    }
 
+    fun slice_head<Element: copy>(v: &vector<Element>, count: u64): vector<Element> {
+        let len = vector::length(v);
+        let new_vec = vector::empty<Element>();
+        let i = 0;
+
+        // Ensure count does not exceed the length of the vector.
+        let c = if (count > len) { len } else { count };
+
+        while (i < c) {
+            let elem = vector::borrow(v, i);
+            vector::push_back(&mut new_vec, *elem);
+            i = i + 1;
+        };
+
+        new_vec
+    }
+
+    #[test_only]
+    public fun assert_eq_precision(a_bytes: vector<u8>, b_bytes: vector<u8>, digits: u64) {
+        assert_eq(
+            slice_head(&a_bytes, digits),
+            slice_head(&b_bytes, digits),
+        )
+    }
 
     #[test_only] use std::debug::print;
+    #[test_only] use sui::test_utils::{assert_eq};
+
     #[test_only] use math::u64;
     #[test_only] use math::u128;
     #[test_only] use math::u256;
+    #[test_only] use math::fixedU64;
 
     #[test]
     fun test_u64() {
-        print(&from_u64(&114514));
-        print(&from_u64(&u64::max_value()));
+        print(&format_u64_pretty(&114514));
+        print(&u64::max_value());
+        print(&format_u64(&u64::max_value()));
+        assert_eq(
+            ascii::into_bytes( format_u64(&u64::max_value())),
+            b"18446744073709551615"
+        );
     }
 
     #[test]
@@ -253,8 +323,16 @@ module math::display {
     }
 
     #[test]
-    fun test_fixedU64() {
-        let v = fixed_point64::create_from_rational(10, 7);
-        print(&from_fixedU64(&v));
+    fun test_fixedU64 () {
+        let pi = fixed_point64::create_from_rational(
+            314_159_265_358_979,
+            100_000_000_000_000,
+        );
+
+        assert(equal_precision(
+            ascii::into_bytes( format_fixedU64(&pi)),
+            b"3.14159265358979323846264338327950288",
+            12,
+        ), 1);
     }
 }
