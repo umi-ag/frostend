@@ -1,7 +1,7 @@
 #[allow(unused_function)]
 module math::parse {
-    use std::ascii::{Self, String, is_valid_char, as_bytes};
-    use std::vector::{Self, length, borrow};
+    use std::ascii::{is_valid_char};
+    use std::vector::{length, borrow};
     use std::debug::print;
 
     use math::fixed_point64::{Self, FixedPoint64};
@@ -58,13 +58,13 @@ module math::parse {
     #[test]
     fun debug() {
         let r = into_fixedU64(b"3.1415");
-        print(&math::display::from_fixedU64(&r));
+        print(&math::display::format_fixedU64_pretty(&r));
 
         let r = into_fixedU64(b"0.1415");
-        print(&math::display::from_fixedU64(&r));
+        print(&math::display::format_fixedU64_pretty(&r));
 
         let r = into_fixedU64(b"123456");
-        print(&math::display::from_fixedU64(&r));
+        print(&math::display::format_fixedU64_pretty(&r));
     }
 
 

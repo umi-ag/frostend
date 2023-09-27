@@ -243,57 +243,12 @@ module math::display {
         ascii::string(result)
     }
 
-    #[test_only]
-    fun equal_precision(a_bytes: vector<u8>, b_bytes: vector<u8>, digits: u64): bool {
-        let a_len = vector::length(&a_bytes);
-        let b_len = vector::length(&b_bytes);
-        let min_len = if (a_len < b_len) { a_len } else { b_len };
-        let compare_digits = if (digits < min_len) { digits } else { min_len };
-
-        let i = 0;
-        while (i < compare_digits) {
-            let a_byte = *vector::borrow(&a_bytes, i);
-            let b_byte = *vector::borrow(&b_bytes, i);
-            if (a_byte != b_byte) {
-                return false
-            };
-            i = i + 1;
-        };
-        true
-    }
-
-    fun slice_head<Element: copy>(v: &vector<Element>, count: u64): vector<Element> {
-        let len = vector::length(v);
-        let new_vec = vector::empty<Element>();
-        let i = 0;
-
-        // Ensure count does not exceed the length of the vector.
-        let c = if (count > len) { len } else { count };
-
-        while (i < c) {
-            let elem = vector::borrow(v, i);
-            vector::push_back(&mut new_vec, *elem);
-            i = i + 1;
-        };
-
-        new_vec
-    }
-
-    #[test_only]
-    public fun assert_eq_precision(a_bytes: vector<u8>, b_bytes: vector<u8>, digits: u64) {
-        assert_eq(
-            slice_head(&a_bytes, digits),
-            slice_head(&b_bytes, digits),
-        )
-    }
-
     #[test_only] use std::debug::print;
     #[test_only] use sui::test_utils::{assert_eq};
 
     #[test_only] use math::u64;
     #[test_only] use math::u128;
     #[test_only] use math::u256;
-    #[test_only] use math::fixedU64;
 
     #[test]
     fun test_u64() {
@@ -329,10 +284,10 @@ module math::display {
             100_000_000_000_000,
         );
 
-        assert(equal_precision(
+        toolkit::vector::assert_eq_precision(
             ascii::into_bytes( format_fixedU64(&pi)),
-            b"3.14159265358979323846264338327950288",
+            b"3.14159265358979",
             12,
-        ), 1);
+        );
     }
 }
