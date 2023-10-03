@@ -79,7 +79,7 @@ const Page = () => {
   const wallet = useWallet();
 
   return (
-    <div className="h-screen bg-blue-500">
+    <div className="h-screen bg-base-100">
       <AppBar />
       <main className="flex justify-center mt-[120px] gap-8">
         <div>
