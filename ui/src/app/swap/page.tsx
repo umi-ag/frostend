@@ -96,14 +96,14 @@ const StatsCard = () => {
 
 const Page = () => {
   return (
-    <div className="h-screen bg-blue-500">
+    <div className="h-screen">
       <AppBar />
       <main className="flex justify-center mt-[120px] gap-8">
         <div>
           <div className="text-white mb-8">
             <ToggleToken />
           </div>
-          <div className="text-white mb-8 text-md flex items-center gap-3 justify-end">
+          <div className="mb-8 text-md flex items-center gap-3 justify-end">
             <span> If you need shaSUI, </span>
             <FaucetButton />
           </div>

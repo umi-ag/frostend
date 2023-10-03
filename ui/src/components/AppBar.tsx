@@ -55,7 +55,7 @@ export const AppBar: React.FC = () => {
   const { setSwapPair } = useTradeStore()
 
   return (
-    <div className="flex items-center justify-between px-6 py-2 bg-sky-800 z-50">
+    <div className="flex items-center justify-between px-6 py-2 bg-base-900 bg-opacity-90 z-50">
       <div className="flex items-center gap-8 drop-shadow-3xl">
         <div className="flex items-center gap-1">
           <Logo />

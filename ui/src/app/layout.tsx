@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <WalletProvider defaultWallets={AllDefaultWallets}>
-        <body className="bg-base-300">
+        <body className="bg-base-100">
           {children}
           <Toaster />
         </body>
