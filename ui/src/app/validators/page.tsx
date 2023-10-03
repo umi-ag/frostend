@@ -5,6 +5,7 @@ import { SuiSystemStateSummary, SuiValidatorSummary } from "@mysten/sui.js/clien
 import { useSuiSystemState } from 'src/store/validators';
 import Link from 'next/link';
 import numeral from 'numeral'
+import { ValidatorTable } from './table';
 
 const SuiValidatorStateView: React.FC<{
   validator: SuiValidatorSummary
@@ -71,8 +72,13 @@ const Page = () => {
   return (
     <div className="h-screen">
       <AppBar />
-      <main className="flex justify-center mt-[120px] gap-8">
-        <div>
+      <main className="grid place-items-center mx-auto mt-[120px] gap-8">
+
+        <div className="px-8 py-2 bg-white shadow-lg rounded-lg">
+          <ValidatorTable />
+        </div>
+
+        {/* <div>
           <button onClick={() => {
             console.table(suiSystemState?.activeValidators)
           }}>print</button>
@@ -81,7 +87,7 @@ const Page = () => {
           {suiSystemState && (
             <SuiSystemStateView suiSystemState={suiSystemState} />
           )}
-        </div>
+        </div> */}
       </main>
     </div>
   )
