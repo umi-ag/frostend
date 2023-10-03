@@ -1,8 +1,9 @@
+'use client';
+
 import { SuiValidatorSummary } from '@mysten/sui.js/client';
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import numeral from 'numeral';
 import { useSuiSystemState } from 'src/store/validators';
-
 
 const columnHelper = createColumnHelper<SuiValidatorSummary>();
 
